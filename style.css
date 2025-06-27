@@ -1,1 +1,21 @@
 @import url("assets/fonts/inter/inter.css");
+
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+}
+
+canvas {
+    background-color: black;
+}
