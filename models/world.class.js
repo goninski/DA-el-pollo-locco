@@ -7,7 +7,7 @@ class World {
     backgrounds = level1.backgrounds;
     clouds = level1.clouds;
     enemies = level1.enemies;
-    character = level1.character;
+    character = new Character();
 
 
     constructor(canvas, keystrokes) {
@@ -43,24 +43,43 @@ class World {
     };
 
 
-    drawObject(obj) {
-        if(obj.otherDirection) {
-            this.ctx.save();
-            this.ctx.translate(obj.width, 0);
-            this.ctx.scale(-1, 1);
-        }
-        this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
-        if(obj.otherDirection) {
-            obj.x = obj.x;
-            this.ctx.restore();
-        }
-    }
-
-
     drawObjects(objs) {
         objs.forEach(obj => {
             this.drawObject(obj);
         });
     }
+
+
+    drawObject(obj) {
+        obj.otherDirection ? this.flipImage(obj) : null;
+        this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
+        obj.drawRectangle(this.ctx);
+        obj.otherDirection ? this.flipImageBack(obj) : null;
+    }
+
+
+    flipImage(obj) {
+        this.ctx.save();
+        this.ctx.translate(obj.width * 1.5, 0);
+        this.ctx.scale(-1, 1);
+        // obj.x = obj.x * -1;
+    }
+
+
+    flipImageBack(obj) {
+        // obj.x = obj.x;
+        this.ctx.restore();
+    }
+
+
+    // drawRectangle(obj) {
+    //     if(this instanceof Character) {
+    //         this.ctx.beginPath();
+    //         this.ctx.rect(obj.x, obj.y, obj.width, obj.height);
+    //         this.ctx.stroke();
+    //         this.ctx.lineWidth = '5';
+    //         this.ctx.strokeStyle = 'orange';
+    //     }
+    // }
 
 }

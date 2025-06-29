@@ -1,11 +1,6 @@
-let imgPathBase = '/assets/img/';
 let keystrokes;
 let canvas;
 let world;
-let widthCanvas = 960;
-let heightCanvas = widthCanvas / 1.777;
-let walkOffset = 48;
-let stoppableIntervals = [];
 
 // document.addEventListener("keydown", updateKeystrokesObj);
 // document.addEventListener("keyup", resetKeystrokesObj);
@@ -15,7 +10,7 @@ function init() {
     document.addEventListener("keydown", updateKeystrokesObj);
     canvas = document.getElementById('canvas');
     world = new World(canvas, keystrokes);
-    document.addEventListener("keyup", resetKeystrokesObj);
+    //document.addEventListener("keyup", resetKeystrokesObj);
 }
 
 

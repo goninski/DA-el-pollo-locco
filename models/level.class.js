@@ -3,13 +3,13 @@ class Level {
     backgrounds;
     clouds;
     enemies;
-    character;
+    screenStartX = (widthCanvas * -1) + 1;
+    screenEndX = (widthCanvas * 2) - 1;
 
-    constructor(backgrounds, clouds, enemies, character) {
+    constructor(backgrounds, clouds, enemies) {
         this.backgrounds = backgrounds;
         this.clouds = clouds;
         this.enemies = enemies;
-        this.character = character;
     }
 
 }

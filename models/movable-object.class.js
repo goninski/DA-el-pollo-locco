@@ -1,12 +1,45 @@
 class MovableObject extends DrawableObject {
 
-    
+    objectPadding = null;
+    fitX;
+    fitY;
+    fitWidth;
+    fitHeight;
+
+
     constructor() {
         super();
     }
 
+
     setScreenSlidePos(screenSlide) {
-            this.x = screenSlide * (widthCanvas - 1);
+        this.x = screenSlide * (widthCanvas - 1);
+    }
+
+
+    drawRectangle(ctx) {
+        if(this instanceof Character || this instanceof Chicken) {
+            this.fitBorderCoordinates();
+            ctx.beginPath();
+            ctx.rect(this.fitX, this.fitY, this.fitWidth, this.fitHeight);
+            ctx.stroke();
+            ctx.lineWidth = '5';
+            ctx.strokeStyle = 'orange';
+        }
+    }
+    
+    
+    fitBorderCoordinates() {
+        this.fitX = this.x;
+        this.fitY = this.y;
+        this.fitWidth = this.width;
+        this.fitHeight = this.height;
+        if(this.objectPadding) {
+            this.fitX = this.x + (this.width * this.objectPadding[1]);
+            this.fitY = this.y + (this.height * this.objectPadding[0]);
+            this.fitWidth = this.width * (1 - this.objectPadding[1] - this.objectPadding[3]);
+            this.fitHeight = this.height * (1 - this.objectPadding[2] - this.objectPadding[0]);
+        }
     }
 
 
@@ -20,7 +53,6 @@ class MovableObject extends DrawableObject {
         setInterval(() => {
             this.x -= speed;
         }, 1000 / 60);
-        console.log('moving right mo-type: ' + type);
     }
 
 
@@ -29,7 +61,6 @@ class MovableObject extends DrawableObject {
         setInterval(() => {
             this.x += speed;
         }, 1000 / 60);
-        console.log('moving right mo-type: ' + type);
     }
 
 }

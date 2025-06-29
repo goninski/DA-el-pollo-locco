@@ -1,3 +1,9 @@
+let imgPathBase = '/assets/img/';
+let widthCanvas = 960;
+let heightCanvas = widthCanvas / 1.777;
+let walkOffset = 48;
+let stoppableIntervals = [];
+
 const level1 = new Level(
     [
         new Background(imgPathBase + '5_background/layers/air.png', -1),
@@ -25,7 +31,6 @@ const level1 = new Level(
         new Chicken(),    
         new Chicken(),    
     ],
-    new Character(),
 );
 
 
