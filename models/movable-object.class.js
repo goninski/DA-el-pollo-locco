@@ -1,48 +1,35 @@
-class MovableObject {
-    x = 0;
-    y = 0;
-    width = widthCanvas * 0.15;
-    height = this.width;
-    img;
-    imageCache = {};
-    currentImage = 0;
+class MovableObject extends DrawableObject {
 
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
+    
+    constructor() {
+        super();
+    }
+
+    setScreenSlidePos(screenSlide) {
+            this.x = screenSlide * (widthCanvas - 1);
     }
 
 
-    setImageCache(imagePaths) {
-        imagePaths.forEach(path => {
-            this.loadImage(path);
-            this.imageCache[path] = this.img
-        });
-    }    
-
-
     animateWalking(imagePaths, speed) {
-        setInterval(() => {
-            let index = this.currentImage % imagePaths.length;
-            let path = imagePaths[index];
-            this.img = this.imageCache[path];
-            this.currentImage++;
-        }, speed);
+        this.loopImages(imagePaths, speed);
     }    
 
 
-    animateLeft(speedMin = 0.15, speedMax = null) {
+    moveLeft(speedMin = 0.15, speedMax = null, type = '') {
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         setInterval(() => {
             this.x -= speed;
         }, 1000 / 60);
+        console.log('moving right mo-type: ' + type);
     }
 
 
-    animateRight(speedMin = 0.15, speedMax = null) {
+    moveRight(speedMin = 0.15, speedMax = null, type = '') {
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         setInterval(() => {
             this.x += speed;
         }, 1000 / 60);
+        console.log('moving right mo-type: ' + type);
     }
+
 }

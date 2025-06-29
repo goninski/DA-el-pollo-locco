@@ -2,47 +2,40 @@ class World {
     keystrokes;
     canvas;
     ctx;
-    backgrounds =  [
-        new Background(imgPathBase + '5_background/layers/air.png'),
-        new Background(imgPathBase + '5_background/layers/3_third_layer/1.png'),
-        new Background(imgPathBase + '5_background/layers/2_second_layer/1.png'),
-        new Background(imgPathBase + '5_background/layers/1_first_layer/1.png'),
-    ];
-    clouds =  [
-        new Clouds(),    
-    ];
-    enemies =  [
-        new Chicken(),    
-        new Chicken(),    
-        new Chicken(),    
-    ]
-    character = new Character();
+    screenTranslateX = 0;
+
+    backgrounds = level1.backgrounds;
+    clouds = level1.clouds;
+    enemies = level1.enemies;
+    character = level1.character;
 
 
     constructor(canvas, keystrokes) {
-        this.ctx = canvas.getContext('2d');
-        this.canvas = canvas;
         this.keystrokes = keystrokes;
+        console.log(this.keystrokes);
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
         this.draw();
         this.applyWorldToObjects();
     }
 
 
     applyWorldToObjects() {
-        console.log(this);
         this.character.world = this;
-        console.log(this.character.world);
     }
 
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        this.ctx.translate(this.screenTranslateX, 0);
+
         this.drawObjects(this.backgrounds);
         this.drawObjects(this.clouds);
         this.drawObjects(this.enemies);
-
         this.drawObject(this.character);
+
+        this.ctx.translate(-this.screenTranslateX, 0);
 
         // automatic recall of draw (speed depending on gpu performance)
         let self = this;
@@ -51,7 +44,16 @@ class World {
 
 
     drawObject(obj) {
-        this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);            
+        if(obj.otherDirection) {
+            this.ctx.save();
+            this.ctx.translate(obj.width, 0);
+            this.ctx.scale(-1, 1);
+        }
+        this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
+        if(obj.otherDirection) {
+            obj.x = obj.x;
+            this.ctx.restore();
+        }
     }
 
 

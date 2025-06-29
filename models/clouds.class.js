@@ -4,12 +4,13 @@ class Clouds extends MovableObject {
     height = heightCanvas;
 
 
-    constructor() {
+    constructor(imgPath, screenSlide = 0) {
 
-        super().loadImage(imgPathBase + '5_background/layers/4_clouds/1.png')
+        super().loadImage(imgPath);
 
-        this.x = Math.random() * widthCanvas * 0.2;
-        this.animateLeft(0.15);
+        this.setScreenSlidePos(screenSlide);
+
+        this.moveLeft(0.15, null, 'clouds');
 
     }
 

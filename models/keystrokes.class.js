@@ -1,7 +1,9 @@
 class Keystrokes {
-    LEFT = false;
-    RIGHT = false;
-    UP = false;
-    DOWN = false;
-    SPACE = false;
+
+    KEY_LEFT = false;
+    KEY_RIGHT = false;
+    KEY_UP = false;
+    KEY_DOWN = false;
+    KEY_SPACE = false;
+    
 };
