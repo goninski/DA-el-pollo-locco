@@ -1,4 +1,4 @@
-@import url("assets/fonts/inter/inter.css");
+@import url("assets/fonts/chango/chango.css");
 
 body {
     margin: 0;
@@ -6,7 +6,8 @@ body {
     flex-direction: column;
     min-height: 100vh;
     min-height: 100svh;
-    font-family: "inter", sans-serif;
+    font-family: "chango", sans-serif;
+    background: linear-gradient(to bottom right, #CD5C5C, #DAA520, #8B4513);
 }
 
 main {
@@ -15,9 +16,28 @@ main {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    transform: translateY(-6vh);
+    transform: translateY(-8vh);
+    max-width: 100%;
+    text-align: center;
 }
 
 canvas {
     background-color: black;
+    border: solid 6px #222;
+    border-radius: 12px;
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-size: 5rem;
+    line-height: 1.1;
+}
+
+@media(max-width: 1000px) {
+    canvas {
+        width: calc(100% - 24px);
+    }
+    h1 {
+        font-size: 8vw;
+    }
 }

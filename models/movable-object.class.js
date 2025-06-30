@@ -13,7 +13,7 @@ class MovableObject extends DrawableObject {
 
 
     setScreenSlidePos(screenSlide) {
-        this.x = screenSlide * (widthCanvas - 1);
+        this.x = screenSlide * (widthCanvas - 0);
     }
 
 
@@ -43,24 +43,40 @@ class MovableObject extends DrawableObject {
     }
 
 
-    animateWalking(imagePaths, speed) {
-        this.loopImages(imagePaths, speed);
+    walkingAnimation(imagePaths, speed = null) {
+        if(speed === null) return;
+        intervalId = setInterval(() => {
+            this.walkingAnimationLoopItem(imagePaths);
+        }, speed);
+        stoppableIntervals.push(intervalId);
     }    
 
 
-    moveLeft(speedMin = 0.15, speedMax = null, type = '') {
+    walkingAnimationLoopItem(imagePaths) {
+        let index = this.currentImage % imagePaths.length;
+        let path = imagePaths[index];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+    }    
+
+
+    moveLeft(speedMin = 0.15, speedMax = null, type = null) {
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
-        setInterval(() => {
+        intervalId = setInterval(() => {
             this.x -= speed;
-        }, 1000 / 60);
+            type ? console.log(type + '.x: ' + this.x) : null;
+    }, 1000 / 60);
+        stoppableIntervals.push(intervalId);
     }
 
 
-    moveRight(speedMin = 0.15, speedMax = null, type = '') {
+    moveRight(speedMin = 0.15, speedMax = null, type = null) {
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
-        setInterval(() => {
+        intervalId = setInterval(() => {
             this.x += speed;
+            type ? console.log(type + '.x: ' + this.x) : null;
         }, 1000 / 60);
+        stoppableIntervals.push(intervalId);
     }
 
 

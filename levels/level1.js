@@ -2,7 +2,9 @@ let imgPathBase = '/assets/img/';
 let widthCanvas = 960;
 let heightCanvas = widthCanvas / 1.777;
 let walkOffset = 48;
+let intervalId = 0;
 let stoppableIntervals = [];
+let playStatus = 1;
 
 const level1 = new Level(
     [

@@ -1,3 +1,5 @@
+let cloudsId = 0;
+
 class Clouds extends MovableObject {
 
     width = widthCanvas;
@@ -6,11 +8,14 @@ class Clouds extends MovableObject {
 
     constructor(imgPath, screenSlide = 0) {
 
-        super().loadImage(imgPath);
-
+        super();
         this.setScreenSlidePos(screenSlide);
+        this.loadImage(imgPath);
 
-        this.moveLeft(0.15, null, 'clouds');
+        cloudsId++;
+        this.objectId = cloudsId;
+        // this.moveLeft(0.15, null, 'clouds' + this.objectId);
+        this.moveLeft(0.15);
 
     }
 

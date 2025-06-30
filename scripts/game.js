@@ -2,7 +2,6 @@ let canvas;
 let world;
 let keystrokes;
 
-
 function init() {
     document.addEventListener("keydown", updateKeystrokesObj);
     document.addEventListener("keyup", resetKeystrokesObj);

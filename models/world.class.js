@@ -33,8 +33,8 @@ class World {
 
         this.drawObjects(this.backgrounds);
         this.drawObjects(this.clouds);
-        this.drawObjects(this.enemies);
         this.drawObject(this.character);
+        this.drawObjects(this.enemies);
 
         this.ctx.translate(-this.screenTranslateX, 0);
 
@@ -61,14 +61,14 @@ class World {
 
     flipImage(obj) {
         this.ctx.save();
-        this.ctx.translate(obj.width * 1.5, 0);
+        this.ctx.translate(obj.width, 0);
         this.ctx.scale(-1, 1);
-        // obj.x = obj.x * -1;
+        obj.x = obj.x * -1;
     }
 
 
     flipImageBack(obj) {
-        // obj.x = obj.x;
+        obj.x = obj.x * -1;
         this.ctx.restore();
     }
 
@@ -80,7 +80,7 @@ class World {
                 // console.log('collision with: ', this.character, enemy);
             });
         }, 1000);
-        clearIntervallTimeout(intervalId);
+        stoppableIntervals.push(intervalId);
     }
 
 }

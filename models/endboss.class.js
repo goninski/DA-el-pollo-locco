@@ -1,3 +1,5 @@
+let endbossId = 0;
+
 class Endboss extends MovableObject {
     width = this.width * 2.5;
     height = this.width / 0.86;
@@ -12,14 +14,20 @@ class Endboss extends MovableObject {
 
     constructor() {
 
-        super().loadImage(this.IMAGES_WALKING[0]);
-        this.x = (widthCanvas * 0.5);
-        // this.x = (widthCanvas * 0.7) + (Math.random() * widthCanvas * 0.9);
+        super();
+        // this.x = (widthCanvas * 0.5);
+        this.x = (widthCanvas * 0.7) + (Math.random() * widthCanvas * 0.9);
         this.y = heightCanvas - this.height - walkOffset;
-
+        this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
-        this.animateWalking(this.IMAGES_WALKING, 175);
-        // this.moveLeft(2);
+
+        endbossId++;
+        this.objectId = 'endboss' + endbossId + '.';
+        console.log(this.objectId + 'x: ' + this.x);
+
+        this.walkingAnimation(this.IMAGES_WALKING, 150);
+
+        this.moveLeft(0.15, 0.66, this.objectId);
 
     }
 

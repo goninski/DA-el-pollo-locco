@@ -6,6 +6,7 @@ class DrawableObject {
     img;
     imageCache = {};
     currentImage = 0;
+    objectId;
 
 
     loadImage(path) {
@@ -20,17 +21,5 @@ class DrawableObject {
             this.imageCache[path] = this.img
         });
     }    
-
-
-    loopImages(imagePaths, speed, isStoppable = true) {
-        let interval = setInterval(() => {
-            let index = this.currentImage % imagePaths.length;
-            let path = imagePaths[index];
-            this.img = this.imageCache[path];
-            this.currentImage++;
-        }, speed);
-        isStoppable ? stoppableIntervals.push(interval) : null;
-    }    
-
 
 }
