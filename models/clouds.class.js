@@ -14,8 +14,8 @@ class Clouds extends MovableObject {
 
         cloudsId++;
         this.objectId = cloudsId;
-        // this.moveLeft(0.15, null, 'clouds' + this.objectId);
-        this.moveLeft(0.15);
+        // this.moveLeftAuto(0.15, null, 'clouds' + this.objectId);
+        this.moveLeftAuto(0.15);
 
     }
 

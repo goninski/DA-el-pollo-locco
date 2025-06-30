@@ -5,7 +5,9 @@ class MovableObject extends DrawableObject {
     fitY;
     fitWidth;
     fitHeight;
-
+    speedY = 0;
+    acceleration = 2.5;
+    yGround = heightCanvas - this.height - walkOffset;
 
     constructor() {
         super();
@@ -43,16 +45,15 @@ class MovableObject extends DrawableObject {
     }
 
 
-    walkingAnimation(imagePaths, speed = null) {
-        if(speed === null) return;
+    movementAnimationAuto(imagePaths, speed = 300) {
         intervalId = setInterval(() => {
-            this.walkingAnimationLoopItem(imagePaths);
+            this.movementAnimationItem(imagePaths);
         }, speed);
         stoppableIntervals.push(intervalId);
     }    
 
 
-    walkingAnimationLoopItem(imagePaths) {
+    movementAnimationItem(imagePaths) {
         let index = this.currentImage % imagePaths.length;
         let path = imagePaths[index];
         this.img = this.imageCache[path];
@@ -60,23 +61,33 @@ class MovableObject extends DrawableObject {
     }    
 
 
-    moveLeft(speedMin = 0.15, speedMax = null, type = null) {
+    moveLeftAuto(speedMin = 0.15, speedMax = null, type = null) {
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         intervalId = setInterval(() => {
             this.x -= speed;
-            type ? console.log(type + '.x: ' + this.x) : null;
-    }, 1000 / 60);
+            // type ? console.log(type + '.x: ' + this.x) : null;
+        }, 1000 / 60);
         stoppableIntervals.push(intervalId);
     }
 
 
-    moveRight(speedMin = 0.15, speedMax = null, type = null) {
-        let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
-        intervalId = setInterval(() => {
-            this.x += speed;
-            type ? console.log(type + '.x: ' + this.x) : null;
-        }, 1000 / 60);
-        stoppableIntervals.push(intervalId);
+    applyGravity() {
+        setInterval(() => {
+            if(this.isAboveGround() || (this.speedY > 0)) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            }
+        }, 1000 / 25);
+    }
+
+
+    jump(speedY) {
+        this.speedY = speedY;
+    }
+
+
+    isAboveGround() {
+        return this.y < this.yGround;
     }
 
 

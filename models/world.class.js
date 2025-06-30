@@ -53,7 +53,7 @@ class World {
     drawObject(obj) {
         obj.otherDirection ? this.flipImage(obj) : null;
         this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
-        obj.drawRectangle(this.ctx);
+        // obj.drawRectangle(this.ctx);
         obj.otherDirection ? this.flipImageBack(obj) : null;
     }
 
@@ -76,8 +76,8 @@ class World {
         let intervalId = setInterval(() => {
             this.level.enemies.forEach((enemy) => {
                 if(this.character.isColliding(enemy)) {
-                    console.log('collision with: ', this.character, enemy);
-                    stopGame();
+                    // console.log('collision with: ', this.character, enemy);
+                    // stopGame();
                 };
             });
         }, 200);

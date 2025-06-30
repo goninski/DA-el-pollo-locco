@@ -13,18 +13,18 @@ class Chicken extends MovableObject {
     constructor() {
 
         super();
-        this.x = (widthCanvas * 0.2) + (Math.random() * widthCanvas * 0.7);
+        this.x = (widthCanvas * 0.8) + (Math.random() * widthCanvas * 2);
         this.y = heightCanvas - this.height - walkOffset;
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
 
         chickenId++;
         this.objectId = 'chicken' + chickenId + '.';
-        console.log(this.objectId + 'x: ' + this.x);
+        // console.log(this.objectId + 'x: ' + this.x);
 
-        this.walkingAnimation(this.IMAGES_WALKING, 200);
+        this.movementAnimationAuto(this.IMAGES_WALKING, 200);
 
-        // this.moveLeft(0.15, 0.45, this.objectId);
+        this.moveLeftAuto(0.15, 0.45, this.objectId);
 
     }
 

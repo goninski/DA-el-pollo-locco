@@ -14,6 +14,11 @@ function initGame() {
 }
 
 
+function restartGame() {
+    window.location.reload();
+}    
+
+
 function stopGame() {
     stoppableIntervals.forEach(clearInterval);
     gameOverScreen.style = '';

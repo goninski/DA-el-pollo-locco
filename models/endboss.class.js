@@ -15,19 +15,18 @@ class Endboss extends MovableObject {
     constructor() {
 
         super();
-        // this.x = (widthCanvas * 0.5);
-        this.x = (widthCanvas * 0.7) + (Math.random() * widthCanvas * 0.9);
+        this.x = (widthCanvas * 1.5) + (Math.random() * widthCanvas * 2);
         this.y = heightCanvas - this.height - walkOffset;
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
 
         endbossId++;
         this.objectId = 'endboss' + endbossId + '.';
-        console.log(this.objectId + 'x: ' + this.x);
+        // console.log(this.objectId + 'x: ' + this.x);
 
-        this.walkingAnimation(this.IMAGES_WALKING, 150);
+        this.movementAnimationAuto(this.IMAGES_WALKING, 150);
 
-        this.moveLeft(0.15, 0.66, this.objectId);
+        this.moveLeftAuto(0.15, 0.66, this.objectId);
 
     }
 
