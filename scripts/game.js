@@ -1,21 +1,24 @@
-let keystrokes;
 let canvas;
 let world;
+let keystrokes;
 
-// document.addEventListener("keydown", updateKeystrokesObj);
-// document.addEventListener("keyup", resetKeystrokesObj);
 
 function init() {
-    keystrokes = new Keystrokes();
     document.addEventListener("keydown", updateKeystrokesObj);
+    document.addEventListener("keyup", resetKeystrokesObj);
+    keystrokes = new Keystrokes();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keystrokes);
-    //document.addEventListener("keyup", resetKeystrokesObj);
 }
 
 
 function stopGame() {
     stoppableIntervals.forEach(clearInterval);
+}    
+
+
+function clearIntervallTimeout(intervalId, timeout = 5000) {
+    setTimeout(function() {clearInterval(intervalId)}, timeout);
 }    
 
 
@@ -36,8 +39,9 @@ function updateKeystrokesObj(event) {
         case ' ':
             keystrokes.KEY_SPACE = true;
     }
-    console.log(keystrokes);
+    // console.log(keystrokes);
 }
+
 
 function resetKeystrokesObj(event) {
     switch(event.key) {
@@ -56,6 +60,6 @@ function resetKeystrokesObj(event) {
         case ' ':
             keystrokes.KEY_SPACE = false;
     }
-    console.log(keystrokes);
+    // console.log(keystrokes);
 }
 

@@ -24,84 +24,62 @@ class Character extends MovableObject {
 
         this.setImageCache(this.IMAGES_WALKING);
         this.animate();
+
     }
 
 
     animate() {
 
-        console.log(this.world);
-        console.log(this.height);
-        // console.log(this.world.level);
-
-        // if(this.world.keystrokes.KEY_RIGHT) {
-        //     this.otherDirection = true;
-        // }
-
-        console.log(this.x)
-        let keystroke;
-        keystroke = 'KEY_LEFT';
-        // keystroke = 'KEY_RIGHT';
-
-        if(keystroke == 'KEY_LEFT') {
-            this.moveLeft();
-        }
-
-        if(keystroke == 'KEY_RIGHT') {
-            this.moveRight();
-        }
-
         this.animateWalking(this.IMAGES_WALKING, 300);
 
-    }
+        // console.log(this.world.level);
 
-
-    moveLeft() {
-        this.otherDirection = true;
         setInterval(() => {
-            // if(keystrokes.KEY_LEFT) {
-                if(this.x < (widthCanvas * 1) + (this.width * 0.6)) {
-                    this.x += this.speedMove;
-                    if(this.x < widthCanvas) {
-                        this.world.screenTranslateX = this.x;
-                    }
-                }
-            // }
+            if(this.world.keystrokes.KEY_RIGHT) {
+                this.otherDirection = false;
+                // this.moveToRight(this.speedMove);
+                this.moveRight(this.speedMove);
+            }
+            else if(this.world.keystrokes.KEY_LEFT) {
+                this.otherDirection = true;
+                // this.moveToLeft(this.speedMove);
+                this.moveLeft(this.speedMove);
+            }
+            console.log('character.x: ' + this.x);
         }, 1000 / 60);
+
     }
 
 
-    moveRight() {
-        this.otherDirection = false;
-        setInterval(() => {
-            // if(keystrokes.KEY_RIGHT) {
-                if(this.x < (widthCanvas * 2) - this.width + (this.width * 0.11)) {
-                    this.x += this.speedMove;
-                    if(this.x < widthCanvas) {
-                        this.world.screenTranslateX = -this.x;
-                    }
-                }
-            // }
-        }, 1000 / 60);
+    moveRight(speed) {
+        if(this.x < (widthCanvas * 2) - this.width + (this.width * 0.11)) {
+            this.x += speed;
+            if(this.x < widthCanvas) {
+                this.world.screenTranslateX = -this.x;
+            }
+        }
     }
 
 
-    // moveLeft(speed) {
-    //     setInterval(() => {
-    //         // this.x = this.x * -1;
-    //         this.x -= speed;
-    //         this.world.screenTranslateX = -this.x;
-    //     }, 1000 / 60);
+    moveLeft(speed) {
+        if(this.x < (widthCanvas * 1) + (this.width * 0.6)) {
+            this.x += speed;
+            if(this.x < widthCanvas) {
+                this.world.screenTranslateX = this.x;
+            }
+        }
+    }
+
+    
+    // moveRight(speed) {
+    //     this.x += speed;
+    //     this.world.screenTranslateX = -this.x;
     // }
 
 
-    // moveX(speed) {
-    //     setInterval(() => {
-    //         console.log(this.x);
-    //         if(this.x > this.screenStartX && this.x < this.screenEndX) {
-    //             this.x += speed;
-    //             this.world.screenTranslateX = -this.x * this.factorX;
-    //         }
-    //     }, 1000 / 60);
+    // moveLeft(speed) {
+    //     this.x += speed;
+    //     this.world.screenTranslateX = this.x;
     // }
 
 

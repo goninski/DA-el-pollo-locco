@@ -4,6 +4,7 @@ class World {
     ctx;
     screenTranslateX = 0;
 
+    level = level1;
     backgrounds = level1.backgrounds;
     clouds = level1.clouds;
     enemies = level1.enemies;
@@ -11,11 +12,11 @@ class World {
 
 
     constructor(canvas, keystrokes) {
-        this.keystrokes = keystrokes;
-        console.log(this.keystrokes);
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.draw();
+        this.checkCollitions();
+        this.keystrokes = keystrokes;
         this.applyWorldToObjects();
     }
 
@@ -72,14 +73,14 @@ class World {
     }
 
 
-    // drawRectangle(obj) {
-    //     if(this instanceof Character) {
-    //         this.ctx.beginPath();
-    //         this.ctx.rect(obj.x, obj.y, obj.width, obj.height);
-    //         this.ctx.stroke();
-    //         this.ctx.lineWidth = '5';
-    //         this.ctx.strokeStyle = 'orange';
-    //     }
-    // }
+    checkCollitions() {
+        let intervalId = setInterval(() => {
+            this.level.enemies.forEach((enemy) => {
+                this.character.isColliding(enemy);
+                // console.log('collision with: ', this.character, enemy);
+            });
+        }, 1000);
+        clearIntervallTimeout(intervalId);
+    }
 
 }
