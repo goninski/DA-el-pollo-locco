@@ -33,6 +33,31 @@ h1 {
     line-height: 1.1;
 }
 
+#gameOverScreen {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: orange;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4vw;
+    font-size: 7rem;
+    gap: 32px;
+    /* display: flex !important; */
+}
+
+.button {
+    font-family: inherit;
+    padding: 12px;
+    border-radius: 5px;
+    background-color: orange;
+    cursor: pointer;
+}
+
+
 @media(max-width: 1000px) {
     canvas {
         width: calc(100% - 24px);

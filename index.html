@@ -18,15 +18,20 @@
     <script src="levels/level1.js"></script>
     <script src="scripts/game.js"></script>
 </head>
-<body onload="init()">
+<body onload="initGame()">
 
     <main>
 
-        <h1>El pollo Loco</h1>
+        <h1 id="title">El pollo Loco</h1>
 
         <canvas id="canvas" width="960" height="540"></canvas>
 
     </main>
+
+    <div id="gameOverScreen" style="display: none;">
+        <div class="game-over-text">Game Over</div>
+        <button class="button button-new-game" onclick="initGame()">New Game</button>
+    </div>
 
 </body>
 </html>

@@ -81,10 +81,10 @@ class MovableObject extends DrawableObject {
 
 
     isColliding(obj) {
-        // this.fitBorderCoordinates();
-        // return (this.fitX + this.fitWidth > obj.fitX) && (this.fitY + this.fitHeight > obj.fitY) && (this.fitX < obj.fitX) && (this.fitY < obj.fitY + obj.fitY + obj.fitHeight);
+        this.fitBorderCoordinates();
+        return (this.fitX + this.fitWidth > obj.fitX) && (this.fitY + this.fitHeight > obj.fitY) && (this.fitX < obj.fitX) && (this.fitY < obj.fitY + obj.fitY + obj.fitHeight);
 
-        return (this.x + this.width > obj.x) && (this.y + this.height > obj.y) && (this.x < obj.x + obj.width) && (this.y < obj.y + obj.y + obj.height);
+        // return (this.x + this.width > obj.x) && (this.y + this.height > obj.y) && (this.x < obj.x + obj.width) && (this.y < obj.y + obj.y + obj.height);
     }
 
 }

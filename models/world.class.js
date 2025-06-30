@@ -10,7 +10,6 @@ class World {
     enemies = level1.enemies;
     character = new Character();
 
-
     constructor(canvas, keystrokes) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -76,10 +75,12 @@ class World {
     checkCollitions() {
         let intervalId = setInterval(() => {
             this.level.enemies.forEach((enemy) => {
-                this.character.isColliding(enemy);
-                // console.log('collision with: ', this.character, enemy);
+                if(this.character.isColliding(enemy)) {
+                    console.log('collision with: ', this.character, enemy);
+                    stopGame();
+                };
             });
-        }, 1000);
+        }, 200);
         stoppableIntervals.push(intervalId);
     }
 

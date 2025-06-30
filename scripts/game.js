@@ -1,8 +1,11 @@
 let canvas;
 let world;
 let keystrokes;
+let gameOverScreen;
 
-function init() {
+function initGame() {
+    gameOverScreen = document.getElementById('gameOverScreen');
+    gameOverScreen.style = 'display: none !important';
     document.addEventListener("keydown", updateKeystrokesObj);
     document.addEventListener("keyup", resetKeystrokesObj);
     keystrokes = new Keystrokes();
@@ -13,6 +16,7 @@ function init() {
 
 function stopGame() {
     stoppableIntervals.forEach(clearInterval);
+    gameOverScreen.style = '';
 }    
 
 

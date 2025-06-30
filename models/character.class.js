@@ -2,8 +2,8 @@ class Character extends MovableObject {
     world;
     width = this.width * 1.5;
     height = this.width / 0.508333;
-    // objectPadding = [0.375, 0.11, 0.04, 0.11];
-    objectPadding = null;
+    objectPadding = [0.375, 0.11, 0.04, 0.11];
+    // objectPadding = null;
     otherDirection = false;
     speed = 10;
 
@@ -58,7 +58,7 @@ class Character extends MovableObject {
             this.moveLeft(this.speed);
         }
         this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
-        console.log(this.objectId + 'x: ' + this.x);
+        // console.log(this.objectId + 'x: ' + this.x);
     }
 
 
