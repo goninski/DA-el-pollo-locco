@@ -2,6 +2,7 @@ let canvas;
 let world;
 let keystrokes;
 let gameOverScreen;
+let gameStatus = 1;
 
 function initGame() {
     gameOverScreen = document.getElementById('gameOverScreen');

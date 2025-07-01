@@ -6,7 +6,12 @@ class DrawableObject {
     img;
     imageCache = {};
     currentImage = 0;
-    objectId;
+    objectName;
+
+
+    constructor() {
+        this.objectName = this.constructor.name;
+    }
 
 
     loadImage(path) {
@@ -20,6 +25,16 @@ class DrawableObject {
             this.loadImage(path);
             this.imageCache[path] = this.img
         });
-    }    
+    }
+    
+    
+    setScreenSlidePos(screenSlide) {
+        this.x = screenSlide * (widthCanvas - 0);
+    }
+
+
+    consoleObjectPosition() {
+         console.log(this.objectName, 'x:' + this.x);
+    }
 
 }

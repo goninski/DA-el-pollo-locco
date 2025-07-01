@@ -9,13 +9,13 @@ class Clouds extends MovableObject {
     constructor(imgPath, screenSlide = 0) {
 
         super();
+        cloudsId++;
+        this.objectName += cloudsId;
         this.setScreenSlidePos(screenSlide);
         this.loadImage(imgPath);
 
-        cloudsId++;
-        this.objectId = cloudsId;
-        // this.moveLeftAuto(0.15, null, 'clouds' + this.objectId);
         this.moveLeftAuto(0.15);
+        // this.moveLeftAuto(0.15, null, false);
 
     }
 

@@ -14,7 +14,7 @@ class World {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.draw();
-        this.checkCollitions();
+        this.checkCharacterCollitions();
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
     }
@@ -53,7 +53,7 @@ class World {
     drawObject(obj) {
         obj.otherDirection ? this.flipImage(obj) : null;
         this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
-        // obj.drawRectangle(this.ctx);
+        obj.drawRectangle(this.ctx);
         obj.otherDirection ? this.flipImageBack(obj) : null;
     }
 
@@ -72,16 +72,24 @@ class World {
     }
 
 
-    checkCollitions() {
+    checkCharacterCollitions() {
         let intervalId = setInterval(() => {
             this.level.enemies.forEach((enemy) => {
-                if(this.character.isColliding(enemy)) {
-                    // console.log('collision with: ', this.character, enemy);
-                    // stopGame();
+                if(this.character.isHit(enemy)) {
+                    // console.log('collision with', enemy.constructor.name, 'strength:', enemy.strength);
+                    this.character.isHitHandling(enemy);
                 };
             });
         }, 200);
         stoppableIntervals.push(intervalId);
+    }
+
+
+    isGameOver(){
+        if(gameStatus === 0) {
+            let timePassed = new Date().getTime() - this.character.lastHit;
+            return timePassed >= 3000;
+        }
     }
 
 }
