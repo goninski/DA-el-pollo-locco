@@ -9,7 +9,8 @@ class World {
     clouds = level1.clouds;
     enemies = level1.enemies;
     throwables = level1.throwables;
-    statusbars = level1.statusbar;
+    // statusBars = level1.statusBars;
+    statusBar = new StatusBar('HEALTH', 50);
     character = new Character();
 
     constructor(canvas, keystrokes) {
@@ -37,9 +38,10 @@ class World {
         this.drawObject(this.character);
         this.drawObjects(this.enemies);
         this.drawObjects(this.throwables);
-        this.drawObjects(this.statusbars);
-
+        
         this.ctx.translate(-this.screenTranslateX, 0);
+        this.drawObject(this.statusBar);
+        // this.drawObjects(this.statusBars);
 
         // automatic recall of draw (speed depending on gpu performance)
         let self = this;
@@ -82,11 +84,16 @@ class World {
                 if(this.character.isHit(enemy)) {
                     // console.log('collision with', enemy.constructor.name, 'strength:', enemy.strength);
                     this.character.hitHandling(enemy);
-                    console.log(this.statusbars);
-                    console.log(this.character.health);
-                    if(this.statusbars.statusType == 'HEALTH') {
-                        this.statusbars.updateStatusbar('HEALTH', this.character.health);
-                    }
+                    console.log(this.statusBar);
+                    this.statusBar.updateStatusBar('HEALTH', this.character.health);
+                    // console.log(this.statusBars);
+                    // this.statusBars.updateStatusBar('HEALTH', this.character.health);
+                    // console.log(this.statusbars);
+                    // console.log(this.character.health);
+                    // if(this.statusBars.statusType == 'HEALTH') {
+                    //     console.log(this.statusBars);
+                    //     this.statusbars.updateStatusbar('HEALTH', this.character.health);
+                    // }
                 };
             });
         }, 200);

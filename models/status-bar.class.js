@@ -37,14 +37,17 @@ class StatusBar extends DrawableObject {
     constructor(statusType, y) {
         super();
         this.statusType = statusType;
-        this.x = widthCanvas * 0.4;
+        this.x = widthCanvas * 0.05;
         this.loadImage(this['IMAGES_'+ this.statusType][0]);
         // this.setImageCache(this['IMAGES_' + statusType]);
         this.y = y;
     }
 
 
-    updateStatusbar(statusType, statusValue) {
+    updateStatusBar(statusType, statusValue) {
+        if(this.statusType != 'HEALTH') {
+            return;
+        }
         this.statusType = statusType;
         this.statusValue = statusValue;
         let index;
