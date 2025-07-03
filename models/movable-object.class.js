@@ -8,7 +8,7 @@ class MovableObject extends DrawableObject {
     borderHeight;
     speedY = 0;
     acceleration = 2.5;
-    energy = 100;
+    health = 100;
     lastHit = 0;
 
 
@@ -22,18 +22,6 @@ class MovableObject extends DrawableObject {
         this.y = this.groundY;
     }
 
-
-    drawRectangle(ctx) {
-        if(this instanceof Character || this instanceof Chicken || this instanceof Endboss) {
-            this.borderCoordinates();
-            ctx.beginPath();
-            ctx.rect(this.borderX, this.borderY, this.borderWidth, this.borderHeight);
-            ctx.stroke();
-            ctx.lineWidth = '5';
-            ctx.strokeStyle = 'orange';
-        }
-    }
-    
     
     borderCoordinates() {
         this.borderX = this.x;
@@ -77,7 +65,7 @@ class MovableObject extends DrawableObject {
 
     applyGravity() {
         setInterval(() => {
-            if(this.isAboveGround() || (this.speedY > 0)) {
+            if(this.isAboveGround() || this instanceof ThrowableObject || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             }
@@ -110,7 +98,7 @@ class MovableObject extends DrawableObject {
 
 
     isDead() {
-        if(this.energy <= 0) {
+        if(this.health <= 0) {
             if(this instanceof Character) {
                 gameStatus = 0;
             }
@@ -120,11 +108,11 @@ class MovableObject extends DrawableObject {
     }
 
 
-    isHitHandling(enemy) {
-        this.energy -= enemy.strength;
-        console.log('character.energy', this.energy);
-        if(this.energy <= 0) {
-            this.energy = 0;
+    hitHandling(enemy) {
+        this.health -= enemy.strength;
+        console.log('character.health', this.health);
+        if(this.health <= 0) {
+            this.health = 0;
         } else {
             this.lastHit = new Date().getTime();
         }

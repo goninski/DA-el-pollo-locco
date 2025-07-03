@@ -5,5 +5,6 @@ class Keystrokes {
     KEY_UP = false;
     KEY_DOWN = false;
     KEY_SPACE = false;
+    KEY_D = false;
     
 };

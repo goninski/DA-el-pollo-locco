@@ -34,7 +34,19 @@ class DrawableObject {
 
 
     consoleObjectPosition() {
-         console.log(this.objectName, 'x:' + this.x);
+         console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
+    }
+
+    
+    drawRectangle(ctx) {
+        if(this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject) {
+            this.borderCoordinates();
+            ctx.beginPath();
+            ctx.rect(this.borderX, this.borderY, this.borderWidth, this.borderHeight);
+            ctx.stroke();
+            ctx.lineWidth = '5';
+            ctx.strokeStyle = 'orange';
+        }
     }
 
 }

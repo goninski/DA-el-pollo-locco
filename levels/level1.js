@@ -34,6 +34,14 @@ const level1 = new Level(
         new Chicken(),
         new Endboss(),    
     ],
+    [
+        new ThrowableObject(),    
+    ],
+    [
+        new StatusBar('HEALTH', 20),    
+        new StatusBar('COINS', 60),    
+        new StatusBar('BOTTLES', 100),    
+    ],
 );
 
 

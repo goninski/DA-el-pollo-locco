@@ -8,6 +8,8 @@ class World {
     backgrounds = level1.backgrounds;
     clouds = level1.clouds;
     enemies = level1.enemies;
+    throwables = level1.throwables;
+    statusbars = level1.statusbar;
     character = new Character();
 
     constructor(canvas, keystrokes) {
@@ -34,6 +36,8 @@ class World {
         this.drawObjects(this.clouds);
         this.drawObject(this.character);
         this.drawObjects(this.enemies);
+        this.drawObjects(this.throwables);
+        this.drawObjects(this.statusbars);
 
         this.ctx.translate(-this.screenTranslateX, 0);
 
@@ -77,7 +81,12 @@ class World {
             this.level.enemies.forEach((enemy) => {
                 if(this.character.isHit(enemy)) {
                     // console.log('collision with', enemy.constructor.name, 'strength:', enemy.strength);
-                    this.character.isHitHandling(enemy);
+                    this.character.hitHandling(enemy);
+                    console.log(this.statusbars);
+                    console.log(this.character.health);
+                    if(this.statusbars.statusType == 'HEALTH') {
+                        this.statusbars.updateStatusbar('HEALTH', this.character.health);
+                    }
                 };
             });
         }, 200);
