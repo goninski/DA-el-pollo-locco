@@ -7,6 +7,7 @@ class DrawableObject {
     imageCache = {};
     currentImage = 0;
     objectName;
+    skipDrawing = false;
 
 
     constructor() {
@@ -33,13 +34,26 @@ class DrawableObject {
     }
 
 
+    setRandomPosX() {
+        // this.x = (widthCanvas * 1.8) * (Math.random() * 2 -1);
+        this.x = (widthCanvas * 1.5) * (Math.random() * 2);
+    }
+
+
+    setWalkGroundY() {
+        this.groundY = heightCanvas - this.height - walkOffset;
+        this.y = this.groundY;
+    }
+
+
     consoleObjectPosition() {
          console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
     }
 
     
     drawRectangle(ctx) {
-        if(this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject) {
+        if(this instanceof MovableObject && !(this instanceof Clouds) ) {
+        // if(this instanceof Character || this instanceof Chicken || this instanceof Endboss ) {
             this.borderCoordinates();
             ctx.beginPath();
             ctx.rect(this.borderX, this.borderY, this.borderWidth, this.borderHeight);
@@ -48,5 +62,6 @@ class DrawableObject {
             ctx.strokeStyle = 'orange';
         }
     }
+
 
 }

@@ -2,12 +2,16 @@ let chickenId = 0;
 
 class Chicken extends MovableObject {
     height = this.width / 1.02;
-    strength = 3;
+    statusValue = 3;
 
     IMAGES_WALKING = [
         imgPathBase + '3_enemies_chicken/chicken_normal/1_walk/1_w.png',
         imgPathBase + '3_enemies_chicken/chicken_normal/1_walk/2_w.png',
         imgPathBase + '3_enemies_chicken/chicken_normal/1_walk/3_w.png',
+    ];
+
+    IMAGES_DEAD = [
+        imgPathBase + '3_enemies_chicken/chicken_normal/2_dead/dead.png',
     ];
 
 
@@ -21,12 +25,35 @@ class Chicken extends MovableObject {
         this.setWalkGroundY();
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
+        this.setImageCache(this.IMAGES_DEAD);
 
-        this.movementAnimationAuto(this.IMAGES_WALKING, 200);
+        // this.movementAnimationAuto(this.IMAGES_WALKING, 200);
+        // this.moveLeftAuto(0.15, 0.45, false);
 
-        this.moveLeftAuto(0.15, 0.45, false);
-
+        this.animate();
     }
+
+
+    animate() {
+
+        intervalId = setInterval(() => {
+            if(this.isDead()) {
+                console.log('isDead', this.healthStatus);
+                this.deadAnimation();
+            } else {
+                this.walkingAnimation();
+            }
+        }, 200);  
+        stoppableIntervals.push(intervalId);
+
+        intervalId = setInterval(() => {
+            if(!this.isDead()) {
+                this.moveLeft(0.15, 0.45, false);
+            }
+        }, 1000 / 60); 
+        stoppableIntervals.push(intervalId);
+    }
+
 
 
 }

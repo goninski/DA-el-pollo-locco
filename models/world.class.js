@@ -8,9 +8,9 @@ class World {
     backgrounds = level1.backgrounds;
     clouds = level1.clouds;
     enemies = level1.enemies;
-    throwables = level1.throwables;
+    bottles = level1.bottles;
+    coins = level1.coins;
     statusBars = level1.statusBars;
-    // statusBar = new StatusBar('HEALTH', 50);
     character = new Character();
 
     constructor(canvas, keystrokes) {
@@ -33,15 +33,14 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.translate(this.screenTranslateX, 0);
-
         this.drawObjects(this.backgrounds);
         this.drawObjects(this.clouds);
+        this.drawObjects(this.bottles);
+        this.drawObjects(this.coins);
         this.drawObject(this.character);
         this.drawObjects(this.enemies);
-        this.drawObjects(this.throwables);
         
         this.ctx.translate(-this.screenTranslateX, 0);
-        // this.drawObject(this.statusBar);
         this.drawObjects(this.statusBars);
 
         // automatic recall of draw (speed depending on gpu performance)
@@ -81,27 +80,76 @@ class World {
 
     checkCharacterCollitions() {
         let intervalId = setInterval(() => {
-            this.level.enemies.forEach((enemy) => {
-                if(this.character.isHit(enemy)) {
-                    console.log('collision with', enemy.constructor.name, 'strength:', enemy.strength);
-                    this.character.hitHandling(enemy);
-                    let statusBarHealth = this.statusBars[0];
-                    statusBarHealth.updateStatusBar(this.character.health);
-                };
-            });
-        }, 200);
+
+            // console.log('screenTranslateX:', this.screenTranslateX);
+            // console.log('character x:', this.character.x)
+            this.checkCharacterCoinCollection();
+            this.checkCharacterBottleCollection();
+            // this.checkCharacterStrikes();
+            this.checkCharacterEnemyCollition();
+
+        }, 500);
         stoppableIntervals.push(intervalId);
     }
 
 
-    isGameOver(){
-        if(gameStatus === 0) {
-            let timePassed = new Date().getTime() - this.character.lastHit;
-            return timePassed >= 3000;
-        }
+
+    checkCharacterCoinCollection() {
+        this.level.coins.forEach((obj) => {
+            if(obj.hits > 0 || this.character.coinStatus >= 100) return;
+            if(this.character.isHit(obj)) {
+                console.log('collision with', obj.constructor.name, 'value:', obj.statusValue);
+                console.log('character.coinStatus:', this.character.coinStatus);
+                this.character.collectCoin(obj);
+                this.statusBars[1].updateStatusBar(this.character.coinStatus);
+            };
+        });
     }
 
 
+    checkCharacterBottleCollection() {
+        this.level.bottles.forEach((obj) => {
+            if(obj.hits > 0 || this.character.bottleStatus >= 100) return;
+            if(this.character.isHit(obj)) {
+                // console.log('collection of:', obj.constructor.name, 'value:', obj.statusValue);
+                // console.log('character.bottleStatus:', this.character.bottleStatus);
+                this.character.collectBottle(obj);
+                this.statusBars[2].updateStatusBar(this.character.bottleStatus);
+            };
+        });
+    }
+    
+
+    checkCharacterStrikes() {
+        this.level.enemies.forEach((obj) => {
+            if(this.character.isHit(obj)) {
+                // console.log('collection of:', obj.constructor.name, 'value:', obj.statusValue);
+                // console.log('character.healthStatus:', this.character.healthStatus);
+                this.character.isHitHandling(obj);
+                // this.statusBars[0].updateStatusBar(this.character.healthStatus);
+            };
+        });
+    }
+
+
+    checkCharacterEnemyCollition() {
+        this.level.enemies.forEach((enemy) => {
+            if(enemy.healthStatus <= 0 || this.character.healthStatus <= 0) return;
+            if(enemy.isHitFromAbove(this.character)) {
+                console.log(enemy.objectName, 'isHitFromAbove:', 'healthStatus:', enemy.healthStatus);
+                enemy.isHitFromAboveHandling(this.character);
+                console.log(enemy.objectName, 'healthStatus:', enemy.healthStatus);
+                // this.statusBars[0].updateStatusBar(enemy.healthStatus);
+            } else if(this.character.isHit(enemy)) {
+                // console.log('isHit with:', enemy.constructor.name, 'value:', enemy.statusValue);
+                // console.log('character.healthStatus:', this.character.healthStatus);
+                this.character.isHitHandling(enemy);
+                this.statusBars[0].updateStatusBar(this.character.healthStatus);
+            }
+        });
+    }
+
+    
     isGameOver(){
         if(gameStatus === 0) {
             let timePassed = new Date().getTime() - this.character.lastHit;
