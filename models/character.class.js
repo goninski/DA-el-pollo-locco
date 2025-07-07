@@ -8,7 +8,9 @@ class Character extends MovableObject {
     speed = 10;
     coinStatus = 0;
     bottleStatus = 0;
-
+    coins = [];
+    bottles = [];
+        
     IMAGES_IDLE = [
         imgPathBase + '2_character_pepe/1_idle/idle/I-1.png',
         imgPathBase + '2_character_pepe/1_idle/idle/I-2.png',
@@ -86,14 +88,16 @@ class Character extends MovableObject {
         this.applyGravity();
 
         this.animate();
+        // this.intervalForMovings(1000 / 60);
+        // this.intervalForWalking(50);
+        // this.intervalForJumpings(100);
 
     }
 
 
     animate() {
-
         intervalId = setInterval(() => {
-            this.movings();
+            this.movingsOnKey();
         }, 1000 / 60);
         stoppableIntervals.push(intervalId);
 
@@ -120,10 +124,15 @@ class Character extends MovableObject {
         }, 100); 
         stoppableIntervals.push(intervalId);
 
-    }
+        intervalId = setInterval(() => {
+            this.throwBottle();
+        }, 100); 
+        stoppableIntervals.push(intervalId);
 
-    
-    movings() {
+    }
+   
+
+    movingsOnKey() {
         if(this.world.keystrokes.KEY_RIGHT) {
             this.otherDirection = false;
             this.moveRight(this.speed);
@@ -133,8 +142,11 @@ class Character extends MovableObject {
             this.moveLeft(this.speed);
         }
         else if(this.world.keystrokes.KEY_SPACE  && !this.isAboveGround()) {
-            this.jump(30 );
+            this.jump(30);
         }
+        // else if(this.world.keystrokes.KEY_D) {
+        //     this.throwBottle();
+        // }
         this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
         // this.consoleObjectPosition()
     }
@@ -160,6 +172,75 @@ class Character extends MovableObject {
             this.x += speed;
         }
     }
+
+
+    collectCoin(coin) {
+        coin.collectObject();
+        this.coins.push(coin);
+        this.coinStatus += coin.statusValue;
+    }
+
+
+    collectBottle(bottle) {
+        bottle.collectObject();
+        this.bottles.push(bottle);
+        this.bottleStatus += bottle.statusValue;
+        console.log(this.bottles);
+    }
+
+
+    throwBottle() {
+        // console.log(this.bottles);
+        if(this.bottles.length <= 0) return;
+        if(this.world.keystrokes.KEY_D) {
+            let bottle = this.bottles[0];
+            bottle.x = this.x;
+            bottle.y = this.y;
+            bottle.speedY = 5;
+            bottle.applyGravity()
+            setInterval(() => {
+                bottle.x += 10;
+            }, 25);
+            this.bottles.shift();
+            // console.log(this.bottles);
+        }
+    };
+
+
+    
+    // intervalForMovings(speed) {
+    //     intervalId = setInterval(() => {
+    //         this.movingsOnKey();
+    //     }, speed);
+    //     stoppableIntervals.push(intervalId);
+    // }
+
+    // intervalForWalking(speed) {
+    //     intervalId = setInterval(() => {
+    //         if(this.world.isGameOver()) {
+    //             // return stopGame();
+    //         }
+    //         if(!this.isAboveGround()) {
+    //             if(this.isDead()) {
+    //                 this.deadAnimation();
+    //             } else if(this.isHurt()) {
+    //                 this.hurtAnimation();
+    //             } else {
+    //                 this.walkingAnimationOnKey();
+    //             }
+    //         }
+    //     }, 50); 
+    //     stoppableIntervals.push(intervalId);
+    // }
+
+    // intervalForJumping(speed) {
+    //     intervalId = setInterval(() => {
+    //         if(this.isAboveGround()) {
+    //             this.jumpingAnimation();    
+    //         }
+    //     }, speed); 
+    //     stoppableIntervals.push(intervalId);
+    // }
 
 
 }

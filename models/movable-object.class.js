@@ -13,7 +13,6 @@ class MovableObject extends DrawableObject {
     hits = 0;
     lastHit = 0;
 
-
     constructor() {
         super();
     }
@@ -96,24 +95,7 @@ class MovableObject extends DrawableObject {
         this.speedY = speedY;
     }
 
-
-    isAboveGround() {
-        return this.y < this.groundY;
-    }
-
-
-    collectCoin(coin) {
-        coin.collectObject(this);
-        this.coinStatus += coin.statusValue;
-    }
-
-
-    collectBottle(bottle) {
-        bottle.collectObject(this);
-        this.bottleStatus += bottle.statusValue;
-    }
-
-
+    
     collectObject() {
         this.hits++;
         this.x = 0;
@@ -122,40 +104,69 @@ class MovableObject extends DrawableObject {
     }
 
 
-    isHit(enemy) {
-        this.borderCoordinates();
-        return (this.borderX + this.borderWidth > enemy.borderX) && (this.borderY + this.borderHeight > enemy.borderY) && (this.borderX < enemy.borderX) && (this.borderY < enemy.borderY + enemy.borderY + enemy.borderHeight);
+    isAboveGround() {
+        return this.y < this.groundY;
     }
 
 
-    isHitFromAbove(striker) {
+    touchesObject(obj) {
         this.borderCoordinates();
-        let buffer = (widthCanvas / 20) * -1 ;
-         striker.borderCoordinates();
-        if(!striker.isAboveGround() || (striker.borderY + striker.borderHeight + buffer < this.borderY) || striker.borderX + striker.borderWidth + buffer < this.borderX || striker.borderX + buffer > this.borderX + this.borderWidth) {
+        return (this.borderX + this.borderWidth > obj.borderX) && (this.borderY + this.borderHeight > obj.borderY) && (this.borderX < obj.borderX) && (this.borderY < obj.borderY + obj.borderY + obj.borderHeight);
+    }
+
+
+    isHit(obj) {
+        this.touchesObject(obj);
+    }
+
+
+    isHitFromAbove(obj, buffer = 1) {
+        this.borderCoordinates();
+        obj.borderCoordinates();
+        buffer = (widthCanvas / buffer) * -1 ;
+        if(!obj.isAboveGround() || (obj.borderY + obj.borderHeight + buffer < this.borderY) || obj.borderX + obj.borderWidth + buffer < this.borderX || obj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
         return true;
     }
 
     
-    isHitFromAboveHandling(striker) {
-        // console.log(this.objectName);
-        striker.statusValue = 100;
-        if(this instanceof Endboss) {
-            striker.statusValue = 25;
-        }
-        this.isHitHandling(striker);
+    isHitFromThrowable(obj, buffer = 1) {
+        buffer = (widthCanvas / buffer) * -1 ;
+        this.borderCoordinates();
+        // obj.borderCoordinates();
+        if(!obj.isAboveGround() || (obj.borderY + obj.borderHeight + buffer < this.borderY) || obj.borderX + obj.borderWidth + buffer < this.borderX || obj.borderX + buffer > this.borderX + this.borderWidth) {
+            return false;
+        };
+        return true;
     }
 
     
-    isHitHandling(obj) {
+    hitHandling(obj) {
         this.healthStatus -= obj.statusValue;
         if(this.healthStatus <= 0) {
             this.healthStatus = 0;
         } else {
             this.lastHit = new Date().getTime();
         }
+    }
+
+
+    hitHandlingFromAbove(obj) {
+        obj.statusValue = 100;
+        if(this instanceof Endboss) {
+            obj.statusValue = 25;
+        }
+        this.isHitHandling(obj);
+    }
+
+
+    hitHandlingFromThrowable(obj) {
+        obj.statusValue = 100;
+        if(this instanceof Endboss) {
+            obj.statusValue = 25;
+        }
+        this.isHitHandling(obj);
     }
 
 
@@ -172,7 +183,7 @@ class MovableObject extends DrawableObject {
                 return true;
             }
             if(this instanceof Character) {
-                gameStatus = 0;
+                // gameStatus = 0;
             }
             let timePassed = new Date().getTime() - this.lastHit;
             return timePassed <= 3000;
