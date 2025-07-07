@@ -4,6 +4,7 @@ class StatusBar extends DrawableObject {
     color = 'orange';
     statusType;
     statusValue = 0;
+    statusReverse = false;
 
 
     IMAGES_HEALTH = [
@@ -38,36 +39,41 @@ class StatusBar extends DrawableObject {
         super();
         this.statusType = statusType;
         this.x = widthCanvas * 0.05;
+        this.statusReverse = this.statusType === 'HEALTH' ? true : false;
         this.loadImage(this['IMAGES_'+ this.statusType][0]);
         // this.setImageCache(this['IMAGES_' + statusType]);
         this.y = y;
     }
 
 
-    updateStatusBar(statusType, statusValue) {
-        if(this.statusType != 'HEALTH') {
-            return;
-        }
-        this.statusType = statusType;
+    updateStatusBar(statusValue) {
         this.statusValue = statusValue;
-        let index;
-        if(this.statusType == 'HEALTH'){
-            index = this.resolveImgIndexHealth(this.statusValue);
-        } else {
-            index = this.resolveImgIndex(this.statusValue);
-        }
-        console.log(this['IMAGES_'+ this.statusType][index]);
+        let index = this.resolveImgIndex(this.statusValue);
+        // console.log(this['IMAGES_'+ this.statusType][index]);
         this.loadImage(this['IMAGES_'+ this.statusType][index]);
-    }
+}
 
 
     resolveImgIndex(statusValue) {
-        return 0;
+        if(this.statusReverse) return this.resolveImgIndexReverse(statusValue);
+        if(statusValue < 20) {
+            return 0;
+        } else if(statusValue < 40) {
+            return 1;
+        } else if(statusValue < 60) {
+            return 2;
+        } else if(statusValue < 80) {
+            return 3;
+        } else if(statusValue < 100) {
+            return 4;
+        } else {
+            return 5;
+        }
     }
 
 
-    resolveImgIndexHealth(statusValue) {
-        if(statusValue == 100) {
+    resolveImgIndexReverse(statusValue) {
+        if(statusValue > 80) {
             return 0;
         } else if(statusValue > 60) {
             return 1;
@@ -77,10 +83,16 @@ class StatusBar extends DrawableObject {
             return 3;
         } else if(statusValue > 0) {
             return 4;
-        } else if(statusValue == 0) {
+        } else {
             return 5;
         }
     }
-        
+
+
+    // updateStatusBarImage(statusType, index) {
+    //     console.log(this['IMAGES_'+ statusType][index]);
+    //     this.loadImage(this['IMAGES_'+ statusType][index]);
+    // }
+
 
 }

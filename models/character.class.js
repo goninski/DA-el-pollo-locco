@@ -71,7 +71,7 @@ class Character extends MovableObject {
 
         intervalId = setInterval(() => {
             if(this.world.isGameOver()) {
-                return stopGame();
+                // return stopGame();
             }
             if(!this.isAboveGround()) {
                 if(this.isDead()) {

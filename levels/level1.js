@@ -37,11 +37,11 @@ const level1 = new Level(
     [
         new ThrowableObject(),    
     ],
-    // [
-    //     new StatusBar('HEALTH', 20),    
-    //     // new StatusBar('COINS', 60),    
-    //     // new StatusBar('BOTTLES', 100),    
-    // ],
+    [
+        new StatusBar('HEALTH', 20),    
+        new StatusBar('COINS', 60),    
+        new StatusBar('BOTTLES', 100),    
+    ],
 );
 
 

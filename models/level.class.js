@@ -15,12 +15,12 @@ class Level {
     throwables;
     statusBars;
 
-    constructor(backgrounds, clouds, enemies, throwables) {
+    constructor(backgrounds, clouds, enemies, throwables, statusBars) {
         this.backgrounds = backgrounds;
         this.clouds = clouds;
         this.enemies = enemies;
         this.throwables = throwables;
-        // this.statusBars = statusBars;
+        this.statusBars = statusBars;
     }
 
 }
