@@ -83,12 +83,12 @@ class World {
 
             // console.log('screenTranslateX:', this.screenTranslateX);
             // console.log('character x:', this.character.x)
+            this.checkCharacterEnemyCollition();
             this.checkCharacterCoinCollection();
             this.checkCharacterBottleCollection();
             // this.checkCharacterStrikes();
-            this.checkCharacterEnemyCollition();
 
-        }, 500);
+        }, 100);
         stoppableIntervals.push(intervalId);
     }
 

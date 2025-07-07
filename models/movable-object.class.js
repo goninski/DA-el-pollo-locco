@@ -130,8 +130,9 @@ class MovableObject extends DrawableObject {
 
     isHitFromAbove(striker) {
         this.borderCoordinates();
-        striker.borderCoordinates();
-        if(!striker.isAboveGround() || (striker.borderY + striker.borderHeight < this.borderY) || striker.borderX + striker.borderWidth < this.borderX || striker.borderX > this.borderX + this.borderWidth) {
+        let buffer = (widthCanvas / 20) * -1 ;
+         striker.borderCoordinates();
+        if(!striker.isAboveGround() || (striker.borderY + striker.borderHeight + buffer < this.borderY) || striker.borderX + striker.borderWidth + buffer < this.borderX || striker.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
         return true;
