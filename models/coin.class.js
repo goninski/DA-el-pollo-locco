@@ -22,7 +22,7 @@ class Coin extends MovableObject {
         this.setRandomPosX();
         this.setWalkGroundY();
         this.y = this.groundY - (Math.floor(Math.random() * (heightCanvas * 0.25)));
-        // this.setBorderCoordinates();
+        this.setBorderCoordinates();
         // console.log(this.y);
 
         let index = Math.floor(Math.random() * 2);

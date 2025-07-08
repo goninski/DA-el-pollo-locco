@@ -111,7 +111,7 @@ class MovableObject extends DrawableObject {
 
 
     touchesObject(counterPartObj) {
-        // this.setBorderCoordinates();
+        this.setBorderCoordinates();
         return (this.borderX + this.borderWidth > counterPartObj.borderX) && (this.borderY + this.borderHeight > counterPartObj.borderY) && (this.borderX < counterPartObj.borderX) && (this.borderY < counterPartObj.borderY + counterPartObj.borderY + counterPartObj.borderHeight);
     }
 
@@ -122,7 +122,7 @@ class MovableObject extends DrawableObject {
 
 
     isHitFromAbove(fromObj, buffer = 20) {
-        // this.setBorderCoordinates();
+        this.setBorderCoordinates();
         buffer = (widthCanvas / buffer) * -1 ;
         if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
@@ -131,8 +131,8 @@ class MovableObject extends DrawableObject {
     }
 
     
-    isHitFromThrowable(throwableObj, buffer = 1) {
-        // this.setBorderCoordinates();
+    isHitFromBottle(throwableObj, buffer = 1) {
+        this.setBorderCoordinates();
         buffer = (widthCanvas / buffer) * -1 ;
         if((throwableObj.borderY + throwableObj.borderHeight + buffer < this.borderY) || throwableObj.borderX + throwableObj.borderWidth + buffer < this.borderX || throwableObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;

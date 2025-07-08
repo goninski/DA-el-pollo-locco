@@ -95,9 +95,9 @@ class Character extends MovableObject {
 
     animate() {
 
-        // interval for key observer
+        // interval for fast key observer
         intervalId = setInterval(() => {
-            this.keyObserver();
+            this.keyObserverFast();
         }, 1000 / 60);
         this.intervals.push(intervalId);
 
@@ -115,10 +115,16 @@ class Character extends MovableObject {
         }, 100); 
         this.intervals.push(intervalId);
 
+        // interval for slow key observer
+        intervalId = setInterval(() => {
+            this.keyObserverSlow();
+        }, 100);
+        this.intervals.push(intervalId);
+
     }
 
 
-    keyObserver() {
+    keyObserverFast() {
         if(this.world.keystrokes.KEY_RIGHT) {
             this.otherDirection = false;
             this.moveRight(this.speed);
@@ -130,11 +136,18 @@ class Character extends MovableObject {
         else if(this.world.keystrokes.KEY_SPACE  && !this.isAboveGround()) {
             this.jump(30);
         }
-        else if(this.world.keystrokes.KEY_D) {
-            this.throwBottle();
-        }
         this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
         // this.consoleObjectPosition()
+    }
+
+
+    keyObserverSlow() {
+        if(this.world.keystrokes.KEY_B) {
+            this.throwBottle();
+        } 
+        else if(this.world.keystrokes.KEY_C) {
+            this.throwCoin();
+        }
     }
 
 
@@ -177,6 +190,7 @@ class Character extends MovableObject {
         coin.collectObject();
         this.coins.push(coin);
         this.coinStatus += coin.statusValue;
+        console.log(this.coins);
     }
 
 
@@ -189,20 +203,31 @@ class Character extends MovableObject {
 
 
     throwBottle() {
-        // console.log(this.bottles);
         if(this.bottles.length <= 0) return;
-        if(this.world.keystrokes.KEY_D) {
-            let bottle = this.bottles[0];
-            bottle.x = this.x;
-            bottle.y = this.y;
-            bottle.speedY = 5;
-            bottle.applyGravity()
-            setInterval(() => {
-                bottle.x += 10;
-            }, 25);
-            this.bottles.shift();
-            // console.log(this.bottles);
-        }
-    };
+        let bottle = this.bottles[0];
+        bottle.x = this.x;
+        bottle.y = this.y;
+        bottle.speedY = 5;
+        bottle.applyGravity()
+        this.bottles.shift();
+        this.bottleStatus -= bottle.statusValue;
+        setInterval(() => bottle.x += 10, 25);
+        console.log(this.bottles);
+        console.log(this.bottleStatus);
+    }
 
+
+    throwCoin() {
+        if(this.coins.length <= 0) return;
+        let coin = this.coins[0];
+        coin.x = this.x;
+        coin.y = this.y;
+        coin.speedY = 5;
+        coin.applyGravity()
+        this.coins.shift();
+        this.coinStatus -= coin.statusValue;
+        setInterval(() => coin.x += 10, 25);
+        console.log(this.coins);
+        console.log(this.coinStatus);
+    }
 }

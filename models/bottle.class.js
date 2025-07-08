@@ -36,7 +36,7 @@ class Bottle extends ThrowableObject {
 
         this.setRandomPosX();
         this.setWalkGroundY();
-        // this.setBorderCoordinates();
+        this.setBorderCoordinates();
 
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);

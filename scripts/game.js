@@ -50,8 +50,11 @@ function updateKeystrokesObj(event) {
         case 'ArrowDown':
             keystrokes.KEY_DOWN = true;
             break
-        case 'd':
-            keystrokes.KEY_D = true;
+        case 'b':
+            keystrokes.KEY_B = true;
+            break;
+        case 'c':
+            keystrokes.KEY_C = true;
             break;
         case ' ':
             keystrokes.KEY_SPACE = true;
@@ -74,8 +77,11 @@ function resetKeystrokesObj(event) {
         case 'ArrowDown':
             keystrokes.KEY_DOWN = false;
             break
-        case 'd':
-            keystrokes.KEY_D = false;
+        case 'b':
+            keystrokes.KEY_B = false;
+         break
+        case 'c':
+            keystrokes.KEY_C = false;
          break
         case ' ':
             keystrokes.KEY_SPACE = false;
