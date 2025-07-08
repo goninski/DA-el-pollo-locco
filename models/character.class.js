@@ -80,6 +80,7 @@ class Character extends MovableObject {
         super();
         this.x = widthCanvas * 0.05;
         this.setWalkGroundY();
+        // this.setBorderCoordinates();
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_JUMPING);
@@ -88,51 +89,36 @@ class Character extends MovableObject {
         this.applyGravity();
 
         this.animate();
-        // this.intervalForMovings(1000 / 60);
-        // this.intervalForWalking(50);
-        // this.intervalForJumpings(100);
-
+        this.saveIntervalsGlobally();
     }
 
 
     animate() {
+
+        // interval for key observer
         intervalId = setInterval(() => {
-            this.movingsOnKey();
+            this.keyObserver();
         }, 1000 / 60);
-        stoppableIntervals.push(intervalId);
+        this.intervals.push(intervalId);
 
+        // interval for walking/hurt/dead animation
         intervalId = setInterval(() => {
-            if(this.world.isGameOver()) {
-                // return stopGame();
-            }
-            if(!this.isAboveGround()) {
-                if(this.isDead()) {
-                    this.deadAnimation();
-                } else if(this.isHurt()) {
-                    this.hurtAnimation();
-                } else {
-                    this.walkingAnimationOnKey();
-                }
-            }
+            this.animationsOnGround();
         }, 50); 
-        stoppableIntervals.push(intervalId);
+        this.intervals.push(intervalId);
 
+        // interval for jumping animation (slower)
         intervalId = setInterval(() => {
             if(this.isAboveGround()) {
                 this.jumpingAnimation();    
             }
         }, 100); 
-        stoppableIntervals.push(intervalId);
-
-        intervalId = setInterval(() => {
-            this.throwBottle();
-        }, 100); 
-        stoppableIntervals.push(intervalId);
+        this.intervals.push(intervalId);
 
     }
-   
 
-    movingsOnKey() {
+
+    keyObserver() {
         if(this.world.keystrokes.KEY_RIGHT) {
             this.otherDirection = false;
             this.moveRight(this.speed);
@@ -144,18 +130,31 @@ class Character extends MovableObject {
         else if(this.world.keystrokes.KEY_SPACE  && !this.isAboveGround()) {
             this.jump(30);
         }
-        // else if(this.world.keystrokes.KEY_D) {
-        //     this.throwBottle();
-        // }
+        else if(this.world.keystrokes.KEY_D) {
+            this.throwBottle();
+        }
         this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
         // this.consoleObjectPosition()
     }
 
 
-    walkingAnimationOnKey() {
+    animationsOnGround() {
+        if(!this.isAboveGround()) {
+            if(this.isDead()) {
+                this.deadHandling();
+            } else if(this.isHurt()) {
+                this.hurtHandling();
+            } else {
+                this.walkingAnimation();
+            }
+        }
+    }
+   
+
+    walkingAnimation() {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
-            this.walkingAnimation();
+            super.walkingAnimation();
         }
     }
 
@@ -205,42 +204,5 @@ class Character extends MovableObject {
             // console.log(this.bottles);
         }
     };
-
-
-    
-    // intervalForMovings(speed) {
-    //     intervalId = setInterval(() => {
-    //         this.movingsOnKey();
-    //     }, speed);
-    //     stoppableIntervals.push(intervalId);
-    // }
-
-    // intervalForWalking(speed) {
-    //     intervalId = setInterval(() => {
-    //         if(this.world.isGameOver()) {
-    //             // return stopGame();
-    //         }
-    //         if(!this.isAboveGround()) {
-    //             if(this.isDead()) {
-    //                 this.deadAnimation();
-    //             } else if(this.isHurt()) {
-    //                 this.hurtAnimation();
-    //             } else {
-    //                 this.walkingAnimationOnKey();
-    //             }
-    //         }
-    //     }, 50); 
-    //     stoppableIntervals.push(intervalId);
-    // }
-
-    // intervalForJumping(speed) {
-    //     intervalId = setInterval(() => {
-    //         if(this.isAboveGround()) {
-    //             this.jumpingAnimation();    
-    //         }
-    //     }, speed); 
-    //     stoppableIntervals.push(intervalId);
-    // }
-
 
 }

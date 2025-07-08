@@ -54,7 +54,7 @@ class DrawableObject {
     drawRectangle(ctx) {
         if(this instanceof MovableObject && !(this instanceof Clouds) ) {
         // if(this instanceof Character || this instanceof Chicken || this instanceof Endboss ) {
-            this.borderCoordinates();
+            this.setBorderCoordinates();
             ctx.beginPath();
             ctx.rect(this.borderX, this.borderY, this.borderWidth, this.borderHeight);
             ctx.stroke();

@@ -23,6 +23,7 @@ class Chicken extends MovableObject {
 
         this.x = (widthCanvas * 0.8) + (Math.random() * widthCanvas * 2);
         this.setWalkGroundY();
+        // this.setBorderCoordinates();
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_DEAD);
@@ -31,6 +32,7 @@ class Chicken extends MovableObject {
         // this.moveLeftAuto(0.15, 0.45, false);
 
         this.animate();
+        this.saveIntervalsGlobally();
     }
 
 
@@ -39,24 +41,24 @@ class Chicken extends MovableObject {
         intervalId = setInterval(() => {
             if(this.isDead()) {
                 console.log('isDead', this.healthStatus);
-                this.deadAnimation();
+                this.deadHandling();
             }
         }, 500);  
-        stoppableIntervals.push(intervalId);
+        this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
             if(!this.isDead()) {
                 this.walkingAnimation();
             }
         }, 200);  
-        stoppableIntervals.push(intervalId);
+        this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
             if(!this.isDead()) {
                 this.moveLeft(0.15, 0.45, false);
             }
         }, 1000 / 60); 
-        stoppableIntervals.push(intervalId);
+        this.intervals.push(intervalId);
     }
 
 

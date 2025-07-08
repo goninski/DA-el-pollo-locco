@@ -1,7 +1,5 @@
 class ThrowableObject extends MovableObject {
 
-    IMAGES_THROW = [];
-
 
     constructor() {
         super();

@@ -12,13 +12,14 @@ class MovableObject extends DrawableObject {
     healthStatus = 100;
     hits = 0;
     lastHit = 0;
+    intervals = [];
 
     constructor() {
         super();
     }
 
 
-    borderCoordinates() {
+    setBorderCoordinates() {
         this.borderX = this.x;
         this.borderY = this.y;
         this.borderWidth = this.width;
@@ -77,7 +78,7 @@ class MovableObject extends DrawableObject {
             this.x -= speed;
             consoleX ? this.consoleObjectPosition() : null;
         }, 1000 / 60);
-        stoppableIntervals.push(intervalId);
+        this.intervals.push(intervalId);
     }
 
 
@@ -96,46 +97,44 @@ class MovableObject extends DrawableObject {
     }
 
     
-    collectObject() {
-        this.hits++;
-        this.x = 0;
-        this.y = heightCanvas + this.height;
-        this.borderCoordinates();
-    }
-
-
     isAboveGround() {
         return this.y < this.groundY;
     }
 
 
-    touchesObject(obj) {
-        this.borderCoordinates();
-        return (this.borderX + this.borderWidth > obj.borderX) && (this.borderY + this.borderHeight > obj.borderY) && (this.borderX < obj.borderX) && (this.borderY < obj.borderY + obj.borderY + obj.borderHeight);
+    collectObject() {
+        this.hits++;
+        this.x = 0;
+        this.y = heightCanvas + this.height;
+        this.setBorderCoordinates();
     }
 
 
-    isHit(obj) {
-        this.touchesObject(obj);
+    touchesObject(counterPartObj) {
+        // this.setBorderCoordinates();
+        return (this.borderX + this.borderWidth > counterPartObj.borderX) && (this.borderY + this.borderHeight > counterPartObj.borderY) && (this.borderX < counterPartObj.borderX) && (this.borderY < counterPartObj.borderY + counterPartObj.borderY + counterPartObj.borderHeight);
     }
 
 
-    isHitFromAbove(obj, buffer = 1) {
-        this.borderCoordinates();
-        obj.borderCoordinates();
+    isHit(fromObj) {
+        return this.touchesObject(fromObj);
+    }
+
+
+    isHitFromAbove(fromObj, buffer = 20) {
+        // this.setBorderCoordinates();
         buffer = (widthCanvas / buffer) * -1 ;
-        if(!obj.isAboveGround() || (obj.borderY + obj.borderHeight + buffer < this.borderY) || obj.borderX + obj.borderWidth + buffer < this.borderX || obj.borderX + buffer > this.borderX + this.borderWidth) {
+        if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
         return true;
     }
 
     
-    isHitFromThrowable(obj, buffer = 1) {
+    isHitFromThrowable(throwableObj, buffer = 1) {
+        // this.setBorderCoordinates();
         buffer = (widthCanvas / buffer) * -1 ;
-        this.borderCoordinates();
-        // obj.borderCoordinates();
-        if(!obj.isAboveGround() || (obj.borderY + obj.borderHeight + buffer < this.borderY) || obj.borderX + obj.borderWidth + buffer < this.borderX || obj.borderX + buffer > this.borderX + this.borderWidth) {
+        if((throwableObj.borderY + throwableObj.borderHeight + buffer < this.borderY) || throwableObj.borderX + throwableObj.borderWidth + buffer < this.borderX || throwableObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
         return true;
@@ -157,7 +156,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.statusValue = 25;
         }
-        this.isHitHandling(obj);
+        this.hitHandling(obj);
     }
 
 
@@ -166,7 +165,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.statusValue = 25;
         }
-        this.isHitHandling(obj);
+        this.hitHandling(obj);
     }
 
 
@@ -179,11 +178,10 @@ class MovableObject extends DrawableObject {
     isDead() {
         if(this.healthStatus <= 0) {
             if(this instanceof Chicken) {
-                // console.log(this.objectName);
                 return true;
             }
             if(this instanceof Character) {
-                // gameStatus = 0;
+                gameStatus = 0;
             }
             let timePassed = new Date().getTime() - this.lastHit;
             return timePassed <= 3000;
@@ -191,30 +189,26 @@ class MovableObject extends DrawableObject {
     }
 
 
+    hurtHandling() {
+       this.hurtAnimation();
+    }
 
 
-
-    // hideObject(){
-    //     this.skipDrawing = true;
-    //     this.x = 0;
-    //     this.y = heightCanvas + this.height;
-    //     this.borderCoordinates();
-    // }
-    
-
-    // movementAnimationAuto(imagePaths, speed = 300) {
-    //     intervalId = setInterval(() => {
-    //         // this.isDead() ? imagePaths = this.IMAGES_DEAD : null;  
-    //         if(this.isDead()) return;
-    //         this.movementAnimation(imagePaths);
-    //     }, speed);
-    //     // if(this.isDead()) {
-    //     //     clearInterval(intervalId);
-    //     // }
-    //     stoppableIntervals.push(intervalId);
-    // }    
+    deadHandling() {
+       this.deadAnimation();
+       this.clearIntervals();
+    }
 
 
+    saveIntervalsGlobally() {
+       stoppableIntervals.push(...this.intervals);
+    //    console.log(stoppableIntervals);
+    }
+
+
+    clearIntervals() {
+       setTimeout(() => this.intervals.forEach(clearInterval), 10000);
+    }
 
 
 

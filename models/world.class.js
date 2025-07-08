@@ -3,6 +3,7 @@ class World {
     canvas;
     ctx;
     screenTranslateX = 0;
+    timer = 0;
 
     level = level1;
     backgrounds = level1.backgrounds;
@@ -42,6 +43,8 @@ class World {
         
         this.ctx.translate(-this.screenTranslateX, 0);
         this.drawObjects(this.statusBars);
+
+        if(this.isGameOver()) return stopGame();
 
         // automatic recall of draw (speed depending on gpu performance)
         let self = this;
@@ -95,22 +98,24 @@ class World {
 
     checkCharacterEnemyCollition() {
         this.level.enemies.forEach((enemy) => {
+            console.log('character healthStatus:', this.character.healthStatus);
+            // console.log(enemy.objectName, 'healthStatus:', enemy.healthStatus);
             if(enemy.healthStatus <= 0 || this.character.healthStatus <= 0) return;
             if(enemy.isHitFromAbove(this.character)) {
                 console.log(enemy.objectName, 'isHitFromAbove:', 'healthStatus:', enemy.healthStatus);
                 enemy.hitHandlingFromAbove(this.character);
                 console.log(enemy.objectName, 'healthStatus:', enemy.healthStatus);
-                // this.statusBars[0].updateStatusBar(enemy.healthStatus);
-            } else if(enemy.isHitFromThrowable(this.character.bottles[0])) {
-                console.log(enemy.objectName, 'isHitFromBottle:', 'healthStatus:', enemy.healthStatus);
-                enemy.hitHandlingFromThrowable(this.character);
-                console.log(enemy.objectName, 'healthStatus:', enemy.healthStatus);
-                // this.statusBars[0].updateStatusBar(enemy.healthStatus);
+                this.statusBars[0].updateStatusBar(enemy.healthStatus);
+            // } else if(enemy.isHitFromThrowable(this.character.bottles[0])) {
+            //     console.log(enemy.objectName, 'isHitFromBottle:', 'healthStatus:', enemy.healthStatus);
+            //     enemy.hitHandlingFromThrowable(this.character);
+            //     console.log(enemy.objectName, 'healthStatus:', enemy.healthStatus);
+            //     // this.statusBars[0].updateStatusBar(enemy.healthStatus);
             } else if(this.character.isHit(enemy)) {
-                // console.log('isHit with:', enemy.constructor.name, 'value:', enemy.statusValue);
-                // console.log('character.healthStatus:', this.character.healthStatus);
-                // this.character.isHitHandling(enemy);
-                // this.statusBars[0].updateStatusBar(this.character.healthStatus);
+                // console.log('isHit from:', enemy.constructor.name, 'value:', enemy.statusValue);
+                // console.log('character healthStatus:', this.character.healthStatus);
+                this.character.hitHandling(enemy);
+                this.statusBars[0].updateStatusBar(this.character.healthStatus);
             }
         });
     }
