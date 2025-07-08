@@ -26,6 +26,11 @@ function stopGame() {
 }    
 
 
+function saveIntervalsGlobally(intervals) {
+    stoppableIntervals.push(...intervals);
+}
+
+
 function clearIntervallTimeout(intervalId, timeout = 5000) {
     setTimeout(function() {clearInterval(intervalId)}, timeout);
 }    
