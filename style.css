@@ -1,5 +1,9 @@
 @import url("assets/fonts/chango/chango.css");
 
+:root {
+    --canvas-width: 960px;
+}
+
 h1 {
     margin: 0;
 }
@@ -20,6 +24,7 @@ main {
     align-items: center;
     flex-grow: 1;
     background: linear-gradient(to bottom right, #CD5C5C, #DAA520, #8B4513);
+    padding: 20px;
     /* background-color: aqua; */
 }
 .main-inner {
@@ -27,11 +32,11 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 100%;
+    max-width: calc(var(--canvas-width) + 12px);
     text-align: center;
-    padding: 32px 20px;
+    /* padding: 32px 20px; */
     gap: 32px;
-    /* background-color: red; */
+    background-color: red;
 }
 .canvas-wrapper {
     position: relative;
@@ -63,6 +68,7 @@ main {
 .nav-panel {
     z-index: 1;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 1.5rem;
 }
@@ -77,11 +83,13 @@ h1 {
     background-color: orange;
     cursor: pointer;
 }
+body.is-touch-device .btn-touch > span {
+    display: none;
+}
 .nav-panel-dev .button {
     background-color: black;
     color: orange;
 }
-
 .hide:not(.show-temp) {
     display: none !important;
 }

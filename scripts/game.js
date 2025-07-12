@@ -20,12 +20,13 @@ function initGame() {
     canvas = document.getElementById('canvas');
     let fullscreenBtn = document.getElementById('fullscreenBtn')
     !fullscreenAvailable ? fullscreenBtn.classList.add('hide') : null;
-    // startGame();
+    setBodyClassIfTouchDevice();
 }
 
 
 function startGame(event) {
     event.stopPropagation();
+    initGame();
     gameStatus = 1;
     startScreen.classList.add('hide');
     gameOverScreen.classList.add('hide');
@@ -38,6 +39,7 @@ function startGame(event) {
 function restartGame(event) {
     event.stopPropagation();
     window.location.reload();
+    initGame();
     // startGame(event);
 }    
 
@@ -152,4 +154,20 @@ function closeFullscreen() {
   } else if (document.msExitFullscreen) { /* IE11 */
     document.msExitFullscreen();
   }
+}
+
+
+function isTouchEnabled() {
+    return ( 'ontouchstart' in window ) || 
+           ( navigator.maxTouchPoints > 0 ) || 
+           ( navigator.msMaxTouchPoints > 0 );
+}
+
+
+function setBodyClassIfTouchDevice() {
+    if(isTouchEnabled()) {
+        document.body.classList.add('is-touch-device');
+    } else {
+        document.body.classList.remove('is-touch-device');
+    }
 }

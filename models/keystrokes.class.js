@@ -12,6 +12,9 @@ class Keystrokes {
     constructor() {
 
         this.bindKeyPressEvents();
+        if(isTouchEnabled()) {
+            this.bindBtnTouchEventsToKeyPress();
+        }
 
     }
 
@@ -74,6 +77,50 @@ class Keystrokes {
                 keystrokes.KEY_SPACE = false;
         }
         // console.log(keystrokes);
+    }
+
+
+    bindBtnTouchEventsToKeyPress() {
+        document.getElementById('btnMoveLeft').addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_LEFT = true;
+        });
+        document.getElementById('btnMoveLeft').addEventListener('touchend', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_LEFT = false;
+        });
+        document.getElementById('btnMoveRight').addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_RIGHT = true;
+        });
+        document.getElementById('btnMoveRight').addEventListener('touchend', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_RIGHT = false;
+        });
+        document.getElementById('btnJump').addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_SPACE = true;
+        });
+        document.getElementById('btnJump').addEventListener('touchend', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_SPACE = false;
+        });
+        document.getElementById('btnThrowBottle').addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_B = true;
+        });
+        document.getElementById('btnThrowBottle').addEventListener('touchend', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_B = false;
+        });
+        document.getElementById('btnThrowCoin').addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_C = true;
+        });
+        document.getElementById('btnThrowCoin').addEventListener('touchend', (event) => {
+            event.preventDefault();
+            keystrokes.KEY_C = false;
+        });
     }
 
 };
