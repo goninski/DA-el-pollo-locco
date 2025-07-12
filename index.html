@@ -23,20 +23,33 @@
     <script src="scripts/game.js"></script>
 </head>
 
-<body onload="initGame()">
+<body class="fullscreen" onload="initGame()">
 
-    <main>
+    <main class="xfullscreen">
+        <div class="main-inner xfullscreen">
 
-        <h1 id="title">El pollo Loco</h1>
+            <h1 id="title">El pollo Loco</h1>
 
-        <canvas id="canvas" width="960" height="540"></canvas>
+            <div class="canvas-wrapper">
+                <canvas id="canvas" width="960" height="540"></canvas>
+                <div id="gameOverScreen" class="canvas-cover hide xhide-temp"></div>
+                <div id="screenOverlay" class="hide xhide-temp"></div>
+                <div id="startScreen" class="canvas-cover hide xhide-temp"></div>
+            </div>
 
+
+            <div class="nav-panel">
+                <button class="button button-new-game" onclick="togglePauseGame(event)">Pause Game</button>
+                <button class="button" onclick="toggleFullscreen(event)">Fullscreen</button>
+            </div>
+
+            <div class="nav-panel nav-panel-dev">
+                <button class="button button-new-game" onclick="restartGame(event)">Start Screen</button>
+                <button class="button button-new-game" onclick="startGame(event)">Start Game</button>
+                <button class="button button-new-game" onclick="stopGame(event)">Game Over</button>
+            </div>
+        </div>
     </main>
-
-    <div id="gameOverScreen" style="display: none;">
-        <div class="game-over-text">Game Over</div>
-        <button class="button button-new-game" onclick="restartGame()">New Game</button>
-    </div>
 
 </body>
 </html>

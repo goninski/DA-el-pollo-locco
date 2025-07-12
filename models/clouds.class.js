@@ -14,8 +14,17 @@ class Clouds extends MovableObject {
         this.setScreenSlidePos(screenSlide);
         this.loadImage(imgPath);
         
-        this.moveLeftAuto(0.15, null, false);
+        // this.moveLeftAuto(0.15, null, false);
+        this.animate();
+        this.saveIntervalsGlobally();
+    }
 
+
+    animate() {
+        intervalId = setInterval(() => {
+             this.moveLeft(0.15, null, false);
+        }, 1000 / 60); 
+        this.intervals.push(intervalId);
     }
 
 }

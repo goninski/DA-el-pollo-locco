@@ -47,12 +47,20 @@ class World {
         this.drawObjects(this.statusBars);
 
         this.updateGameStatus();
+        console.log(this.isGamePaused());
 
-        // automatic recall of draw (speed depending on gpu performance)
-        let self = this;
-        requestAnimationFrame(() => self.draw());
+        if(!this.isGameOver()) {
+            let self = this;
+            requestAnimationFrame(() => self.draw());
+        }
     };
 
+
+    drawStartScreenObjects(objs) {
+        objs.forEach(obj => {
+            this.drawObject(obj);
+        });
+    }
 
     drawObjects(objs) {
         objs.forEach(obj => {
@@ -94,7 +102,7 @@ class World {
         intervalId = setInterval(() => {
             this.checkCoinCollection();
             this.checkBottleCollection();
-            // this.updateGameStatus();
+            this.updateGameStatus();
         }, 100);
         this.intervals.push(intervalId);
     }
@@ -160,10 +168,10 @@ class World {
     
     
     updateGameStatus() {
-        this.statusBars[0].updateStatusBar(this.character.healthStatus);
-        this.statusBars[1].updateStatusBar(this.character.coinStatus);
-        this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-        this.updateEndbossStatusBar();
+        // this.statusBars[0].updateStatusBar(this.character.healthStatus);
+        // this.statusBars[1].updateStatusBar(this.character.coinStatus);
+        // this.statusBars[2].updateStatusBar(this.character.bottleStatus);
+        // this.updateEndbossStatusBar();
         this.character.healthStatus <= 0 ? gameStatus = 0 : null;
         this.isGameOver() ? stopGame() : null;
     }
@@ -178,11 +186,19 @@ class World {
     }
 
 
+    isGamePaused(){
+        if(this.isGameOver()) {
+            return false;
+        } else {
+            return gameStatus === -1;
+        }
+    }
+
+
     isGameOver(){
         if(gameStatus === 0) {
             let timePassed = new Date().getTime() - this.character.lastHit;
             return timePassed >= 3000;
         }
     }
-
 }

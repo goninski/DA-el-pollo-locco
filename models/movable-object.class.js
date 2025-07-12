@@ -34,6 +34,7 @@ class MovableObject extends DrawableObject {
 
 
     movementAnimation(imagePaths) {
+        if(gameStatus === -1) return;
         let index = this.currentImage % imagePaths.length;
         let path = imagePaths[index];
         this.img = this.imageCache[path];
@@ -66,20 +67,22 @@ class MovableObject extends DrawableObject {
 
 
     moveLeft(speedMin = 0.15, speedMax = null, consoleX = false) {
+        if(gameStatus === -1) return;
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         this.x -= speed;
         consoleX ? this.consoleObjectPosition() : null;
     }
 
     
-    moveLeftAuto(speedMin = 0.15, speedMax = null, consoleX = false) {
-        let speed = speedMax ? speedMin + (Math.random() * speedMax) : speedMin;
-        intervalId = setInterval(() => {
-            this.x -= speed;
-            consoleX ? this.consoleObjectPosition() : null;
-        }, 1000 / 60);
-        this.intervals.push(intervalId);
-    }
+    // moveLeftAuto(speedMin = 0.15, speedMax = null, consoleX = false) {
+    //     if(gameStatus === -1) return;
+    //     let speed = speedMax ? speedMin + (Math.random() * speedMax) : speedMin;
+    //     intervalId = setInterval(() => {
+    //         this.x -= speed;
+    //         consoleX ? this.consoleObjectPosition() : null;
+    //     }, 1000 / 60);
+    //     this.intervals.push(intervalId);
+    // }
 
 
     applyGravity() {

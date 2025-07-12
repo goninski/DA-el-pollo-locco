@@ -97,18 +97,21 @@ class Character extends MovableObject {
 
         // interval for fast key observer
         intervalId = setInterval(() => {
+            if(gameStatus === -1) return;
             this.keyObserverFast();
         }, 1000 / 60);
         this.intervals.push(intervalId);
 
         // interval for walking/hurt/dead animation
         intervalId = setInterval(() => {
+            if(gameStatus === -1) return;
             this.animationsOnGround();
         }, 50); 
         this.intervals.push(intervalId);
 
         // interval for jumping animation (slower)
         intervalId = setInterval(() => {
+            if(gameStatus === -1) return;
             if(this.isAboveGround()) {
                 this.jumpingAnimation();    
             }
@@ -117,6 +120,7 @@ class Character extends MovableObject {
 
         // interval for slow key observer
         intervalId = setInterval(() => {
+            if(gameStatus === -1) return;
             this.keyObserverSlow();
         }, 100);
         this.intervals.push(intervalId);

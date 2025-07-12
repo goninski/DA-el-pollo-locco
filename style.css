@@ -1,5 +1,9 @@
 @import url("assets/fonts/chango/chango.css");
 
+h1 {
+    margin: 0;
+}
+
 body {
     margin: 0;
     display: flex;
@@ -7,48 +11,65 @@ body {
     min-height: 100vh;
     min-height: 100svh;
     font-family: "chango", sans-serif;
-    background: linear-gradient(to bottom right, #CD5C5C, #DAA520, #8B4513);
+    /* background: linear-gradient(to bottom right, #CD5C5C, #DAA520, #8B4513); */
 }
-
 main {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    transform: translateY(-8vh);
-    max-width: 100%;
-    text-align: center;
+    background: linear-gradient(to bottom right, #CD5C5C, #DAA520, #8B4513);
+    /* background-color: aqua; */
 }
-
-canvas {
-    background-color: black;
-    border: solid 6px #222;
-    border-radius: 12px;
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-h1 {
-    font-size: 5rem;
-    line-height: 1.1;
-}
-
-#gameOverScreen {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: orange;
+.main-inner {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 100%;
     text-align: center;
-    padding: 4vw;
-    font-size: 7rem;
+    padding: 32px 20px;
     gap: 32px;
-    /* display: flex !important; */
+    /* background-color: red; */
 }
-
+.canvas-wrapper {
+    position: relative;
+    box-sizing: content-box;
+    background-color: black;
+    border: solid 6px #222;
+    border-radius: 12px;
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+#screenOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.canvas-cover {
+    position: absolute;
+    inset: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* transform: translateY(8vh); */
+}
+#startScreen {
+    background-image: url(assets/img/9_intro_outro_screens/start/startscreen_1.png);
+}
+#gameOverScreen {
+    background-image: url(assets/img/9_intro_outro_screens/game_over/game-over-2.png);
+}
+.nav-panel {
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+h1 {
+    font-size: 5rem;
+    line-height: 1.1;
+}
 .button {
     font-family: inherit;
     padding: 12px;
@@ -56,6 +77,18 @@ h1 {
     background-color: orange;
     cursor: pointer;
 }
+.nav-panel-dev .button {
+    background-color: black;
+    color: orange;
+}
+
+.hide:not(.show-temp) {
+    display: none !important;
+}
+.hide-temp {
+    display: none !important;
+}
+
 
 
 @media(max-width: 1000px) {
@@ -63,6 +96,18 @@ h1 {
         width: calc(100% - 24px);
     }
     h1 {
-        font-size: 8vw;
+        font-size: 9vw;
+    }
+    .game-over-text {
+        font-size: 10vw;
+    }
+}
+
+@media only screen and (max-height: 540px) {
+    canvas {
+        max-height: 100vh;
+        max-height: 100svh;
+        width: auto;
+        max-width: calc(100% - 24px);
     }
 }
