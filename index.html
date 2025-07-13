@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,38 +28,43 @@
     <main class="xfullscreen">
         <div class="main-inner xfullscreen">
 
-            <h1 id="title">El pollo Loco</h1>
+            <h1 id="title" class="page-title">El pollo Loco</h1>
 
             <div class="canvas-wrapper">
-                <canvas id="canvas" width="960" height="540">Your browser does not support canvas element !</canvas>
-                <div id="gameOverScreen" class="canvas-cover hide xhide-temp"></div>
-                <div id="screenOverlay" class="hide xhide-temp"></div>
-                <div id="startScreen" class="canvas-cover hide xhide-temp"></div>
+                <canvas id="canvas" width="1000" height="562">Your browser does not support canvas element !</canvas>
+                <div id="gameOverScreen" class="canvas-cover"></div>
+                <div id="screenOverlay" class=""></div>
+                <div id="startScreen" class="canvas-cover"></div>
             </div>
 
 
-            <div class="nav-panel nav-panel-touch" data-after="Pepe's actions">
-                <button id="btnMoveLeft" class="button xbefore-empty" data-before="[ < ]" data-after="left"><span><<</span></button>
-                <button id="btnMoveRight" class="button xbefore-empty" data-before="[ > ]" data-after="right"><span>>></span></button>
-                <button id="btnJump" class="button" data-before="[ space ]" data-after="jump"><span>>></span></button>
-                <button id="btnThrowBottle" class="button" data-before="[ B ]" data-after="throw"><img src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
-                <!-- <button id="btnMoveLeft" class="button icon-btn btn-touch before-empty" data-before="-" data-after="left"><img src="assets/icons/arrow.svg" alt="arrow-left-icon"></button> -->
-                <!-- <button id="btnMoveRight" class="button icon-btn btn-touch before-empty" data-before="-" data-after="right"><img src="assets/icons/arrow.svg" alt="arrow-right-icon"></button> -->
-                <!-- <button id="btnJump" class="button icon-btn btn-touch" data-before="[space]" data-after="jump"><img src="assets/icons/arrow.svg" alt="arrow-up-icon"></button> -->
-                <!-- <button id="btnThrowBottle" class="button icon-btn btn-touch" data-before="[B]" data-after="throw"><img src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button> -->
-                <!-- <button id="btnThrowCoin" class="button btn-touch">Throw Bottle<span>:&emsp;C</span></button> -->
+
+            <div class="nav-panels">
+                <div class="nav-panel nav-panel-touch" data-after="Pepe's actions">
+                    <button id="btnMoveLeft" class="button xbefore-empty" data-before="[ < ]" data-after="left"><span><<</span></button>
+                    <button id="btnMoveRight" class="button xbefore-empty" data-before="[ > ]" data-after="right"><span>>></span></button>
+                    <button id="btnJump" class="button" data-before="[ space ]" data-after="jump"><span>>></span></button>
+                    <button id="btnThrowBottle" class="button" data-before="[ B ]" data-after="throw"><img src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
+                    <!-- <button id="btnMoveLeft" class="button icon-btn btn-touch before-empty" data-before="-" data-after="left"><img src="assets/icons/arrow.svg" alt="arrow-left-icon"></button> -->
+                    <!-- <button id="btnMoveRight" class="button icon-btn btn-touch before-empty" data-before="-" data-after="right"><img src="assets/icons/arrow.svg" alt="arrow-right-icon"></button> -->
+                    <!-- <button id="btnJump" class="button icon-btn btn-touch" data-before="[space]" data-after="jump"><img src="assets/icons/arrow.svg" alt="arrow-up-icon"></button> -->
+                    <!-- <button id="btnThrowBottle" class="button icon-btn btn-touch" data-before="[B]" data-after="throw"><img src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button> -->
+                    <!-- <button id="btnThrowCoin" class="button btn-touch">Throw Bottle<span>:&emsp;C</span></button> -->
+                </div>
+
+                <div class="nav-panel">
+                    <button class="button" onclick="togglePauseGame(event)">Pause Game</button>
+                    <button class="button" onclick="toggleFullscreen(event)">Fullscreen</button>
+                </div>
+
+                <div class="nav-panel nav-panel-dev">
+                    <button class="button" onclick="startGame(event)">Start Game</button>
+                    <button class="button" onclick="restartGame(event)">Start Screen</button>
+                    <button class="button" onclick="stopGame(event)">Game Over</button>
+                </div>
+
             </div>
 
-            <div class="nav-panel">
-                <button class="button" onclick="togglePauseGame(event)">Pause Game</button>
-                <button class="button" onclick="toggleFullscreen(event)">Fullscreen</button>
-            </div>
-
-            <div class="nav-panel nav-panel-dev">
-                <button class="button" onclick="startGame(event)"><< Start Game</button>
-                <button class="button" onclick="restartGame(event)">Start Screen</button>
-                <button class="button" onclick="stopGame(event)">Game Over</button>
-            </div>
         </div>
     </main>
 

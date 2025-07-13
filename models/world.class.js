@@ -46,10 +46,9 @@ class World {
         this.ctx.translate(-this.screenTranslateX, 0);
         this.drawObjects(this.statusBars);
 
-        this.updateGameStatus();
-        console.log(this.isGamePaused());
+        // this.updateGameStatus();
 
-        if(!this.isGameOver()) {
+        if(!this.isGameOver() && !this.isGameWon) {
             let self = this;
             requestAnimationFrame(() => self.draw());
         }
@@ -93,6 +92,11 @@ class World {
 
     setCheckIntervals() {
         intervalId = setInterval(() => {
+            this.updateGameStatus();
+        }, 1000 / 60);
+        this.intervals.push(intervalId);
+
+        intervalId = setInterval(() => {
             // console.log('screenTranslateX:', this.screenTranslateX);
             // console.log('character x:', this.character.x)
             this.checkEnemyHits();
@@ -102,9 +106,9 @@ class World {
         intervalId = setInterval(() => {
             this.checkCoinCollection();
             this.checkBottleCollection();
-            this.updateGameStatus();
         }, 100);
         this.intervals.push(intervalId);
+
     }
 
 
@@ -173,7 +177,11 @@ class World {
         // this.statusBars[2].updateStatusBar(this.character.bottleStatus);
         // this.updateEndbossStatusBar();
         this.character.healthStatus <= 0 ? gameStatus = 0 : null;
-        this.isGameOver() ? stopGame() : null;
+        if(this.isGameOver()) {
+            gameOver();
+        } else if(this.isGameWon()) {
+            gameWon();
+        }
     }
 
 
@@ -196,9 +204,18 @@ class World {
 
 
     isGameOver(){
-        if(gameStatus === 0) {
+        if(gameStatus === 9) {
             let timePassed = new Date().getTime() - this.character.lastHit;
             return timePassed >= 3000;
         }
     }
+
+
+    isGameWon(){
+        if(gameStatus === 2) {
+            let timePassed = new Date().getTime() - this.character.lastHit;
+            return timePassed >= 3000;
+        }
+    }
+
 }

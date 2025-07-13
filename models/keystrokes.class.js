@@ -113,14 +113,14 @@ class Keystrokes {
             event.preventDefault();
             keystrokes.KEY_B = false;
         });
-        document.getElementById('btnThrowCoin').addEventListener('touchstart', (event) => {
-            event.preventDefault();
-            keystrokes.KEY_C = true;
-        });
-        document.getElementById('btnThrowCoin').addEventListener('touchend', (event) => {
-            event.preventDefault();
-            keystrokes.KEY_C = false;
-        });
+        // document.getElementById('btnThrowCoin').addEventListener('touchstart', (event) => {
+        //     event.preventDefault();
+        //     keystrokes.KEY_C = true;
+        // });
+        // document.getElementById('btnThrowCoin').addEventListener('touchend', (event) => {
+        //     event.preventDefault();
+        //     keystrokes.KEY_C = false;
+        // });
     }
 
 };

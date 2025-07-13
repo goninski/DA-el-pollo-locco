@@ -184,7 +184,7 @@ class MovableObject extends DrawableObject {
                 return true;
             }
             if(this instanceof Character) {
-                gameStatus = 0;
+                gameStatus = 9;
             }
             let timePassed = new Date().getTime() - this.lastHit;
             return timePassed <= 3000;

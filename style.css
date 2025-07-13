@@ -1,9 +1,13 @@
 @import url("assets/fonts/chango/chango.css");
 
 :root {
-    --canvas-width: 960px;
+    --full-height: 100vh;
+    --full-height: 100svh;
+    --canvas-width: 1000px;
+    --clr-accent: hsl(35, 50%, 31%);
+    --clr-accent-dark: hsl(35, 50%, 24%);
+    --cpx: 24px;
 }
-
 h1 {
     margin: 0;
 }
@@ -16,6 +20,7 @@ body {
     min-height: 100svh;
     font-family: "chango", sans-serif;
     /* background: linear-gradient(to bottom right, #CD5C5C, #DAA520, #8B4513); */
+    color: var(--clr-accent-dark);
 }
 main {
     display: flex;
@@ -24,7 +29,8 @@ main {
     align-items: center;
     flex-grow: 1;
     background: linear-gradient(to bottom right, #CD5C5C, #DAA520, #8B4513);
-    padding: 20px;
+    padding-inline: var(--cpx);
+    padding-block: 4px;
     /* background-color: aqua; */
 }
 .main-inner {
@@ -38,19 +44,34 @@ main {
     gap: 32px;
     /* background-color: red; */
 }
-.canvas-wrapper {
-    position: relative;
-    box-sizing: content-box;
-    background-color: black;
-    border: solid 6px #222;
-    border-radius: 12px;
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-}
 #screenOverlay {
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.3);
+}
+#startScreen {
+    background-image: url(assets/img/9_intro_outro_screens/start/startscreen_1.png);
+}
+#gameOverScreen {
+    background-image: url(assets/img/9_intro_outro_screens/game_over/game-over-2.png);
+}
+body.play-mode #screenOverlay {
+    display: none;
+}
+body.play-mode :is(#screenOverlay, #startScreen, #gameOverScreen),
+body.show-start-screen :is(#winScreen, #gameOverScreen),
+body.show-win-screen :is(#startScreen, #gameOverScreen),
+body.show-gameover-screen :is(#startScreen, #winScreen) {
+    display: none;
+}
+.canvas-wrapper {
+    position: relative;
+    box-sizing: content-box;
+    background-color: var(--clr-accent);
+    border: solid 6px var(--clr-accent);
+    border-radius: 12px;
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
 .canvas-cover {
     position: absolute;
@@ -58,12 +79,6 @@ main {
     background-repeat: no-repeat;
     background-size: cover;
     /* transform: translateY(8vh); */
-}
-#startScreen {
-    background-image: url(assets/img/9_intro_outro_screens/start/startscreen_1.png);
-}
-#gameOverScreen {
-    background-image: url(assets/img/9_intro_outro_screens/game_over/game-over-2.png);
 }
 h1 {
     font-size: 5rem;
@@ -126,7 +141,7 @@ h1 {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    background-color: black;
+    background-color: var(--clr-accent-dark);
     color: hsl(39deg 100% 50% / 80%);
     font-size: 1.1rem;
     width: 44px;
@@ -162,9 +177,20 @@ body.is-touch-device .nav-panel-touch .button[data-before]::before {
 #btnThrowBottle img {
     transform: scale(0.8);
 }
+.nav-panel-dev {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    background: transparent;
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
+}
 .nav-panel-dev .button {
-    background-color: black;
+    /* background-color: var(--clr-accent); */
+    background-color: transparent;
     color: orange;
+   
 }
 
 
@@ -179,10 +205,16 @@ body.is-touch-device .nav-panel-touch .button[data-before]::before {
 
 
 
-@media(max-width: 1000px) {
-    canvas {
-        width: calc(100% - 24px);
+@media(max-width: 1024px) {
+    :root {
+        --cpx: 6px;
     }
+    canvas {
+        width: calc(100% - 12px - 12px);
+    }
+    /* .page-title {
+        display: none;
+    } */
     h1 {
         font-size: 9vw;
     }
@@ -191,11 +223,21 @@ body.is-touch-device .nav-panel-touch .button[data-before]::before {
     }
 }
 
-@media only screen and (max-height: 540px) {
+@media only screen and (max-height: 562px) {
+    main {
+        padding-block: 0;
+        --cpx: 0;
+    }
     canvas {
         max-height: 100vh;
-        max-height: 100svh;
+        max-height: var(--full-height);
         width: auto;
-        max-width: calc(100% - 24px);
+        max-width: calc(100% - 12px - 12px);
+    }
+}
+
+@media (orientation: landscape) and (min-aspect-ratio: 13/10) {
+    .page-title {
+        display: none;
     }
 }
