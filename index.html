@@ -25,8 +25,8 @@
 
 <body class="fullscreen" onload="initGame()">
 
-    <main class="xfullscreen">
-        <div class="main-inner xfullscreen">
+    <main class="">
+        <div class="main-inner">
 
             <h1 id="title" class="page-title">El pollo Loco</h1>
 
@@ -36,24 +36,23 @@
                 <div id="screenOverlay" class=""></div>
                 <div id="startScreen" class="canvas-cover"></div>
                 <div class="option-panel">
-                    <button id="btnStartGame" class="button" onclick="startGame(event)" data-after="Start">
+                    <button id="btnStartGame" class="button" onclick="startGame(event)" data-after="Start Game">
                         <img class="" src="assets/icons/play.svg" alt="play-icon">
                     </button>
-                    <button id="btntogglePauseGame" class="button" onclick="togglePauseGame(event)">
+                    <button id="btntogglePauseGame" class="button" onclick="togglePauseGame(event)" title="play/pause game">
                         <img class="enable" src="assets/icons/pause.svg" alt="pause-icon">
                         <img class="disable hide" src="assets/icons/play.svg" alt="play-icon">
                     </button>
-                    <button id="btnToggleAudioMute" class="button" onclick="toggleAudioMute(event)">
+                    <button id="btnToggleAudioMute" class="button" onclick="toggleAudioMute(event)" title="play/pause audio">
                         <img class="enable" src="assets/icons/audio-playing.svg" alt="audio-playing-icon">
                         <img class="disable hide" src="assets/icons/audio-muted.svg" alt="audio-muted-toggle-icon">
                     </button>
-                    <button class="button" onclick="toggleFullscreen(event)">
+                    <button id="btnToggleFullscreen" class="button" onclick="toggleFullscreen(event)" title="toggle fullscreen">
                         <img class="enable" src="assets/icons/fullscreen.svg" alt="fullscreen-toggle-icon">
                         <img class="disable hide" src="assets/icons/fullscreen-exit.svg" alt="exit-fullscreen-icon">
                     </button>
                 </div>
             </div>
-
 
 
             <div class="nav-panels">
@@ -70,9 +69,8 @@
                 </div>
 
                 <div class="nav-panel nav-panel-dev">
-                    <button class="button" onclick="startGame(event)">Start Game</button>
                     <button class="button" onclick="restartGame(event)">Start Screen</button>
-                    <button class="button" onclick="stopGame(event)">Game Over</button>
+                    <button class="button" onclick="gameOver(event)">Game Over</button>
                 </div>
 
             </div>

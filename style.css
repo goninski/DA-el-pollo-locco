@@ -5,7 +5,7 @@
         transform: scale(1); /* Start at normal size */
     }
     50% {
-        transform: scale(1.1); /* Grow slightly larger */
+        transform: scale(var(--pulse-scale, 1.1)); /* Grow slightly larger */
     }
     100% {
         transform: scale(1); /* Return to normal size */
@@ -183,17 +183,24 @@ h1 {
 }
 .option-panel {
     position: absolute;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    width: 100%;
     bottom: 1rem;
     right: 1rem;
     button {
         background-color: transparent;
     }
     #btnStartGame {
-        margin-right: 0.75rem;
+        margin-left: 2rem;
+        margin-right: auto;
         color: orange;
         /* color: var(--clr-accent-dark); */
         img {
-            height: 54px;
+            height: 72px;
+            --pulse-scale: 1.1;
+            animation: pulse 1.5s infinite ease-in-out;
         }
     }
 }
@@ -204,7 +211,7 @@ body.show-start-screen #btntogglePauseGame {
     display: none;
 }
 #btnToggleAudioMute img {
-    animation: pulse 2s infinite ease-in-out;
+    animation: pulse 1.5s infinite ease-in-out;
 }
 
 body.is-touch-device .nav-panel-touch .button[data-before]::before {

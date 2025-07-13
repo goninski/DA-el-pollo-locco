@@ -46,9 +46,9 @@ class World {
         this.ctx.translate(-this.screenTranslateX, 0);
         this.drawObjects(this.statusBars);
 
-        this.updateGameStatus();
+        // this.updateGameStatus();
 
-        if(!this.isGameOver() && !this.isGameWon) {
+        if(!this.isGameOver() && !this.isGameWon()) {
             let self = this;
             requestAnimationFrame(() => self.draw());
         }
@@ -91,10 +91,10 @@ class World {
 
 
     setCheckIntervals() {
-        // intervalId = setInterval(() => {
-        //     this.updateGameStatus();
-        // }, 1000 / 60);
-        // this.intervals.push(intervalId);
+        intervalId = setInterval(() => {
+            this.updateGameStatus();
+        }, 1000 / 60);
+        this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
             // console.log('screenTranslateX:', this.screenTranslateX);
@@ -195,7 +195,7 @@ class World {
 
 
     isGamePaused(){
-        if(this.isGameOver()) {
+        if(this.isGameOver() || this.isGameWon()) {
             return false;
         } else {
             return gameStatus === -1;
