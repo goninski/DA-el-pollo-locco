@@ -1,5 +1,16 @@
 @import url("assets/fonts/chango/chango.css");
 
+@keyframes pulse {
+    0% {
+        transform: scale(1); /* Start at normal size */
+    }
+    50% {
+        transform: scale(1.1); /* Grow slightly larger */
+    }
+    100% {
+        transform: scale(1); /* Return to normal size */
+    }
+}
 :root {
     --full-height: 100vh;
     --full-height: 100svh;
@@ -11,7 +22,19 @@
 h1 {
     margin: 0;
 }
-
+button {
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+}
+.button {
+    border: none;
+}
+button img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+}
 body {
     margin: 0;
     display: flex;
@@ -84,18 +107,11 @@ h1 {
     font-size: 5rem;
     line-height: 1.1;
 }
-.button {
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-}
 .icon-btn {
     background-color: transparent;
 }
 .icon-btn img {
     height: 24px;
-    width: auto;
-    object-fit: contain;
 }
 [data-before]::before {
     content: attr(data-before);
@@ -165,6 +181,32 @@ h1 {
 .nav-panel-touch .button.before-empty::before {
     opacity: 0;
 }
+.option-panel {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    button {
+        background-color: transparent;
+    }
+    #btnStartGame {
+        margin-right: 0.75rem;
+        color: orange;
+        /* color: var(--clr-accent-dark); */
+        img {
+            height: 54px;
+        }
+    }
+}
+body:not(.show-start-screen) #btnStartGame {
+    display: none;
+}
+body.show-start-screen #btntogglePauseGame {
+    display: none;
+}
+#btnToggleAudioMute img {
+    animation: pulse 2s infinite ease-in-out;
+}
+
 body.is-touch-device .nav-panel-touch .button[data-before]::before {
     display: none;
 }

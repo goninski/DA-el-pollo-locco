@@ -35,6 +35,23 @@
                 <div id="gameOverScreen" class="canvas-cover"></div>
                 <div id="screenOverlay" class=""></div>
                 <div id="startScreen" class="canvas-cover"></div>
+                <div class="option-panel">
+                    <button id="btnStartGame" class="button" onclick="startGame(event)" data-after="Start">
+                        <img class="" src="assets/icons/play.svg" alt="play-icon">
+                    </button>
+                    <button id="btntogglePauseGame" class="button" onclick="togglePauseGame(event)">
+                        <img class="enable" src="assets/icons/pause.svg" alt="pause-icon">
+                        <img class="disable hide" src="assets/icons/play.svg" alt="play-icon">
+                    </button>
+                    <button id="btnToggleAudioMute" class="button" onclick="toggleAudioMute(event)">
+                        <img class="enable" src="assets/icons/audio-playing.svg" alt="audio-playing-icon">
+                        <img class="disable hide" src="assets/icons/audio-muted.svg" alt="audio-muted-toggle-icon">
+                    </button>
+                    <button class="button" onclick="toggleFullscreen(event)">
+                        <img class="enable" src="assets/icons/fullscreen.svg" alt="fullscreen-toggle-icon">
+                        <img class="disable hide" src="assets/icons/fullscreen-exit.svg" alt="exit-fullscreen-icon">
+                    </button>
+                </div>
             </div>
 
 
@@ -50,11 +67,6 @@
                     <!-- <button id="btnJump" class="button icon-btn btn-touch" data-before="[space]" data-after="jump"><img src="assets/icons/arrow.svg" alt="arrow-up-icon"></button> -->
                     <!-- <button id="btnThrowBottle" class="button icon-btn btn-touch" data-before="[B]" data-after="throw"><img src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button> -->
                     <!-- <button id="btnThrowCoin" class="button btn-touch">Throw Bottle<span>:&emsp;C</span></button> -->
-                </div>
-
-                <div class="nav-panel">
-                    <button class="button" onclick="togglePauseGame(event)">Pause Game</button>
-                    <button class="button" onclick="toggleFullscreen(event)">Fullscreen</button>
                 </div>
 
                 <div class="nav-panel nav-panel-dev">

@@ -4,7 +4,7 @@ let world;
 let keystrokes;
 let gameStatus = 0; // 0:startscreen, -1:paused, 1:play, 2:won; 9:gameover
 let fullscreenAvailable = document.fullscreenEnabled;
-
+let currentAudio;
 
 function initGame(restart = false) {
     gameStatus = 0;
@@ -31,7 +31,7 @@ function hideAllScreens() {
 function showStartScreen() {
     hideAllScreens();
     body.classList.add('show-start-screen');
-    audioStart.play();
+    playAudio(audioStart);
 }
 
 
@@ -42,6 +42,7 @@ function startGame(event) {
     gameStatus = 1;
     initLevel1();
     world = new World(canvas, keystrokes);
+    console.log(gameStatus);
 }  
 
 
@@ -49,20 +50,8 @@ function restartGame(event) {
     event.stopPropagation();
     window.location.reload();
     initGame(true);
+    gameStatus = 1;
 }    
-
-
-function togglePauseGame(event) {
-    event.stopPropagation();
-    if(gameStatus === -1) {
-        gameStatus = 1;
-        body.classList.remove('game-paused');
-    } else {
-        gameStatus = -1;
-        body.classList.add('game-paused');
-    }
-}    
-
 
 function gameOver(event = null) {
     event ? event.stopPropagation() : null;
@@ -92,13 +81,70 @@ function clearIntervallTimeout(intervalId, timeout = 5000) {
 }    
 
 
+async function playAudio(file) {
+    currentAudio = file;
+    currentAudio.loop = currentAudio === audioStart ? true : false;
+    try {
+      await currentAudio.play();
+        currentAudio.play();
+        // body.classList.remove('audio-muted');
+    } catch (err) {
+        // body.classList.add('audio-muted');
+        toggleAudioMute();
+    }
+}
+
+
+function togglePauseGame(event) {
+    event.stopPropagation();
+    let elemEnable = event.currentTarget.querySelector('.enable');
+    let elemDisable = event.currentTarget.querySelector('.disable');
+    if(gameStatus === -1) {
+        gameStatus = 1;
+        elemEnable.classList.remove('hide');
+        elemDisable.classList.add('hide');
+    } else {
+        gameStatus = -1;
+        elemEnable.classList.add('hide');
+        elemDisable.classList.remove('hide');
+    }
+}    
+
+
+function toggleAudioMute(event = null) {
+    event ? event.stopPropagation() : null;
+    let btn = document.getElementById('btnToggleAudioMute');
+    let elemEnable = btn.querySelector('.enable');
+    let elemDisable = btn.querySelector('.disable');
+    if(body.classList.contains('audio-muted')) {
+        // currentAudio.muted = false;
+        currentAudio.play();
+        elemEnable.classList.remove('hide');
+        elemDisable.classList.add('hide');
+        body.classList.remove('audio-muted');
+    } else {
+        // currentAudio.muted = true;
+        currentAudio.pause();
+        elemEnable.classList.add('hide');
+        elemDisable.classList.remove('hide');
+        body.classList.add('audio-muted');
+    }
+}   
+
+
 function toggleFullscreen(event) {
     event.stopPropagation();
     let fullscreenElem = document.querySelector('.fullscreen');
+    let elemEnable = event.currentTarget.querySelector('.enable');
+    let elemDisable = event.currentTarget.querySelector('.disable');
     if (!document.fullscreenElement) {
         openFullscreen(fullscreenElem);
+        elemEnable.classList.add('hide');
+        elemDisable.classList.remove('hide');
     } else {
         closeFullscreen();
+        elemEnable.classList.remove('hide');
+        elemDisable.classList.add('hide');
     }
 }    
 

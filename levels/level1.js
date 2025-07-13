@@ -5,7 +5,7 @@ let heightCanvas = widthCanvas / 1.777;
 let walkOffset = 48;
 let intervalId = 0;
 let stoppableIntervals = [];
-// let playStatus = 1;
+let playStatus = 1;
 let audioStart = new Audio('assets/audio/el-pollo-loco-start.mp3');
 
 

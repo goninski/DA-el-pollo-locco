@@ -46,7 +46,7 @@ class World {
         this.ctx.translate(-this.screenTranslateX, 0);
         this.drawObjects(this.statusBars);
 
-        // this.updateGameStatus();
+        this.updateGameStatus();
 
         if(!this.isGameOver() && !this.isGameWon) {
             let self = this;
@@ -91,10 +91,10 @@ class World {
 
 
     setCheckIntervals() {
-        intervalId = setInterval(() => {
-            this.updateGameStatus();
-        }, 1000 / 60);
-        this.intervals.push(intervalId);
+        // intervalId = setInterval(() => {
+        //     this.updateGameStatus();
+        // }, 1000 / 60);
+        // this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
             // console.log('screenTranslateX:', this.screenTranslateX);
