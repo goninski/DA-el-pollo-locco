@@ -6,7 +6,6 @@ let gameStatus = 0; // 0:startscreen, -1:paused, 1:play, 2:won; 9:gameover
 let fullscreenAvailable = document.fullscreenEnabled;
 let currentAudio;
 
-
 function initGame(restart = false) {
     // gameStatus = 0;
     canvas = document.getElementById('canvas');
@@ -45,6 +44,7 @@ function hideAllScreens() {
     body.classList.remove('show-win-screen');
     body.classList.remove('show-gameover-screen');
     body.classList.remove('play-mode');
+    body.classList.remove('game-paused');
 }
 
 
@@ -88,6 +88,8 @@ async function playAudio(file) {
     if(file === null) {
         currentAudio.pause();
         currentAudio = null;
+        body.classList.remove('audio-auto-muted');
+        return;
     } else {
         currentAudio = file;
         currentAudio.loop = currentAudio === audioStart ? true : false;
@@ -96,10 +98,10 @@ async function playAudio(file) {
     try {
       await currentAudio.play();
         currentAudio.play();
-        // body.classList.remove('audio-muted');
+        body.classList.remove('audio-auto-muted');
     } catch (err) {
-        // body.classList.add('audio-muted');
         toggleAudioMute();
+        body.classList.add('audio-auto-muted');
     }
 }
 
@@ -112,28 +114,31 @@ function togglePauseGame(event) {
         gameStatus = 1;
         elemEnable.classList.remove('hide');
         elemDisable.classList.add('hide');
+        body.classList.remove('game-paused');
     } else {
         gameStatus = -1;
         elemEnable.classList.add('hide');
         elemDisable.classList.remove('hide');
+        body.classList.add('game-paused');
     }
 }    
 
 
 function toggleAudioMute(event = null) {
-    event ? event.stopPropagation() : null;
+    if(event) {
+        event.stopPropagation();
+        body.classList.remove('audio-auto-muted');
+    };
     if(currentAudio === null) return;
     let btn = document.getElementById('btnToggleAudioMute');
     let elemEnable = btn.querySelector('.enable');
     let elemDisable = btn.querySelector('.disable');
     if(body.classList.contains('audio-muted')) {
-        // currentAudio.muted = false;
         currentAudio.play();
         elemEnable.classList.remove('hide');
         elemDisable.classList.add('hide');
         body.classList.remove('audio-muted');
     } else {
-        // currentAudio.muted = true;
         currentAudio.pause();
         elemEnable.classList.add('hide');
         elemDisable.classList.remove('hide');

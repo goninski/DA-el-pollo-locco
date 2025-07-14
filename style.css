@@ -26,6 +26,7 @@ button {
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
+    transition-duration: 175ms;
 }
 .button {
     border: none;
@@ -113,6 +114,9 @@ h1 {
 .icon-btn img {
     height: 24px;
 }
+[data-before],[data-after] {
+    position: relative;
+}
 [data-before]::before {
     content: attr(data-before);
     display: block;
@@ -122,7 +126,97 @@ h1 {
     display: block;
 }
 
+.option-panel {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    width: 100%;
+    gap: 0.5rem;
+    button {
+        background-color: transparent;
+    }
+    button:not(#btnStartGame):hover {
+        transform: scale(1.1);
+    }
+    #btnStartGame {
+        margin-left: 2rem;
+        margin-right: auto;
+        color: orange;
+        /* color: var(--clr-accent-dark); */
+        img {
+            height: 72px;
+            --pulse-scale: 1.1;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+    }
+    .option-msg {
+        color: orange;
+        margin-bottom: 12px;
+        margin-right: 4px;
+        --pulse-scale: 1.05;
+    }
+    .game-is-paused-msg {
+        margin-left: 2.5rem;
+        margin-right: auto;
+    }
+    .enable-audio-msg {
+        animation: pulse 1s infinite ease-in-out;
+    }
+}
+body.show-gameover-screen .option-panel {
+    gap: 1.25rem;
+    bottom: 1.5rem;
+    button {
+        border-radius: 100%;
+        background-color:hsla(39, 100%, 50%, 0.7);
+        box-shadow: 2px 2px 16px 1px hsla(39, 100%, 50%, 0.5);
+        img {
+            height: 24px;
+            padding-block: 7px 6px;
+            padding-inline: 4px;
+        }
+    }
+    button:hover {
+        background-color:hsla(39, 100%, 50%, 0.9);
+    }
+    #btnRestartGame {
+        margin-right: auto;
+        margin-left: 2rem;
+        img {
+            height: 56px;
+            content: url(assets/icons/refresh.svg);
+        }
+    }
+}
+body:not(.show-start-screen) #btnStartGame {
+    display: none;
+}
+body:not(.game-paused, .show-gameover-screen) #btnRestartGame {
+    display: none;
+}
+body:not(.game-paused) #btnSurrender {
+    display: none;
+}
+body:not(.play-mode) #btntogglePauseGame {
+    display: none;
+}
+body.game-paused #btntogglePauseGame img {
+    --pulse-scale: 1.2;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+#btnToggleAudioMute img {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+body:not(.game-paused) .game-is-paused-msg,
+body:not(.audio-auto-muted) .enable-audio-msg {
+    display: none;
+}
 
+
+/* NAV PANEL */
 .nav-panel {
     z-index: 1;
     display: flex;
@@ -133,6 +227,7 @@ h1 {
     background-color: hsl(39deg 100% 40%);
     border-radius: 999rem;
     padding: 1.25rem 3rem;
+    display: none;
 }
 .nav-panel-touch  {
     position: relative;
@@ -165,9 +260,9 @@ h1 {
     border-radius: 100%;
     padding: 4px;
 }
-.nav-panel-touch .button:is([data-before], [data-after]) {
+/* .nav-panel-touch .button:is([data-before], [data-after]) {
     position: relative;
-}
+} */
 .nav-panel-touch .button[data-before]::before {
     max-width: 80px;
     margin-bottom: 1rem;
@@ -181,39 +276,6 @@ h1 {
 .nav-panel-touch .button.before-empty::before {
     opacity: 0;
 }
-.option-panel {
-    position: absolute;
-    display: flex;
-    justify-content: end;
-    align-items: end;
-    width: 100%;
-    bottom: 1rem;
-    right: 1rem;
-    button {
-        background-color: transparent;
-    }
-    #btnStartGame {
-        margin-left: 2rem;
-        margin-right: auto;
-        color: orange;
-        /* color: var(--clr-accent-dark); */
-        img {
-            height: 72px;
-            --pulse-scale: 1.1;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-    }
-}
-body:not(.show-start-screen) #btnStartGame {
-    display: none;
-}
-body.show-start-screen #btntogglePauseGame {
-    display: none;
-}
-#btnToggleAudioMute img {
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
 body.is-touch-device .nav-panel-touch .button[data-before]::before {
     display: none;
 }
@@ -226,24 +288,6 @@ body.is-touch-device .nav-panel-touch .button[data-before]::before {
 #btnThrowBottle img {
     transform: scale(0.8);
 }
-.nav-panel-dev {
-    position: fixed;
-    bottom: 16px;
-    left: 16px;
-    background: transparent;
-    flex-direction: column;
-    align-items: start;
-    gap: 1rem;
-}
-.nav-panel-dev .button {
-    /* background-color: var(--clr-accent); */
-    background-color: transparent;
-    color: orange;
-   
-}
-
-
-
 
 .hide:not(.show-temp) {
     display: none !important;
