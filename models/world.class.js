@@ -100,6 +100,7 @@ class World {
             // console.log('screenTranslateX:', this.screenTranslateX);
             // console.log('character x:', this.character.x)
             this.checkEnemyHits();
+            // this.updateGameStatus();
         }, 50);
         this.intervals.push(intervalId);
 
@@ -109,6 +110,10 @@ class World {
         }, 100);
         this.intervals.push(intervalId);
 
+        intervalId = setInterval(() => {
+            document.getElementById('playTimer').innerHTML = getCurrentTime();
+        }, 1000);
+        this.intervals.push(intervalId);
     }
 
 
@@ -176,11 +181,10 @@ class World {
         // this.statusBars[1].updateStatusBar(this.character.coinStatus);
         // this.statusBars[2].updateStatusBar(this.character.bottleStatus);
         // this.updateEndbossStatusBar();
-        this.character.healthStatus <= 0 ? gameStatus = 0 : null;
         if(this.isGameOver()) {
-            gameOver();
+            return gameOver();
         } else if(this.isGameWon()) {
-            gameWon();
+            return gameWon();
         }
     }
 

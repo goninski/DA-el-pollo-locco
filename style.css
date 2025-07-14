@@ -152,13 +152,16 @@ h1 {
             animation: pulse 1.5s infinite ease-in-out;
         }
     }
+    #btnTogglePauseGame img {
+        transform: scale(1.4);
+    }
     .option-msg {
         color: orange;
         margin-bottom: 12px;
         margin-right: 4px;
         --pulse-scale: 1.05;
     }
-    .game-is-paused-msg {
+    #playTimer, .game-is-paused-msg {
         margin-left: 2.5rem;
         margin-right: auto;
     }
@@ -191,27 +194,21 @@ body.show-gameover-screen .option-panel {
         }
     }
 }
-body:not(.show-start-screen) #btnStartGame {
-    display: none;
-}
-body:not(.game-paused, .show-gameover-screen) #btnRestartGame {
-    display: none;
-}
-body:not(.game-paused) #btnSurrender {
-    display: none;
-}
-body:not(.play-mode) #btntogglePauseGame {
-    display: none;
-}
-body.game-paused #btntogglePauseGame img {
-    --pulse-scale: 1.2;
+body.game-paused #btnTogglePauseGame img {
+    --pulse-scale: 1.6;
     animation: pulse 1.5s infinite ease-in-out;
 }
-#btnToggleAudioMute img {
+body.audio-muted:not(.game-paused) #btnToggleAudioMute img {
+    --pulse-scale: 1.3;
     animation: pulse 1.5s infinite ease-in-out;
 }
+body:not(.show-start-screen) #btnStartGame,
+body:not(.game-paused, .show-gameover-screen) #btnRestartGame,
+body:not(.game-paused) #btnSurrender,
 body:not(.game-paused) .game-is-paused-msg,
-body:not(.audio-auto-muted) .enable-audio-msg {
+body:not(.play-mode) :is(#btnTogglePauseGame),
+body:not(.audio-auto-muted) .enable-audio-msg,
+body.no-audio #btnToggleAudioMute {
     display: none;
 }
 

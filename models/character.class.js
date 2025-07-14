@@ -207,7 +207,7 @@ class Character extends MovableObject {
 
 
     throwBottle() {
-        if(this.bottles.length <= 0) return;
+        if(this.bottles.length <= 0 || this.healthStatus <= 0) return;
         let bottle = this.bottles[0];
         bottle.x = this.x;
         bottle.y = this.y;
@@ -222,7 +222,7 @@ class Character extends MovableObject {
 
 
     throwCoin() {
-        if(this.coins.length <= 0) return;
+        if(this.coins.length <= 0 || this.healthStatus <= 0) return;
         let coin = this.coins[0];
         coin.x = this.x;
         coin.y = this.y;

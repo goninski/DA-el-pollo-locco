@@ -5,6 +5,7 @@ let keystrokes;
 let gameStatus = 0; // 0:startscreen, -1:paused, 1:play, 2:won; 9:gameover
 let fullscreenAvailable = document.fullscreenEnabled;
 let currentAudio;
+let lastTime;
 
 function initGame(restart = false) {
     // gameStatus = 0;
@@ -74,13 +75,15 @@ function gameWon(event = null) {
 }    
 
 
-function saveIntervalsGlobally(intervals) {
-    stoppableIntervals.push(...intervals);
-}
-
-
-function clearIntervallTimeout(intervalId, timeout = 5000) {
-    setTimeout(function() {clearInterval(intervalId)}, timeout);
+function togglePauseGame(event) {
+    event.stopPropagation();
+    if(gameStatus === -1) {
+        gameStatus = 1;
+        body.classList.remove('game-paused');
+    } else {
+        gameStatus = -1;
+        body.classList.add('game-paused');
+    }
 }    
 
 
@@ -89,39 +92,27 @@ async function playAudio(file) {
         currentAudio.pause();
         currentAudio = null;
         body.classList.remove('audio-auto-muted');
+        body.classList.add('no-audio');
         return;
     } else {
         currentAudio = file;
         currentAudio.loop = currentAudio === audioStart ? true : false;
-        currentAudio.controls = true;
     }
+    await handleAudioAutoMute();
+}
+
+
+async function handleAudioAutoMute() {
     try {
       await currentAudio.play();
         currentAudio.play();
         body.classList.remove('audio-auto-muted');
+        body.classList.remove('no-audio');
     } catch (err) {
         toggleAudioMute();
         body.classList.add('audio-auto-muted');
     }
 }
-
-
-function togglePauseGame(event) {
-    event.stopPropagation();
-    let elemEnable = event.currentTarget.querySelector('.enable');
-    let elemDisable = event.currentTarget.querySelector('.disable');
-    if(gameStatus === -1) {
-        gameStatus = 1;
-        elemEnable.classList.remove('hide');
-        elemDisable.classList.add('hide');
-        body.classList.remove('game-paused');
-    } else {
-        gameStatus = -1;
-        elemEnable.classList.add('hide');
-        elemDisable.classList.remove('hide');
-        body.classList.add('game-paused');
-    }
-}    
 
 
 function toggleAudioMute(event = null) {
@@ -200,3 +191,40 @@ function setBodyClassIfTouchDevice() {
         body.classList.remove('is-touch-device');
     }
 }
+
+
+function saveIntervalsGlobally(intervals) {
+    stoppableIntervals.push(...intervals);
+}
+
+
+function clearIntervallTimeout(intervalId, timeout = 5000) {
+    setTimeout(function() {clearInterval(intervalId)}, timeout);
+}    
+
+
+function getCurrentTime() {
+    // lastTime = new Date().getTime() - 99;
+
+    let dateObj = new Date();
+    // let dateObj = new Date(new Date().setHours(0,0,0,0));
+    let time = {
+        hours:dateObj.getHours(),
+        minutes:dateObj.getMinutes(),
+        seconds:dateObj.getSeconds(),
+    }
+    // let timePassed = new Date().getTime() - this.character.lastHit;
+
+
+    Object.keys(time).forEach(key => {
+        prependNullToSingleDigits(key);
+    });
+    return time.hours + ':' + time.minutes + ':' + time.seconds + '';
+}
+
+
+function prependNullToSingleDigits(number) {
+    if(number < 10) {
+        return '0' + number;
+    }
+}    

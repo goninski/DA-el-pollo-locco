@@ -39,24 +39,25 @@
                     <button id="btnStartGame" class="button" onclick="startGame(event)" data-after="Start Game">
                         <img src="assets/icons/play.svg" alt="play-icon">
                     </button>
-                    <div class="game-is-paused-msg option-msg">Game is paused</div>
                     <button id="btnRestartGame" class="button" onclick="restartGame(event)" title="New game (startscreen)">
-                        <img src="assets/icons/amend.svg" alt="redo-icon">
+                        <img src="assets/icons/forward.svg" alt="replay-icon">
                     </button>
+                    <div id="playTimer" class="option-msg"></div>
+                    <div class="game-is-paused-msg option-msg">Game is paused</div>
                     <button id="btnSurrender" class="button" onclick="gameOver(event)" title="Surrender (game over)">
                         <img src="assets/icons/flag.svg" alt="white-flag-icon">
                     </button>
-                    <button id="btntogglePauseGame" class="button" onclick="togglePauseGame(event)" title="play/pause game">
-                        <img class="enable" src="assets/icons/pause.svg" alt="pause-icon">
-                        <img class="disable hide" src="assets/icons/play.svg" alt="play-icon">
+                    <button id="btnTogglePauseGame" class="button" onclick="togglePauseGame(event)" title="play/pause game">
+                        <img class="enable" src="assets/icons/play-pause.svg" alt="play-pause-icon">
+                        <!-- <img class="disable hide" src="assets/icons/play-pause.svg" alt="play-icon"> -->
                     </button>
                     <div class="enable-audio-msg option-msg">enable Audio >></div>
                     <button id="btnToggleAudioMute" class="button" onclick="toggleAudioMute(event)" title="play/pause audio">
                         <img class="enable" src="assets/icons/audio-playing.svg" alt="audio-playing-icon">
                         <img class="disable hide" src="assets/icons/audio-muted.svg" alt="audio-muted-toggle-icon">
                     </button>
-                    <button id="btnToggleFullscreen" class="button" onclick="toggleFullscreen(event)" title="toggle fullscreen">
-                        <img class="enable" src="assets/icons/fullscreen.svg" alt="fullscreen-toggle-icon">
+                    <button id="btnToggleFullscreen" class="button" onclick="toggleFullscreen(event)" title="Fullscreen on/off">
+                        <img class="enable" src="assets/icons/fullscreen.svg" alt="Fullscreen-toggle-icon">
                         <img class="disable hide" src="assets/icons/fullscreen-exit.svg" alt="exit-fullscreen-icon">
                     </button>
                 </div>
