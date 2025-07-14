@@ -181,6 +181,19 @@ function closeFullscreen() {
 }
 
 
+function toggleHelp(event) {
+    event.stopPropagation();
+    if(body.classList.contains('show-help')) {
+        body.classList.remove('show-help');
+        // gameStatus === -1 ? gameStatus = 1 : null; 
+    } else {
+        body.classList.add('show-help');
+        // gameStatus === 1 ? gameStatus = -1 : null; 
+    }
+    togglePauseGame(event);
+}   
+
+
 function isTouchEnabled() {
     return ( 'ontouchstart' in window ) || 
            ( navigator.maxTouchPoints > 0 ) || 

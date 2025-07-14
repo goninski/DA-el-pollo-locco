@@ -44,47 +44,48 @@
                     <button id="btnRestartGame" class="button" onclick="restartGame(event)" title="New game (startscreen)">
                         <img src="assets/icons/forward.svg" alt="replay-icon">
                     </button>
-                    <button id="btnSurrender" class="button" onclick="gameOver(event)" title="Surrender (game over)">
+                    <button id="btnSurrender" onclick="gameOver(event)" title="Surrender (game over)">
                         <img src="assets/icons/flag.svg" alt="white-flag-icon">
                     </button>
-                    <button id="btnTogglePauseGame" class="button" onclick="togglePauseGame(event)" title="play/pause game">
-                        <img class="enable" src="assets/icons/play-pause.svg" alt="play-pause-icon">
-                        <!-- <img class="disable hide" src="assets/icons/play-pause.svg" alt="play-icon"> -->
+                    <button id="btnTogglePauseGame" onclick="togglePauseGame(event)" title="play/pause game">
+                        <img class="" src="assets/icons/play-pause.svg" alt="play-pause-icon">
                     </button>
                     <div class="enable-audio-msg option-msg">enable Audio >></div>
-                    <button id="btnToggleAudioMute" class="button" onclick="toggleAudioMute(event)" title="play/pause audio">
+                    <button id="btnToggleAudioMute" onclick="toggleAudioMute(event)" title="play/pause audio">
                         <img class="enable" src="assets/icons/audio-playing.svg" alt="audio-playing-icon">
                         <img class="disable hide" src="assets/icons/audio-muted.svg" alt="audio-muted-toggle-icon">
                     </button>
-                    <button id="btnToggleFullscreen" class="button" onclick="toggleFullscreen(event)" title="Fullscreen on/off">
+                    <button id="btnToggleFullscreen" onclick="toggleFullscreen(event)" title="Fullscreen on/off">
                         <img class="enable" src="assets/icons/fullscreen.svg" alt="Fullscreen-toggle-icon">
                         <img class="disable hide" src="assets/icons/fullscreen-exit.svg" alt="exit-fullscreen-icon">
                     </button>
-                </div>
-                <div class="nav-panel" xdata-after="Pepe's actions">
-                    <button id="btnMoveLeft" class="" xdata-before="move left"><img src="assets/icons/spacebar-orange.png" alt="arrow-left-keyboard-icon"><span><<</span></button>
-                    <button id="btnJump" class="key-wide" xdata-before="[space bar]"><img src="assets/icons/spacebar-orange.png" alt="spacebar-keyboard-icon-for-jump"><span>JUMP</span></button>
-                    <button id="btnThrowBottle" class="" xdata-before="throw bottle"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><img class="label-img" src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"><span></span></button>
-                    <button id="btnMoveRight" class="" xdata-before="move right"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><span>>></span></button>
+                    <button id="btnToggleHelp" onclick="toggleHelp(event)" title="Help on/off">
+                        <img class="" src="assets/icons/help-fill.svg" alt="question-mark-icon">
+                    </button>
                 </div>
             </div>
-
-            <!-- <div class="nav-panel nav-panel-touch" data-after="Pepe's actions">
-                <button id="btnMoveLeft" class="button xbefore-empty" data-before="[ < ]" data-after="left"><span><<</span></button>
-                <button id="btnMoveRight" class="button xbefore-empty" data-before="[ > ]" data-after="right"><span>>></span></button>
-                <button id="btnJump" class="button" data-before="[ space ]" data-after="jump"><span>>></span></button>
-                <button id="btnThrowBottle" class="button" data-before="[ B ]" data-after="throw"><img src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
-            </div> -->
-
-            <!-- <div class="nav-panel nav-panel-touch" data-after="Pepe's actions">
-                <button id="btnMoveLeft" class="button icon-btn btn-touch before-empty" data-before="-" data-after="left"><img src="assets/icons/arrow.svg" alt="arrow-left-icon"></button>
-                <button id="btnMoveRight" class="button icon-btn btn-touch before-empty" data-before="-" data-after="right"><img src="assets/icons/arrow.svg" alt="arrow-right-icon"></button>
-                <button id="btnJump" class="button icon-btn btn-touch" data-before="[space]" data-after="jump"><img src="assets/icons/arrow.svg" alt="arrow-up-icon"></button>
-                <button id="btnThrowBottle" class="button icon-btn btn-touch" data-before="[B]" data-after="throw"><img src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
-                <button id="btnThrowCoin" class="button btn-touch">Throw Bottle<span>:&emsp;C</span></button>
-            </div> -->
-
-
+            <div class="nav-panel" data-before="Pepe's actions">
+                <div class="button-wrapper">
+                    <div class="info-action">Move left</div>
+                    <div class="info-key">[ < ]</div>
+                    <button id="btnMoveLeft"><img src="assets/icons/spacebar-orange.png" alt="arrow-left-keyboard-icon"><span class="label"><<</span></button>
+                </div>
+                <div class="button-wrapper">
+                    <div class="info-action">Jump</div>
+                    <div class="info-key">[ space ]</div>
+                    <button id="btnJump"><img src="assets/icons/spacebar-orange.png" alt="spacebar-keyboard-icon-for-jump"><span class="label">JUMP</span></button>
+                </div>
+                <div class="button-wrapper">
+                    <div class="info-action">Throw bottle</div>
+                    <div class="info-key">[ B ]</div>
+                    <button id="btnThrowBottle"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><img class="label-img" src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
+                </div>
+                <div class="button-wrapper">
+                    <div class="info-action">Move right</div>
+                    <div class="info-key">[ > ]</div>
+                    <button id="btnMoveRight"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><span class="label">>></span></button>
+                </div>
+            </div>
         </div>
     </main>
 
