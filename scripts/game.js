@@ -5,10 +5,9 @@ let keystrokes;
 let gameStatus = 0; // 0:startscreen, -1:paused, 1:play, 2:won; 9:gameover
 let fullscreenAvailable = document.fullscreenEnabled;
 let currentAudio;
-let lastTime;
+let secondsPlay = 0;
 
 function initGame(restart = false) {
-    // gameStatus = 0;
     canvas = document.getElementById('canvas');
     body = document.body;
     let btnToggleFullscreen = document.getElementById('btnToggleFullscreen')
@@ -30,6 +29,7 @@ function startGame(event) {
     initLevel1();
     world = new World(canvas, keystrokes);
     playAudio(null);
+    secondsPlay = 0;
 }  
 
 
@@ -203,28 +203,19 @@ function clearIntervallTimeout(intervalId, timeout = 5000) {
 }    
 
 
-function getCurrentTime() {
-    // lastTime = new Date().getTime() - 99;
-
-    let dateObj = new Date();
-    // let dateObj = new Date(new Date().setHours(0,0,0,0));
+function timerUpCounter() {
+    secondsPlay++;
+    let dateObj = new Date(secondsPlay * 1000);
     let time = {
         hours:dateObj.getHours(),
         minutes:dateObj.getMinutes(),
         seconds:dateObj.getSeconds(),
     }
-    // let timePassed = new Date().getTime() - this.character.lastHit;
-
-
-    Object.keys(time).forEach(key => {
-        prependNullToSingleDigits(key);
+    Object.entries(time).forEach(i => {
+        let key = i[0];
+        let val = i[1];
+        time[key] = (val < 10 ? '0' + val : val);
     });
     return time.hours + ':' + time.minutes + ':' + time.seconds + '';
 }
 
-
-function prependNullToSingleDigits(number) {
-    if(number < 10) {
-        return '0' + number;
-    }
-}    

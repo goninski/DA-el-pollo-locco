@@ -111,7 +111,9 @@ class World {
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
-            document.getElementById('playTimer').innerHTML = getCurrentTime();
+            if(gameStatus === 1) {
+                document.getElementById('playTimer').innerHTML = timerUpCounter();
+            }
         }, 1000);
         this.intervals.push(intervalId);
     }
