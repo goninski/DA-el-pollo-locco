@@ -16,7 +16,7 @@
     --full-height: 100svh;
     --canvas-width: 1000px;
     --clr-accent: hsl(35, 50%, 31%);
-    --clr-accent-dark: hsl(35, 50%, 24%);
+    --clr-accent-dark: hsl(35, 50%, 20%);
     --cpx: 24px;
 }
 h1 {
@@ -27,9 +27,8 @@ button {
     font-size: inherit;
     cursor: pointer;
     transition-duration: 175ms;
-}
-.button {
     border: none;
+    color: var(--clr-accent-dark);
 }
 button img {
     height: 32px;
@@ -65,13 +64,13 @@ main {
     max-width: calc(var(--canvas-width) + 12px);
     text-align: center;
     /* padding: 32px 20px; */
-    gap: 32px;
+    /* gap: 32px; */
     /* background-color: red; */
 }
 #screenOverlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 #startScreen {
     background-image: url(assets/img/9_intro_outro_screens/start/startscreen_1.png);
@@ -126,13 +125,17 @@ h1 {
     display: block;
 }
 
+
+/* OPTION PANEL */
 .option-panel {
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
+    top: 1rem;
+    /* bottom: 1rem; */
+    right: 1.5rem;
     display: flex;
     justify-content: end;
-    align-items: end;
+    align-items: start;
+    /* align-items: end; */
     width: 100%;
     gap: 0.5rem;
     button {
@@ -142,10 +145,8 @@ h1 {
         transform: scale(1.1);
     }
     #btnStartGame {
-        margin-left: 2rem;
+        margin-left: 2.75rem;
         margin-right: auto;
-        color: orange;
-        /* color: var(--clr-accent-dark); */
         img {
             height: 72px;
             --pulse-scale: 1.1;
@@ -157,24 +158,26 @@ h1 {
     }
     .option-msg {
         color: orange;
-        margin-bottom: 12px;
-        margin-right: 4px;
+        margin-top: 6px;
+        margin-inline: 8px;
         --pulse-scale: 1.05;
     }
     #playTimer, .game-is-paused-msg {
-        margin-left: 2.5rem;
-        margin-right: auto;
+        /* margin-left: 2.75rem;
+        margin-right: auto; */
     }
     .enable-audio-msg {
         animation: pulse 1s infinite ease-in-out;
     }
 }
 body.show-gameover-screen .option-panel {
-    gap: 1.25rem;
+    /* top: unset;
     bottom: 1.5rem;
+    align-items: end; */
+    /* gap: 1.25rem; */
     button {
         border-radius: 100%;
-        background-color:hsla(39, 100%, 50%, 0.7);
+        background-color:hsla(39, 100%, 50%, 0.8);
         box-shadow: 2px 2px 16px 1px hsla(39, 100%, 50%, 0.5);
         img {
             height: 24px;
@@ -186,13 +189,23 @@ body.show-gameover-screen .option-panel {
         background-color:hsla(39, 100%, 50%, 0.9);
     }
     #btnRestartGame {
+        /* order: -1;
         margin-right: auto;
-        margin-left: 2rem;
+        margin-left: 2.75rem; */
+         color: orange;
+        animation: pulse 1.5s infinite ease-in-out;
         img {
-            height: 56px;
+            /* height: 56px; */
             content: url(assets/icons/refresh.svg);
         }
     }
+    .option-msg {
+        color: orange;
+        margin-top: 10px;
+    }
+}
+body.game-paused #playTimer {
+    margin-right: unset;
 }
 body.game-paused #btnTogglePauseGame img {
     --pulse-scale: 1.6;
@@ -215,6 +228,62 @@ body.no-audio #btnToggleAudioMute {
 
 /* NAV PANEL */
 .nav-panel {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    /* max-width: calc(100% - 400px); */
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: center;
+    /* flex-wrap: wrap; */
+    gap: 0.75rem;
+    button {
+        position: relative;
+        background-color: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--clr-accent-dark);
+        img {
+            opacity: 0.85;
+            height: 40px;
+        }
+        span {
+            display: inline-flex;
+            position: absolute;
+        };
+        img.label-img {
+            position: absolute;
+            height: 24px;
+        }
+    }
+    /* button:not(.key-wide) img {
+        width: 5rem;
+        height: 37px;
+        object-fit: fill;
+    } */
+}
+body:not(.show-start-screen, .play-mode) .nav-panel,
+body.game-paused .nav-panel {
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+/* NAV PANEL OLD */
+.nav-panel-touch {
+    /* position: absolute;
+    bottom: 0;
+    transform: translateY(-100%); */
     z-index: 1;
     display: flex;
     justify-content: center;
@@ -224,12 +293,10 @@ body.no-audio #btnToggleAudioMute {
     background-color: hsl(39deg 100% 40%);
     border-radius: 999rem;
     padding: 1.25rem 3rem;
-    display: none;
+    /* display: none; */
 }
 .nav-panel-touch  {
-    position: relative;
     padding-bottom: 2.5rem;
-    transform: translateY(-5.5rem);
     border: solid 2px rgba(0,0,0,0.7);
 }
 .nav-panel-touch::after  {
@@ -276,7 +343,7 @@ body.no-audio #btnToggleAudioMute {
 body.is-touch-device .nav-panel-touch .button[data-before]::before {
     display: none;
 }
-#btnMoveLeft img {
+/* #btnMoveLeft img {
     rotate: 180deg;
 }
 #btnJump span {
@@ -284,6 +351,24 @@ body.is-touch-device .nav-panel-touch .button[data-before]::before {
 }
 #btnThrowBottle img {
     transform: scale(0.8);
+} */
+
+
+
+
+#orientationOverlay {
+    /* display: flex; */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 20px;
+    color: orange;
+    line-height: 1.5;
 }
 
 .hide:not(.show-temp) {
@@ -311,23 +396,49 @@ body.is-touch-device .nav-panel-touch .button[data-before]::before {
     .game-over-text {
         font-size: 10vw;
     }
+    /* .option-panel {
+        position: absolute;
+        top: 1rem;
+        align-items: start;
+    } */
+    .nav-panel {
+        bottom: 0.8vw;
+    }
 }
-
+@media(max-width: 719px) {
+    .nav-panel {
+        bottom: 0.6vw;
+        button img {
+            height: 32px;
+        }
+    }
+}
 @media only screen and (max-height: 562px) {
     main {
-        padding-block: 0;
         --cpx: 0;
+        padding-block: 0;
+        /* background: var(--clr-accent); */
     }
     canvas {
         max-height: 100vh;
-        max-height: var(--full-height);
+        max-height: calc(var(--full-height) - 12px - 3px);
         width: auto;
-        max-width: calc(100% - 12px - 12px);
+        /* max-width: calc(100% - 12px); */
+        max-width: 100%;
     }
 }
 
 @media (orientation: landscape) and (min-aspect-ratio: 13/10) {
     .page-title {
         display: none;
+    }
+}
+
+@media(orientation: portrait) and (max-width: 567px) {
+    body {
+        overflow: hidden !important;
+    }
+    #orientationOverlay {
+        display: flex;
     }
 }

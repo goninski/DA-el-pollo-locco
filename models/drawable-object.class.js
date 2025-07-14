@@ -52,14 +52,16 @@ class DrawableObject {
 
     
     drawRectangle(ctx) {
-        if(this instanceof MovableObject && !(this instanceof Clouds) ) {
-        // if(this instanceof Character || this instanceof Chicken || this instanceof Endboss ) {
-            this.setBorderCoordinates();
-            ctx.beginPath();
-            ctx.rect(this.borderX, this.borderY, this.borderWidth, this.borderHeight);
-            ctx.stroke();
-            ctx.lineWidth = '5';
-            ctx.strokeStyle = 'orange';
+        if(showObjectBorders) {
+            if(this instanceof MovableObject && !(this instanceof Clouds) ) {
+            // if(this instanceof Character || this instanceof Chicken || this instanceof Endboss ) {
+                this.setBorderCoordinates();
+                ctx.beginPath();
+                ctx.rect(this.borderX, this.borderY, this.borderWidth, this.borderHeight);
+                ctx.stroke();
+                ctx.lineWidth = '5';
+                ctx.strokeStyle = 'orange';
+            }
         }
     }
 

@@ -4,7 +4,7 @@ class World {
     ctx;
     screenTranslateX = 0;
     intervals = [];
-    timer = 0;
+    // timer = 0;
 
     level = level1;
     backgrounds = level1.backgrounds;
@@ -112,7 +112,8 @@ class World {
 
         intervalId = setInterval(() => {
             if(gameStatus === 1) {
-                document.getElementById('playTimer').innerHTML = timerUpCounter();
+                timer = timerUpCounter();
+                document.getElementById('playTimer').innerHTML =  timer;
             }
         }, 1000);
         this.intervals.push(intervalId);

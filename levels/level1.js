@@ -67,10 +67,10 @@ function initLevel1() {
             new Coin(),    
         ],
         [
-            new StatusBar('HEALTH', widthCanvas * 0.03, heightCanvas * 0.03),    
-            new StatusBar('COINS', (widthCanvas * 0.03) + 20, (heightCanvas * 0.03) + 36),    
-            new StatusBar('BOTTLES', (widthCanvas * 0.03 + 40), (heightCanvas * 0.03) + 72),    
-            new StatusBar('ENDBOSS', (widthCanvas * 0.97) - 158, (heightCanvas * 0.03)),    
+            new StatusBar('HEALTH', widthCanvas * 0.015, heightCanvas * 0.03),    
+            new StatusBar('COINS', (widthCanvas * 0.015) + 20, (heightCanvas * 0.03) + 36),    
+            new StatusBar('BOTTLES', (widthCanvas * 0.015 + 40), (heightCanvas * 0.03) + 72),    
+            new StatusBar('ENDBOSS', (widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72),    
         ],
     );
 }
