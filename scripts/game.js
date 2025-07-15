@@ -27,7 +27,7 @@ function startGame(event) {
     event.stopPropagation();
     hideAllScreens();
     stoppableIntervals.forEach(clearInterval);
-    body.classList.add('play-mode');
+    body.classList.add('play-screen');
     gameStatus = 1;
     initLevel1();
     world = new World(canvas, keystrokes);
@@ -44,17 +44,19 @@ function restartGame(event) {
 
 
 function hideAllScreens() {
-    body.classList.remove('show-start-screen');
-    body.classList.remove('show-win-screen');
-    body.classList.remove('show-gameover-screen');
-    body.classList.remove('play-mode');
+    body.classList.remove('start-screen');
+    body.classList.remove('win-screen');
+    body.classList.remove('game-over-screen');
+    body.classList.remove('play-screen');
     body.classList.remove('game-paused');
+    body.classList.remove('help-screen');
 }
 
 
 function showStartScreen() {
     hideAllScreens();
-    body.classList.add('show-start-screen');
+    body.classList.add('start-screen');
+    body.classList.add('help-screen');
     playAudio(audioStart);
 }
 
@@ -65,7 +67,7 @@ function gameOver(event = null) {
     gameStatus = 9;
     stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
-    body.classList.add('show-gameover-screen');
+    body.classList.add('game-over-screen');
     document.getElementById('playTimer').innerHTML = timer;
 }    
 
@@ -75,19 +77,7 @@ function gameWon(event = null) {
     gameStatus = 2;
     stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
-    body.classList.add('show-win-screen');
-}    
-
-
-function togglePauseGame(event) {
-    event.stopPropagation();
-    if(gameStatus === -1) {
-        gameStatus = 1;
-        body.classList.remove('game-paused');
-    } else {
-        gameStatus = -1;
-        body.classList.add('game-paused');
-    }
+    body.classList.add('win-screen');
 }    
 
 
@@ -144,7 +134,7 @@ function toggleAudioMute(event = null) {
 
 function toggleFullscreen(event) {
     event.stopPropagation();
-    let fullscreenElem = document.querySelector('.fullscreen');
+    let fullscreenElem = document.querySelector('.fullscreen-element');
     let elemEnable = event.currentTarget.querySelector('.enable');
     let elemDisable = event.currentTarget.querySelector('.disable');
     if (!document.fullscreenElement) {
@@ -183,15 +173,32 @@ function closeFullscreen() {
 
 function toggleHelp(event) {
     event.stopPropagation();
-    if(body.classList.contains('show-help')) {
-        body.classList.remove('show-help');
-        // gameStatus === -1 ? gameStatus = 1 : null; 
+    body.classList.remove('game-paused');
+    if(body.classList.contains('help-screen')) {
+        body.classList.remove('help-screen');
+        if(body.classList.contains('play-screen')) {
+            gameStatus = 1;
+        }
     } else {
-        body.classList.add('show-help');
-        // gameStatus === 1 ? gameStatus = -1 : null; 
+        body.classList.add('help-screen');
+        if(body.classList.contains('play-screen')) {
+            body.classList.add('game-paused');
+            gameStatus = -1;
+        }
     }
-    togglePauseGame(event);
 }   
+
+
+// function togglePauseGame(event) {
+//     event.stopPropagation();
+//     if(gameStatus === -1) {
+//         gameStatus = 1;
+//         body.classList.remove('game-paused');
+//     } else {
+//         gameStatus = -1;
+//         body.classList.add('game-paused');
+//     }
+// }    
 
 
 function isTouchEnabled() {
