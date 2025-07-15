@@ -9,7 +9,7 @@ class DrawableObject {
     objectName;
     skipDrawing = false;
 
-
+    
     constructor() {
         this.objectName = this.constructor.name;
     }

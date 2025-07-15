@@ -36,8 +36,8 @@
                 <div class="canvas-wrapper">
                     <canvas id="canvas" width="1000" height="562">Your browser does not support canvas element !</canvas>
                     <div id="gameOverScreen" class="canvas-cover"></div>
-                    <div id="screenOverlay" class=""></div>
                     <div id="startScreen" class="canvas-cover"></div>
+                    <div id="screenOverlay" class=""></div>
                 </div>
 
                 <div class="option-panel">
@@ -55,7 +55,7 @@
                     <!-- <button id="btnTogglePauseGame" onclick="togglePauseGame(event)" title="Play/Pause game">
                         <img class="" src="assets/icons/play-pause.svg" alt="play-pause-icon">
                     </button> -->
-                    <div class="enable-audio-msg option-msg">enable Audio >></div>
+                    <!-- <div class="enable-audio-msg option-msg">enable Audio >></div> -->
                     <button id="btnToggleAudioMute" onclick="toggleAudioMute(event)" title="Play/Pause audio">
                         <img class="enable" src="assets/icons/audio-playing.svg" alt="audio-playing-icon">
                         <img class="disable hide" src="assets/icons/audio-muted.svg" alt="audio-muted-toggle-icon">
@@ -84,6 +84,11 @@
                             <button id="btnMoveLeft"><img src="assets/icons/spacebar-orange.png" alt="arrow-left-keyboard-icon"><span class="label"><<</span></button>
                         </div>
                         <div class="button-wrapper">
+                            <div class="info-action help">Move right</div>
+                            <div class="info-key help">[ > ]</div>
+                            <button id="btnMoveRight"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><span class="label">>></span></button>
+                        </div>
+                        <div class="button-wrapper">
                             <div class="info-action help">Jump</div>
                             <div class="info-key help">[ space ]</div>
                             <button id="btnJump"><img src="assets/icons/spacebar-orange.png" alt="spacebar-keyboard-icon-for-jump"><span class="label">JUMP</span></button>
@@ -92,11 +97,6 @@
                             <div class="info-action help">Throw bottle</div>
                             <div class="info-key help">[ B ]</div>
                             <button id="btnThrowBottle"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><img class="label-img" src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
-                        </div>
-                        <div class="button-wrapper">
-                            <div class="info-action help">Move right</div>
-                            <div class="info-key help">[ > ]</div>
-                            <button id="btnMoveRight"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><span class="label">>></span></button>
                         </div>
                     </div>
                 </div>

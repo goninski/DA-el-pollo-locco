@@ -24,7 +24,7 @@ class Character extends MovableObject {
         imgPathBase + '2_character_pepe/1_idle/idle/I-10.png',
     ];
 
-    IMAGES_LONG_IDLE = [
+    IMAGES_IDLE_LONG = [
         imgPathBase + '2_character_pepe/1_idle/long_idle/I-11.png',
         imgPathBase + '2_character_pepe/1_idle/long_idle/I-12.png',
         imgPathBase + '2_character_pepe/1_idle/long_idle/I-13.png',
@@ -82,6 +82,8 @@ class Character extends MovableObject {
         this.setWalkGroundY();
         // this.setBorderCoordinates();
         this.loadImage(this.IMAGES_WALKING[0]);
+        this.setImageCache(this.IMAGES_IDLE);
+        this.setImageCache(this.IMAGES_IDLE_LONG);
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_JUMPING);
         this.setImageCache(this.IMAGES_HURT);
@@ -161,12 +163,40 @@ class Character extends MovableObject {
                 this.deadHandling();
             } else if(this.isHurt()) {
                 this.hurtHandling();
+            } else if(this.isIdleLong()) {
+                this.idleLongAnimation();
+            } else if(this.isIdle()) {
+                this.idleAnimation();
             } else {
                 this.walkingAnimation();
             }
         }
     }
    
+
+    isIdle() {
+        let timePassed = new Date().getTime() - this.world.keystrokes.lastAction;
+        return timePassed >= 2000;
+    }
+
+
+    isIdleLong() {
+        let timePassed = new Date().getTime() - this.world.keystrokes.lastAction;
+        return timePassed >= 4000;
+    }
+
+
+    idleAnimation(imagePaths = 'IMAGES_IDLE') {
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);    
+    }
+
+
+    idleLongAnimation(imagePaths = 'IMAGES_IDLE_LONG') {
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);    
+    }
+
 
     walkingAnimation() {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
@@ -234,4 +264,5 @@ class Character extends MovableObject {
         console.log(this.coins);
         console.log(this.coinStatus);
     }
+
 }
