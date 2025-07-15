@@ -56,7 +56,7 @@ function hideAllScreens() {
 function showStartScreen() {
     hideAllScreens();
     body.classList.add('start-screen');
-    body.classList.add('help-screen');
+    // body.classList.add('help-screen');
     playAudio(audioStart);
 }
 

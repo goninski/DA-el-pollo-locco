@@ -28,13 +28,18 @@
     <main class="">
         <div class="main-inner">
 
-            <h1 id="title" class="page-title">El pollo Loco</h1>
 
-            <div class="canvas-wrapper">
-                <canvas id="canvas" width="1000" height="562">Your browser does not support canvas element !</canvas>
-                <div id="gameOverScreen" class="canvas-cover"></div>
-                <div id="screenOverlay" class=""></div>
-                <div id="startScreen" class="canvas-cover"></div>
+            <div class="canvas-main-wrapper">
+
+                <h1 id="title" class="page-title">El pollo Loco</h1>
+
+                <div class="canvas-wrapper">
+                    <canvas id="canvas" width="1000" height="562">Your browser does not support canvas element !</canvas>
+                    <div id="gameOverScreen" class="canvas-cover"></div>
+                    <div id="screenOverlay" class=""></div>
+                    <div id="startScreen" class="canvas-cover"></div>
+                </div>
+
                 <div class="option-panel">
                     <button id="btnStartGame" class="button" onclick="startGame(event)" data-after="Start Game">
                         <img src="assets/icons/play.svg" alt="play-icon">
@@ -51,42 +56,53 @@
                         <img class="" src="assets/icons/play-pause.svg" alt="play-pause-icon">
                     </button> -->
                     <div class="enable-audio-msg option-msg">enable Audio >></div>
-                    <button id="btnToggleHelp" onclick="toggleHelp(event)" title="Help/Pause on/off">
-                        <img class="" src="assets/icons/info-alert.svg" alt="question-mark-icon">
-                    </button>
                     <button id="btnToggleAudioMute" onclick="toggleAudioMute(event)" title="Play/Pause audio">
                         <img class="enable" src="assets/icons/audio-playing.svg" alt="audio-playing-icon">
                         <img class="disable hide" src="assets/icons/audio-muted.svg" alt="audio-muted-toggle-icon">
+                    </button>
+                    <button id="btnToggleHelp" onclick="toggleHelp(event)" title="Help/Pause on/off">
+                        <img class="" src="assets/icons/info-alert.svg" alt="question-mark-icon">
                     </button>
                     <button id="btnToggleFullscreen" onclick="toggleFullscreen(event)" title="Fullscreen on/off">
                         <img class="enable" src="assets/icons/fullscreen.svg" alt="Fullscreen-toggle-icon">
                         <img class="disable hide" src="assets/icons/fullscreen-exit.svg" alt="exit-fullscreen-icon">
                     </button>
                 </div>
+
+                <div class="nav-panel" data-before="Instructions for Pepe">
+                    <div class="play-info help">
+                        LEVEL 1 :<br>
+                        Eliminate all chickens whether they are small or big.<br>
+                        Use jumps and throw bottles.<br> 
+                        Collect 5 coins to get 1 extra bottle.
+                        <hr>
+                    </div>
+                    <div class="buttons-wrapper">
+                        <div class="button-wrapper">
+                            <div class="info-action help">Move left</div>
+                            <div class="info-key help">[ < ]</div>
+                            <button id="btnMoveLeft"><img src="assets/icons/spacebar-orange.png" alt="arrow-left-keyboard-icon"><span class="label"><<</span></button>
+                        </div>
+                        <div class="button-wrapper">
+                            <div class="info-action help">Jump</div>
+                            <div class="info-key help">[ space ]</div>
+                            <button id="btnJump"><img src="assets/icons/spacebar-orange.png" alt="spacebar-keyboard-icon-for-jump"><span class="label">JUMP</span></button>
+                        </div>
+                        <div class="button-wrapper">
+                            <div class="info-action help">Throw bottle</div>
+                            <div class="info-key help">[ B ]</div>
+                            <button id="btnThrowBottle"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><img class="label-img" src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
+                        </div>
+                        <div class="button-wrapper">
+                            <div class="info-action help">Move right</div>
+                            <div class="info-key help">[ > ]</div>
+                            <button id="btnMoveRight"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><span class="label">>></span></button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="nav-panel" data-before="Pepe's actions">
-                <div class="button-wrapper">
-                    <div class="info-action help">Move left</div>
-                    <div class="info-key help">[ < ]</div>
-                    <button id="btnMoveLeft"><img src="assets/icons/spacebar-orange.png" alt="arrow-left-keyboard-icon"><span class="label"><<</span></button>
-                </div>
-                <div class="button-wrapper">
-                    <div class="info-action help">Jump</div>
-                    <div class="info-key help">[ space ]</div>
-                    <button id="btnJump"><img src="assets/icons/spacebar-orange.png" alt="spacebar-keyboard-icon-for-jump"><span class="label">JUMP</span></button>
-                </div>
-                <div class="button-wrapper">
-                    <div class="info-action help">Throw bottle</div>
-                    <div class="info-key help">[ B ]</div>
-                    <button id="btnThrowBottle"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><img class="label-img" src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
-                </div>
-                <div class="button-wrapper">
-                    <div class="info-action help">Move right</div>
-                    <div class="info-key help">[ > ]</div>
-                    <button id="btnMoveRight"><img src="assets/icons/spacebar-orange.png" alt="arrow-right-keyboard-icon"><span class="label">>></span></button>
-                </div>
-            </div>
         </div>
     </main>
 

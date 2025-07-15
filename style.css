@@ -14,11 +14,10 @@
 :root {
     --full-height: 100vh;
     --full-height: 100svh;
+    --cpx: 24px;
     --canvas-width: 1000px;
     --clr-accent: hsl(35, 50%, 31%);
     --clr-accent-dark: hsl(35, 50%, 20%);
-    --cpx: 24px;
-    --height-nav-panel: 62px;
 }
 h1 {
     margin: 0;
@@ -64,9 +63,6 @@ main {
     align-items: center;
     max-width: calc(var(--canvas-width) + 12px);
     text-align: center;
-    /* padding: 32px 20px; */
-    /* gap: 32px; */
-    /* background-color: red; */
 }
 #screenOverlay {
     position: fixed;
@@ -88,6 +84,11 @@ body.win-screen :is(#startScreen, #gameOverScreen),
 body.game-over-screen :is(#startScreen, #winScreen) {
     display: none;
 }
+.canvas-main-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
 .canvas-wrapper {
     position: relative;
     box-sizing: content-box;
@@ -102,10 +103,6 @@ body.game-over-screen :is(#startScreen, #winScreen) {
     inset: 0;
     background-repeat: no-repeat;
     background-size: cover;
-}
-h1 {
-    font-size: 5rem;
-    line-height: 1.1;
 }
 .icon-btn {
     background-color: transparent;
@@ -126,10 +123,23 @@ h1 {
 }
 
 
+.page-title {
+    position: absolute;
+    transform: translate(50%, -50%);
+    z-index: 1;
+    font-size: 2rem;
+    line-height: 1.1;
+    background-color: var(--clr-accent);
+    color: orange;
+    border-radius: 999rem;
+    padding-inline: 1em;
+    padding-block: 0.3em;
+}
+
 /* OPTION PANEL */
 .option-panel {
     position: absolute;
-    top: 1rem;
+    top: 1.25rem;
     right: 1.5rem;
     display: flex;
     justify-content: end;
@@ -161,17 +171,13 @@ h1 {
         transform: scale(1.4);
     }
     #btnToggleHelp img {
-        transform: scale(1.2);
+        transform: scale(1.2) translateY(-5%);
     }
     .option-msg {
         color: orange;
-        margin-top: 6px;
+        margin-top: 10px;
         margin-inline: 8px;
         --pulse-scale: 1.05;
-    }
-    #playTimer, .game-is-paused-msg {
-        /* margin-left: 2.75rem;
-        margin-right: auto; */
     }
     .enable-audio-msg {
         animation: pulse 1s infinite ease-in-out;
@@ -202,20 +208,19 @@ body.game-over-screen .option-panel {
     }
     .option-msg {
         color:hsla(39, 100%, 50%, 0.8);
-        margin-top: 10px;
+        margin-top: 14px;
     }
 }
-body.game-paused #playTimer {
-    margin-right: unset;
-}
-body.game-paused :is(#btnTogglePauseGame, #btnToggleHelp) img {
-    --pulse-scale: 1.5;
+body.game-paused :is(#btnTogglePauseGame, #btnToggleHelp) img,
+body.start-screen:not(.help-screen) #btnToggleHelp img {
+    --pulse-scale: 1.4;
     animation: pulse 1.5s infinite ease-in-out;
 }
 body.audio-muted:not(.game-paused) #btnToggleAudioMute img {
     --pulse-scale: 1.3;
     animation: pulse 1.5s infinite ease-in-out;
 }
+body.game-over-screen #btnToggleHelp,
 body:not(.start-screen) #btnStartGame,
 body:not(.game-paused, .game-over-screen) #btnRestartGame,
 body:not(.game-paused) #btnSurrender,
@@ -229,16 +234,25 @@ body.no-audio #btnToggleAudioMute {
 
 /* NAV PANEL */
 .nav-panel {
-    transform: translate(24%,-45%);
+    position: absolute;
+    bottom: 9px;
+    right: 9px;
     display: flex;
-    justify-content: center;
-    gap: 0.75rem;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    gap: 1rem;
     background: linear-gradient(to top right, hsl(194, 69%, 47%), hsl(195, 28%, 89%));
-    border-radius: 999rem;
     border: solid 2px var(--clr-accent);
-    padding-block: 1.3rem 0.7rem;
+    border-radius: 36px;
+    border-bottom-right-radius: 0;
+    padding-block: 2rem 1rem;
     padding-inline: 2.25rem;
     opacity: 0.925;
+    .buttons-wrapper {
+        display: flex;
+        gap: 0.75rem
+    }
     .button-wrapper {
         display: flex;
         flex-direction: column;
@@ -257,6 +271,7 @@ body.no-audio #btnToggleAudioMute {
         justify-content: center;
         color: var(--clr-accent-dark);
         margin-top: 4px;
+        cursor: auto;
         img {
             opacity: 0.85;
             height: 40px;
@@ -271,18 +286,31 @@ body.no-audio #btnToggleAudioMute {
             height: 24px;
         }
     }
+    .play-info {
+        font-size: 0.7rem;
+        line-height: 1.8;
+        width: 100%;
+        hr {
+            margin-top: 1em;
+        };
+    }
 }
 .nav-panel::before {
     position: absolute;
-    transform: translate(50%, -125%);
+    transform: translate(30%, -145%);
     background-color: var(--clr-accent-dark);
     color: orange;
     padding-block: 0.5rem 0.66rem;
-    padding-inline: 1.2rem;
+    padding-inline: 1.5rem;
     border-radius: 999rem;
 }
-body.is-touch-device .nav-panel .info-key,
 body:not(.help-screen) .nav-panel {
+    display: none;
+}
+body.is-touch-device .nav-panel {
+    right: unset;
+}
+body.is-touch-device .nav-panel .info-key {
     display: none;
 }
 body.is-touch-device:is(.start-screen, .play-screen):not(.help-screen) {
@@ -295,15 +323,9 @@ body.is-touch-device:is(.start-screen, .play-screen):not(.help-screen) {
         display: none;
     }
 }
-body.is-touch-device:is(.start-screen, .play-screen) .nav-panel {
+body.is-touch-device.play-screen .nav-panel {
     display: flex !important;
-    transform: translateY(-100%);
 }
-body:not(.start-screen, .play-screen) .canvas-wrapper,
-body.game-paused .canvas-wrapper {
-    /* transform: translateY(calc(var(--height-nav-panel) / -2)); */
-}
-
 
 
 #orientationOverlay {
@@ -320,10 +342,8 @@ body.game-paused .canvas-wrapper {
     color: orange;
     line-height: 1.5;
 }
+.hide-temp,
 .hide:not(.show-temp) {
-    display: none !important;
-}
-.hide-temp {
     display: none !important;
 }
 
@@ -336,44 +356,44 @@ body.game-paused .canvas-wrapper {
     canvas {
         width: calc(100% - 12px - 12px);
     }
-    /* .page-title {
-        display: none;
+    /* .nav-panel {
+        transform: translate(0, 55%);
     } */
-    h1 {
-        font-size: 9vw;
-    }
     .game-over-text {
         font-size: 10vw;
     }
-    /* .option-panel {
-        position: absolute;
-        top: 1rem;
-        align-items: start;
-    } */
-    .nav-panel {
-        /* transform: translateX(0%); */
-        transform: translate(0,-45%);
-    }
 }
 @media(max-width: 719px) {
+    .page-title {
+        transform: translate(25%, -66%);
+        font-size: 1.75rem;
+        white-space: nowrap;
+    }
     .nav-panel {
-        /* bottom: 0.6vw; */
         button img {
             height: 32px;
         }
     }
 }
-
-@media only screen and (max-height: 659px) {
-    .nav-panel {
-        transform: translateY(-100%);
+@media(min-height: 780px) and (min-width: 1025px) {
+    body:not(.is-touch-device) {
+        .canvas-main-wrapper {
+            transform: translateY(-5vh);
+        }
+        .nav-panel {
+            transform: translate(-10%, 55%);
+        }
+    }
+}
+@media(max-height: 779px) {
+    .page-title {
+        display: none !important;
     }
 }
 @media only screen and (max-height: 562px) {
     main {
         --cpx: 0;
         padding-block: 0;
-        /* background: var(--clr-accent); */
     }
     canvas {
         max-height: 100vh;
@@ -383,14 +403,9 @@ body.game-paused .canvas-wrapper {
         max-width: 100%;
     }
 }
-
 @media (orientation: landscape) and (min-aspect-ratio: 13/10) {
-    .page-title {
-        display: none;
-    }
 }
-
-@media(orientation: portrait) and (max-width: 566px) {
+@media(orientation: portrait) and (max-width: 639px) {
     body {
         overflow: hidden !important;
     }
