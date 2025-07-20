@@ -1,3 +1,13 @@
+let imgPathBase = '/assets/img/';
+let audioPathBase = '/assets/audio/';
+let widthCanvas = 1000;
+let heightCanvas = widthCanvas / 1.777;
+let walkOffset = 48;
+let intervalId = 0;
+let stoppableIntervals = [];
+let playStatus = 1;
+let AUDIO_START = new Audio(audioPathBase + 'start.mp3');
+
 class World {
     keystrokes;
     canvas;

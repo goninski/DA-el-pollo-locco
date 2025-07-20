@@ -45,24 +45,32 @@ class MovableObject extends DrawableObject {
     walkingAnimation(imagePaths = 'IMAGES_WALKING') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
+        this.audio = new Audio(this.audioFiles.walk);
+        this.audio.play();
     }
 
 
     jumpingAnimation(imagePaths = 'IMAGES_JUMPING') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
-    }
+        this.audio = new Audio(this.audioFiles.jump);
+        this.audio.play();
+}
 
 
     hurtAnimation(imagePaths = 'IMAGES_HURT') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
+        this.audio = new Audio(this.audioFiles.hurt);
+        this.audio.play();
     }
 
 
     deadAnimation(imagePaths = 'IMAGES_DEAD') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
+        this.audio = new Audio(this.audioFiles.dead);
+        this.audio.play();
     }
 
 
@@ -215,6 +223,17 @@ class MovableObject extends DrawableObject {
        setTimeout(() => this.intervals.forEach(clearInterval), 10000);
     }
 
+
+    playAudio(file = null, loop = true) {
+        if(file === null) {
+            return removeAudio();
+        } else {
+            this.currentAudio = file;
+            console.log(this.currentAudio);
+            // this.currentAudio.play();
+            // this.currentAudio.loop = true;
+        }
+    }
 
 
 }

@@ -1,4 +1,5 @@
 let showObjectBorders = false;
+let audioAutoPlay = true;
 let canvas;
 let body;
 let world;
@@ -59,7 +60,7 @@ function showStartScreen() {
     hideAllScreens();
     body.classList.add('start-screen');
     // body.classList.add('help-screen');
-    playAudio(audioStart);
+    playAudio(AUDIO_START);
 }
 
 
@@ -85,14 +86,10 @@ function gameWon(event = null) {
 
 async function playAudio(file) {
     if(file === null) {
-        currentAudio.pause();
-        currentAudio = null;
-        body.classList.remove('audio-auto-muted');
-        body.classList.add('no-audio');
-        return;
+        return removeAudio();
     } else {
         currentAudio = file;
-        currentAudio.loop = currentAudio === audioStart ? true : false;
+        currentAudio.loop = currentAudio === AUDIO_START ? true : false;
     }
     await handleAudioAutoMute();
 }
@@ -100,13 +97,12 @@ async function playAudio(file) {
 
 async function handleAudioAutoMute() {
     try {
-      await currentAudio.play();
-        currentAudio.play();
-        body.classList.remove('audio-auto-muted');
+        await currentAudio.play();
         body.classList.remove('no-audio');
+        body.classList.remove('audio-auto-muted');
     } catch (err) {
         toggleAudioMute();
-        body.classList.add('audio-auto-muted');
+        audioAutoPlay ? body.classList.add('audio-auto-muted') : null;
     }
 }
 
@@ -131,6 +127,14 @@ function toggleAudioMute(event = null) {
         elemDisable.classList.remove('hide');
         body.classList.add('audio-muted');
     }
+}   
+
+
+function removeAudio() {
+    currentAudio.pause();
+    currentAudio = null;
+    body.classList.remove('audio-auto-muted');
+    body.classList.add('no-audio');
 }   
 
 

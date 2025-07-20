@@ -1,4 +1,5 @@
 class DrawableObject {
+    skipDrawing = false;
     x = 0;
     y = 0;
     width = widthCanvas * 0.15;
@@ -7,7 +8,10 @@ class DrawableObject {
     imageCache = {};
     currentImage = 0;
     objectName;
-    skipDrawing = false;
+    audio;
+    audioFiles = {};
+    // audioCache = {};
+    currentAudio = null;
 
     
     constructor() {
@@ -29,6 +33,14 @@ class DrawableObject {
     }
     
     
+    // setAudioCache(audioFiles) {
+    //     for (let [type, path] of Object.entries(audioFiles)) {
+    //         this.audioCache[type] = new Audio(path);
+    //     }
+    //     console.log(this.audioCache);
+    // }
+
+
     setScreenSlidePos(screenSlide) {
         this.x = screenSlide * (widthCanvas - 0);
     }

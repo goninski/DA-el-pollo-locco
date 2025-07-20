@@ -1,13 +1,4 @@
 let level1;
-let imgPathBase = '/assets/img/';
-let widthCanvas = 1000;
-let heightCanvas = widthCanvas / 1.777;
-let walkOffset = 48;
-let intervalId = 0;
-let stoppableIntervals = [];
-let playStatus = 1;
-let audioStart = new Audio('assets/audio/el-pollo-loco-start.mp3');
-
 
 function initLevel1() {
     level1 = new Level(

@@ -12,7 +12,7 @@ class Character extends MovableObject {
     bottles = [];
     isIdle = false;
     isIdleLong = false;
-    
+
     IMAGES_IDLE = [
         imgPathBase + '2_character_pepe/1_idle/idle/I-1.png',
         imgPathBase + '2_character_pepe/1_idle/idle/I-2.png',
@@ -76,6 +76,15 @@ class Character extends MovableObject {
         imgPathBase + '2_character_pepe/5_dead/D-57.png',
     ];
 
+    audioFiles = {
+        idle : audioPathBase + 'idle.wav',
+        walk : audioPathBase + 'walk-character.wav',
+        jump : audioPathBase + 'jump.mp3',
+        hurt : audioPathBase + 'silence.mp3',
+        dead : audioPathBase + 'silence.mp3',
+    }
+
+
 
     constructor() {
 
@@ -91,6 +100,8 @@ class Character extends MovableObject {
         this.setImageCache(this.IMAGES_HURT);
         this.setImageCache(this.IMAGES_DEAD);
         this.applyGravity();
+
+        // this.setAudioCache(this.audioFiles);
 
         this.animate();
         this.saveIntervalsGlobally();
@@ -224,8 +235,10 @@ class Character extends MovableObject {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
             super.walkingAnimation();
+            this.audio = new Audio(this.audioFiles.walk);
+            this.audio.play();
         }
-    }
+}
 
 
     // isIdle(isIdle = false) {
@@ -252,7 +265,9 @@ class Character extends MovableObject {
             return;
         }
         this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);    
+        this.movementAnimation(this[imagePaths]);
+        this.audio = new Audio(this.audioFiles.idle);
+        this.audio.play();
     }
 
 
