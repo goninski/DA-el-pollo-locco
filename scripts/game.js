@@ -60,7 +60,7 @@ function showStartScreen() {
     hideAllScreens();
     body.classList.add('start-screen');
     // body.classList.add('help-screen');
-    playAudio(AUDIO_START);
+    playAudio(audioCache.start);
 }
 
 
@@ -71,6 +71,7 @@ function gameOver(event = null) {
     stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
     body.classList.add('game-over-screen');
+    playAudio(audioCache.gameOver);
     document.getElementById('playTimer').innerHTML = timer;
 }    
 
@@ -78,18 +79,29 @@ function gameOver(event = null) {
 function gameWon(event = null) {
     event ? event.stopPropagation() : null;
     gameStatus = 2;
-    stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
     body.classList.add('win-screen');
+    playAudio(audioCache.gameWin);
+    setTimeout(() => {
+        playAudio(null);
+    }, 4000);
+    stoppableIntervals.forEach(clearInterval);
 }    
 
 
-async function playAudio(file) {
-    if(file === null) {
-        return removeAudio();
+async function playAudio(audioObj) {
+    if(audioObj === null) {
+        currentAudio ? currentAudio.pause() : null;
+        currentAudio = null;
+        body.classList.remove('audio-auto-muted');
+        body.classList.add('no-audio');
+        return;
     } else {
-        currentAudio = file;
-        currentAudio.loop = currentAudio === AUDIO_START ? true : false;
+        currentAudio = audioObj;
+        if(currentAudio === audioCache.start) {
+            currentAudio.loop = true;
+            currentAudio.volume = 0.25;
+        }
     }
     await handleAudioAutoMute();
 }
@@ -122,7 +134,7 @@ function toggleAudioMute(event = null) {
         elemDisable.classList.add('hide');
         body.classList.remove('audio-muted');
     } else {
-        currentAudio.pause();
+        currentAudio ? currentAudio.pause() : null;
         elemEnable.classList.add('hide');
         elemDisable.classList.remove('hide');
         body.classList.add('audio-muted');
@@ -131,7 +143,9 @@ function toggleAudioMute(event = null) {
 
 
 function removeAudio() {
-    currentAudio.pause();
+    if(currentAudio) {
+        currentAudio.pause();
+    }
     currentAudio = null;
     body.classList.remove('audio-auto-muted');
     body.classList.add('no-audio');

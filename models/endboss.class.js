@@ -1,6 +1,7 @@
 let endbossId = 0;
 
 class Endboss extends MovableObject {
+    type = 'enemy';
     width = this.width * 2;
     height = this.width / 0.86;
     statusValue = 15;

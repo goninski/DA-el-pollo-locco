@@ -13,6 +13,10 @@ class MovableObject extends DrawableObject {
     hits = 0;
     lastHit = 0;
     intervals = [];
+    audio;
+    audioFiles = {};
+    audioCache = {};
+    deadCount = 0;
 
     constructor() {
         super();
@@ -33,6 +37,23 @@ class MovableObject extends DrawableObject {
     }
 
 
+    setAudioCache(audioFiles) {
+        for (let [type, path] of Object.entries(audioFiles)) {
+            this.audioCache[type] = new Audio(path);
+        }
+    }
+
+
+    playAudio(audioObj, type = '', volume = 1) {
+        this.audio = audioObj;
+        gameStatus === 1 ? this.audio.play() : this.audio.pause();
+        this.audio.volume = volume;
+        if(type == 'walk-chicken') {
+            this.audio.loop = true;
+        }
+    }
+
+
     movementAnimation(imagePaths) {
         if(gameStatus === -1) return;
         let index = this.currentImage % imagePaths.length;
@@ -44,33 +65,25 @@ class MovableObject extends DrawableObject {
 
     walkingAnimation(imagePaths = 'IMAGES_WALKING') {
         this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);    
-        this.audio = new Audio(this.audioFiles.walk);
-        this.audio.play();
+        this.movementAnimation(this[imagePaths]);
     }
 
 
     jumpingAnimation(imagePaths = 'IMAGES_JUMPING') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
-        this.audio = new Audio(this.audioFiles.jump);
-        this.audio.play();
 }
 
 
     hurtAnimation(imagePaths = 'IMAGES_HURT') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
-        this.audio = new Audio(this.audioFiles.hurt);
-        this.audio.play();
     }
 
 
     deadAnimation(imagePaths = 'IMAGES_DEAD') {
         this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);    
-        this.audio = new Audio(this.audioFiles.dead);
-        this.audio.play();
+        this.movementAnimation(this[imagePaths]);
     }
 
 
@@ -188,7 +201,10 @@ class MovableObject extends DrawableObject {
 
     isDead() {
         if(this.healthStatus <= 0) {
-            if(this instanceof Chicken) {
+            if(this instanceof Chicken || this instanceof Endboss) {
+                this.deadCount++;
+                this.deadCount === 1 ? livingEnemies-- : null;
+                // livingEnemies <= 0 ? gameStatus = 2 : null;
                 return true;
             }
             if(this instanceof Character) {
@@ -208,8 +224,11 @@ class MovableObject extends DrawableObject {
 
 
     deadHandling() {
+    //    (this.type == 'enemy' && this.deadCount === 1) ? livingEnemies-- : null;
+       livingEnemies <= 0 ? gameStatus = 2 : null;
        this.deadAnimation();
        this.clearIntervals();
+       this.audio.pause();
     }
 
 
@@ -221,18 +240,6 @@ class MovableObject extends DrawableObject {
 
     clearIntervals() {
        setTimeout(() => this.intervals.forEach(clearInterval), 10000);
-    }
-
-
-    playAudio(file = null, loop = true) {
-        if(file === null) {
-            return removeAudio();
-        } else {
-            this.currentAudio = file;
-            console.log(this.currentAudio);
-            // this.currentAudio.play();
-            // this.currentAudio.loop = true;
-        }
     }
 
 

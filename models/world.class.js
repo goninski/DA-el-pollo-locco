@@ -5,8 +5,13 @@ let heightCanvas = widthCanvas / 1.777;
 let walkOffset = 48;
 let intervalId = 0;
 let stoppableIntervals = [];
+let livingEnemies = 0;
 let playStatus = 1;
-let AUDIO_START = new Audio(audioPathBase + 'start.mp3');
+let audioCache = {
+    start : new Audio(audioPathBase + 'start.mp3'),
+    gameOver : new Audio(audioPathBase + 'game-over.mp3'),
+    gameWin : new Audio(audioPathBase + 'game-win.mp3'),
+};
 
 class World {
     keystrokes;
@@ -33,6 +38,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
+        livingEnemies = this.enemies.length;
     }
 
 
@@ -190,6 +196,8 @@ class World {
     
     
     updateGameStatus() {
+        console.log('livingEnemies', livingEnemies);
+        console.log('gameStatus', gameStatus);
         // this.statusBars[0].updateStatusBar(this.character.healthStatus);
         // this.statusBars[1].updateStatusBar(this.character.coinStatus);
         // this.statusBars[2].updateStatusBar(this.character.bottleStatus);
@@ -230,6 +238,7 @@ class World {
 
     isGameWon(){
         if(gameStatus === 2) {
+            return true;
             let timePassed = new Date().getTime() - this.character.lastHit;
             return timePassed >= 3000;
         }

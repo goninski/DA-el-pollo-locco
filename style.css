@@ -77,7 +77,12 @@ main {
 #gameOverScreen {
     background-image: url(assets/img/9_intro_outro_screens/game_over/game-over-2.png);
 }
-body.play-screen :is(#startScreen, #gameOverScreen),
+#winScreen {
+    background-image: url(/assets/img/9_intro_outro_screens/you-won-2.png);
+    background-position: center;
+    background-size: 66%;
+}
+body.play-screen :is(#startScreen, #winScreen, #gameOverScreen),
 body.start-screen :is(#winScreen, #gameOverScreen),
 body.win-screen :is(#startScreen, #gameOverScreen),
 body.game-over-screen :is(#startScreen, #winScreen) {

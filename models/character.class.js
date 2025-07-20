@@ -77,11 +77,13 @@ class Character extends MovableObject {
     ];
 
     audioFiles = {
-        idle : audioPathBase + 'idle.wav',
-        walk : audioPathBase + 'walk-character.wav',
+        idle : audioPathBase + 'idle.mp3',
+        walk : audioPathBase + 'walk2.mp3',
         jump : audioPathBase + 'jump.mp3',
         hurt : audioPathBase + 'silence.mp3',
         dead : audioPathBase + 'silence.mp3',
+        collectCoin : audioPathBase + 'collect-coin.mp3',
+        collectBottle : audioPathBase + 'collect-bottle.mp3',
     }
 
 
@@ -99,9 +101,9 @@ class Character extends MovableObject {
         this.setImageCache(this.IMAGES_JUMPING);
         this.setImageCache(this.IMAGES_HURT);
         this.setImageCache(this.IMAGES_DEAD);
+        this.setAudioCache(this.audioFiles);
         this.applyGravity();
 
-        // this.setAudioCache(this.audioFiles);
 
         this.animate();
         this.saveIntervalsGlobally();
@@ -129,7 +131,8 @@ class Character extends MovableObject {
             if(gameStatus === -1) return;
             if(this.isAboveGround()) {
                 this.jumpingAnimation();
-            }
+                this.playAudio(this.audioCache.jump, 'jump' + this.objectName);
+             }
         }, 100); 
         this.intervals.push(intervalId);
 
@@ -235,8 +238,7 @@ class Character extends MovableObject {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
             super.walkingAnimation();
-            this.audio = new Audio(this.audioFiles.walk);
-            this.audio.play();
+            this.playAudio(this.audioCache.walk, 'walk' + this.objectName);
         }
 }
 
@@ -261,16 +263,15 @@ class Character extends MovableObject {
             imagePaths = 'IMAGES_IDLE'
         } else if(this.isIdleLong) {
             imagePaths = 'IMAGES_IDLE_LONG'
+            this.playAudio(this.audioCache.idle, 'idle' + this.objectName);
         } else {
             return;
         }
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);
-        this.audio = new Audio(this.audioFiles.idle);
-        this.audio.play();
     }
 
-
+  
     idleAnimationShort(imagePaths = 'IMAGES_IDLE') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
@@ -299,6 +300,7 @@ class Character extends MovableObject {
 
     collectCoin(coin) {
         coin.collectObject();
+        this.playAudio(this.audioCache.collectCoin, 'collectCoin' + this.objectName);
         this.coins.push(coin);
         this.coinStatus += coin.statusValue;
         console.log(this.coins);
@@ -307,6 +309,7 @@ class Character extends MovableObject {
 
     collectBottle(bottle) {
         bottle.collectObject();
+        this.playAudio(this.audioCache.collectBottle, 'collectBottle' + this.objectName);
         this.bottles.push(bottle);
         this.bottleStatus += bottle.statusValue;
         console.log(this.bottles);
@@ -328,18 +331,18 @@ class Character extends MovableObject {
     }
 
 
-    throwCoin() {
-        if(this.coins.length <= 0 || this.healthStatus <= 0) return;
-        let coin = this.coins[0];
-        coin.x = this.x;
-        coin.y = this.y;
-        coin.speedY = 5;
-        coin.applyGravity()
-        this.coins.shift();
-        this.coinStatus -= coin.statusValue;
-        setInterval(() => coin.x += 10, 25);
-        console.log(this.coins);
-        console.log(this.coinStatus);
-    }
+    // throwCoin() {
+    //     if(this.coins.length <= 0 || this.healthStatus <= 0) return;
+    //     let coin = this.coins[0];
+    //     coin.x = this.x;
+    //     coin.y = this.y;
+    //     coin.speedY = 5;
+    //     coin.applyGravity()
+    //     this.coins.shift();
+    //     this.coinStatus -= coin.statusValue;
+    //     setInterval(() => coin.x += 10, 25);
+    //     console.log(this.coins);
+    //     console.log(this.coinStatus);
+    // }
 
 }

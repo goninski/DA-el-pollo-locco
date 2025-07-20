@@ -7,12 +7,8 @@ class DrawableObject {
     img;
     imageCache = {};
     currentImage = 0;
+    type;
     objectName;
-    audio;
-    audioFiles = {};
-    // audioCache = {};
-    currentAudio = null;
-
     
     constructor() {
         this.objectName = this.constructor.name;
@@ -33,14 +29,6 @@ class DrawableObject {
     }
     
     
-    // setAudioCache(audioFiles) {
-    //     for (let [type, path] of Object.entries(audioFiles)) {
-    //         this.audioCache[type] = new Audio(path);
-    //     }
-    //     console.log(this.audioCache);
-    // }
-
-
     setScreenSlidePos(screenSlide) {
         this.x = screenSlide * (widthCanvas - 0);
     }
