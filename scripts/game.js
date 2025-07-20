@@ -1,3 +1,4 @@
+let showObjectBorders = false;
 let canvas;
 let body;
 let world;
@@ -7,7 +8,7 @@ let fullscreenAvailable = document.fullscreenEnabled;
 let currentAudio;
 let secondsPlay = 0;
 let timer;
-let showObjectBorders = false;
+let lastKeystroke;
 
 function initGame(restart = false) {
     canvas = document.getElementById('canvas');
@@ -33,6 +34,7 @@ function startGame(event) {
     world = new World(canvas, keystrokes);
     playAudio(null);
     secondsPlay = 0;
+    lastKeystroke = new Date().getTime();
 }  
 
 

@@ -171,7 +171,7 @@ body.game-over-screen :is(#startScreen, #winScreen) {
         transform: scale(1.4);
     }
     #btnToggleHelp img {
-        transform: scale(1.2) translateY(-5%);
+        /* transform: scale(1.1) translateY(-5%); */
     }
     .option-msg {
         color: orange;
@@ -213,7 +213,7 @@ body.game-over-screen .option-panel {
 }
 body.game-paused :is(#btnTogglePauseGame, #btnToggleHelp) img,
 body.start-screen:not(.help-screen) #btnToggleHelp img {
-    --pulse-scale: 1.4;
+    --pulse-scale: 1.3;
     animation: pulse 1.5s infinite ease-in-out;
 }
 body.audio-muted:not(.game-paused) #btnToggleAudioMute img {
