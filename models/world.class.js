@@ -10,7 +10,7 @@ let playStatus = 1;
 let audioCache = {
     start : new Audio(audioPathBase + 'start.mp3'),
     gameOver : new Audio(audioPathBase + 'game-over.mp3'),
-    gameWin : new Audio(audioPathBase + 'game-win.mp3'),
+    gameWin : new Audio(audioPathBase + 'game-win.wav'),
 };
 
 class World {
@@ -196,8 +196,8 @@ class World {
     
     
     updateGameStatus() {
-        console.log('livingEnemies', livingEnemies);
-        console.log('gameStatus', gameStatus);
+        // console.log('livingEnemies', livingEnemies);
+        // console.log('gameStatus', gameStatus);
         // this.statusBars[0].updateStatusBar(this.character.healthStatus);
         // this.statusBars[1].updateStatusBar(this.character.coinStatus);
         // this.statusBars[2].updateStatusBar(this.character.bottleStatus);

@@ -2,13 +2,13 @@
 
 @keyframes pulse {
     0% {
-        transform: scale(1); /* Start at normal size */
+        scale: 1; /* Start at normal size */
     }
     50% {
-        transform: scale(var(--pulse-scale, 1.1)); /* Grow slightly larger */
+        scale: var(--pulse-scale, 1.1); /* Grow slightly larger */
     }
     100% {
-        transform: scale(1); /* Return to normal size */
+        scale: 1; /* Return to normal size */
     }
 }
 :root {
@@ -94,11 +94,22 @@ body.win-screen :is(#winScreen, #screenOverlay),
 body.game-over-screen :is(#gameOverScreen, #screenOverlay) {
     display: block
 }
-body.help-screen:not(.start-screen) #screenOverlay {
+body.help-screen #screenOverlay {
     display: block;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(3px);
 }
-
+.page-title {
+    position: absolute;
+    translate: 50% -50%;
+    z-index: 1;
+    font-size: 2rem;
+    line-height: 1.1;
+    background-color: var(--clr-accent);
+    color: orange;
+    border-radius: 999rem;
+    padding-inline: 1em;
+    padding-block: 0.3em;
+}
 .canvas-main-wrapper {
     position: relative;
     display: flex;
@@ -137,18 +148,6 @@ body.help-screen:not(.start-screen) #screenOverlay {
     content: attr(data-after);
     display: block;
 }
-.page-title {
-    position: absolute;
-    transform: translate(50%, -50%);
-    z-index: 1;
-    font-size: 2rem;
-    line-height: 1.1;
-    background-color: var(--clr-accent);
-    color: orange;
-    border-radius: 999rem;
-    padding-inline: 1em;
-    padding-block: 0.3em;
-}
 
 
 /* OPTION PANEL */
@@ -165,7 +164,7 @@ body.help-screen:not(.start-screen) #screenOverlay {
         background-color: transparent;
     }
     button:not(#btnStartGame):hover {
-        transform: scale(1.1);
+        scale: 1.1;
     }
     #btnStartGame {
         margin-left: 2.75rem;
@@ -179,14 +178,11 @@ body.help-screen:not(.start-screen) #screenOverlay {
         }
     }
     #btnStartGame::after {
-        /* transform: translate(6px, 60%); */
+        /* translate: 6px 60%; */
     }
 
     #btnTogglePauseGame img {
-        transform: scale(1.4);
-    }
-    #btnToggleHelp img {
-        /* transform: scale(1.1) translateY(-5%); */
+        scale: 1.4;
     }
     .option-msg {
         color: orange;
@@ -196,6 +192,11 @@ body.help-screen:not(.start-screen) #screenOverlay {
     }
     .enable-audio-msg {
         animation: pulse 1s infinite ease-in-out;
+    }
+}
+body:is(.start-screen) .option-panel { 
+    #btnToggleHelp img {
+        height: 40px;
     }
 }
 body:is(.win-screen, .game-over-screen) .option-panel {
@@ -215,11 +216,11 @@ body:is(.win-screen, .game-over-screen) .option-panel {
     }
     #btnRestartGame {
         position: fixed;
+        top: 50%;
+        left: 50%;
+        translate: -110% 250%;
         display: flex;
-        flex-direction: column;
         text-align: center;
-        bottom: 20%;
-        right: 10%;
         color: orange;
         box-shadow:  hsla(0, 53%, 58%, 0.7) 4px 4px 16px;
         text-shadow: 3px 3px hsla(0, 53%, 58%, 0.9);
@@ -232,7 +233,7 @@ body:is(.win-screen, .game-over-screen) .option-panel {
     #btnRestartGame::after {
         content: 'Restart Game';
         position: absolute;
-        transform: translate(-15%,200%)
+        translate: 100% 25%;
     }
     .option-msg {
         color:hsla(39, 100%, 50%, 0.8);
@@ -269,15 +270,21 @@ body.no-audio #btnToggleAudioMute {
 
 /* NAV PANEL */
 .nav-panel {
-    position: absolute;
-    bottom: 9px;
-    right: 9px;
+    display: none;
+}
+body.help-screen .nav-panel,
+body.is-touch-device:is(.start-screen, .play-screen) .nav-panel {
     display: flex;
+}
+.nav-panel {
+    position: absolute;
+    bottom: 10%;
+    right: 10%; 
     flex-direction: column;
     align-items: center;
     align-self: center;
     gap: 1rem;
-    background: linear-gradient(to top right, hsl(194, 69%, 47%), hsl(195, 28%, 89%));
+    background: linear-gradient(to top right, hsla(194, 69%, 47%, 0.975), hsla(195, 28%, 89%, 0.975));
     border: solid 2px var(--clr-accent);
     border-radius: 36px;
     border-bottom-right-radius: 0;
@@ -292,7 +299,7 @@ body.no-audio #btnToggleAudioMute {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        .info-action, .info-key {
+        .action-info, .key-info {
             font-size: 0.75rem;
         }
     }
@@ -323,6 +330,23 @@ body.no-audio #btnToggleAudioMute {
             height: 24px;
         }
     }
+    button.close {
+        position: absolute;
+        top: -6px;
+        right: -4px;
+        max-width: 26px;
+        max-height: 26px;
+        background-color: orange;
+        border-radius: 100%;
+        overflow: hidden;
+        cursor: pointer;
+        img {
+            height: 32px;
+        }
+    }
+    button.close:hover {
+        scale: 1.15;
+    }
     .play-info {
         font-size: 0.7rem;
         line-height: 1.8;
@@ -334,24 +358,19 @@ body.no-audio #btnToggleAudioMute {
 }
 .nav-panel::before {
     position: absolute;
-    transform: translate(30%, -145%);
+    translate: 30% -145%;
     background-color: var(--clr-accent-dark);
     color: orange;
     padding-block: 0.5rem 0.66rem;
     padding-inline: 1.5rem;
     border-radius: 999rem;
 }
-body:not(.help-screen) .nav-panel {
+body.is-touch-device .nav-panel .key-info {
     display: none;
 }
-body.is-touch-device .nav-panel {
-    right: unset;
-}
-body.is-touch-device .nav-panel .info-key {
-    display: none;
-}
-body.is-touch-device:is(.start-screen, .play-screen):not(.help-screen) {
+body.is-touch-device:not(.help-screen) {
     .nav-panel {
+        bottom: 0.5rem;
         padding-top: 0.7rem;
         background: transparent;
         border: none;
@@ -364,18 +383,16 @@ body.is-touch-device:is(.start-screen, .play-screen):not(.help-screen) {
             }
         }
     }
-    .nav-panel .help, .nav-panel::before {
+    .nav-panel::before,
+    .nav-panel .help {
         display: none;
     }
-}
-body.is-touch-device.play-screen .nav-panel {
-    display: flex !important;
 }
 
 
 #orientationOverlay {
-    /* display: flex; */
     display: none;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -401,16 +418,10 @@ body.is-touch-device.play-screen .nav-panel {
     canvas {
         width: calc(100% - 12px - 12px);
     }
-    /* .nav-panel {
-        transform: translate(0, 55%);
-    } */
-    .game-over-text {
-        font-size: 10vw;
-    }
 }
 @media(max-width: 719px) {
     .page-title {
-        transform: translate(25%, -66%);
+        translate: 25% -66%;
         font-size: 1.75rem;
         white-space: nowrap;
     }
@@ -423,10 +434,10 @@ body.is-touch-device.play-screen .nav-panel {
 @media(min-height: 799px) and (min-width: 1025px) {
     body:not(.is-touch-device) {
         .canvas-main-wrapper {
-            transform: translateY(-4vh);
+            translateY: -4vh;
         }
         .nav-panel {
-            transform: translate(-10%, 55%);
+            /* translate: -10% 55%; */
         }
     }
 }
@@ -446,6 +457,9 @@ body.is-touch-device.play-screen .nav-panel {
         width: auto;
         /* max-width: calc(100% - 12px); */
         max-width: 100%;
+    }
+    body:is(.win-screen, .game-over-screen) #btnRestartGame {
+        translate: -110% 27vh !important;
     }
 }
 @media (orientation: landscape) and (min-aspect-ratio: 13/10) {

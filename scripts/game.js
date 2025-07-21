@@ -40,7 +40,7 @@ function startGame(event) {
 
 
 function restartGame(event) {
-    event.stopPropagation();
+    event ? event.stopPropagation() : null;
     window.location.reload();
     initGame(true);
 }    
@@ -73,6 +73,7 @@ function gameOver(event = null) {
     body.classList.add('game-over-screen');
     playAudio(audioCache.gameOver);
     document.getElementById('playTimer').innerHTML = timer;
+    setTimeout(() => restartGame(null), 12000);
 }    
 
 
@@ -82,10 +83,9 @@ function gameWon(event = null) {
     hideAllScreens();
     body.classList.add('win-screen');
     playAudio(audioCache.gameWin);
-    setTimeout(() => {
-        playAudio(null);
-    }, 4000);
     stoppableIntervals.forEach(clearInterval);
+    setTimeout(() => playAudio(null), 4000);
+    setTimeout(() => restartGame(null), 12000);
 }    
 
 
