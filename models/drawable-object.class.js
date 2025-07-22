@@ -34,9 +34,10 @@ class DrawableObject {
     }
 
 
-    setRandomPosX() {
-        // this.x = (widthCanvas * 1.8) * (Math.random() * 2 -1);
-        this.x = (widthCanvas * 1.5) * (Math.random() * 2);
+    setRandomPosX(screenStart = -1, screenEnd = 2) {
+        let min = widthCanvas * screenStart;
+        let max = (widthCanvas * screenEnd) - this.width;
+        this.x = Math.floor(Math.random() * (max - min)) + min;        
     }
 
 

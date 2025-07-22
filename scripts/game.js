@@ -1,4 +1,4 @@
-let showObjectBorders = false;
+let showObjectBorders = true;
 let audioAutoPlay = true;
 let canvas;
 let body;
@@ -73,7 +73,7 @@ function gameOver(event = null) {
     body.classList.add('game-over-screen');
     playAudio(audioCache.gameOver);
     document.getElementById('playTimer').innerHTML = timer;
-    setTimeout(() => restartGame(null), 12000);
+    // setTimeout(() => restartGame(null), 12000);
 }    
 
 
@@ -85,7 +85,7 @@ function gameWon(event = null) {
     playAudio(audioCache.gameWin);
     stoppableIntervals.forEach(clearInterval);
     setTimeout(() => playAudio(null), 4000);
-    setTimeout(() => restartGame(null), 12000);
+    // setTimeout(() => restartGame(null), 12000);
 }    
 
 
@@ -204,6 +204,7 @@ function toggleHelp(event) {
         if(body.classList.contains('play-screen')) {
             body.classList.add('game-paused');
             gameStatus = -1;
+            // stoppableIntervals.forEach(clearInterval);
         }
     }
 }   
@@ -266,7 +267,7 @@ function timerUpCounter() {
     } else {
         timer = time.minutes + ':' + time.seconds + '';
     }
-    console.log(timer);
+    // console.log(timer);
     return timer;
 }
 

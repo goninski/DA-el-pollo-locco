@@ -5,7 +5,7 @@ let heightCanvas = widthCanvas / 1.777;
 let walkOffset = 48;
 let intervalId = 0;
 let stoppableIntervals = [];
-let livingEnemies = 0;
+let livingEnemies = 999;
 let playStatus = 1;
 let audioCache = {
     start : new Audio(audioPathBase + 'start.mp3'),
@@ -116,15 +116,17 @@ class World {
             // console.log('screenTranslateX:', this.screenTranslateX);
             // console.log('character x:', this.character.x)
             this.checkEnemyHits();
+            this.checkBottleCollection();
+            this.checkCoinCollection();
             // this.updateGameStatus();
         }, 50);
         this.intervals.push(intervalId);
 
-        intervalId = setInterval(() => {
-            this.checkCoinCollection();
-            this.checkBottleCollection();
-        }, 100);
-        this.intervals.push(intervalId);
+        // intervalId = setInterval(() => {
+        //     this.checkCoinCollection();
+        //     this.checkBottleCollection();
+        // }, 50);
+        // this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
             if(gameStatus === 1) {
@@ -154,13 +156,13 @@ class World {
 
     handleEnemyHitFromAbove(enemy, character) {
         enemy.hitHandlingFromAbove(character);
-        console.log(enemy.objectName, 'isHitFromAbove:', 'healthStatus:', enemy.healthStatus);
+        console.log(enemy.objectName, 'isHitFromAbove:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
     }
     
 
-    EnemyHitFromBottlee(enemy, character) {
+    EnemyHitFromBottle(enemy, character) {
         enemy.hitHandlingFromBottle(character);
-        console.log(enemy.objectName, 'isHitFromBottle:', 'healthStatus:', enemy.healthStatus);
+        console.log(enemy.objectName, 'isHitFromBottle:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
     }
 
     
@@ -172,31 +174,35 @@ class World {
 
     
     checkCoinCollection() {
+        if(this.character.coinStatus >= 100) return;
         this.level.coins.forEach((coin) => {
-            if(coin.hits > 0 || this.character.coinStatus >= 100) return;
-            if(this.character.touchesObject(coin)) {
-                this.character.collectCoin(coin);
-                console.log('collection of:', coin.constructor.name, 'value:', coin.statusValue);
-                console.log('character.coinStatus:', this.character.coinStatus);
-            };
+            if(coin.hits <= 0) {
+                if(this.character.touchesObject(coin)) {
+                    this.character.collectCoin(coin);
+                    // console.log('collection of:', coin.constructor.name, 'value:', coin.statusValue);
+                    // console.log('character.coinStatus:', this.character.coinStatus);
+                };
+            }
         });
     }
 
 
     checkBottleCollection() {
+        if(this.character.bottleStatus >= 100) return;
         this.level.bottles.forEach((bottle) => {
-            if(bottle.hits > 0 || this.character.bottleStatus >= 100) return;
-            if(this.character.touchesObject(bottle)) {
-                this.character.collectBottle(bottle);
-                console.log('collection of:', bottle.constructor.name, 'value:', bottle.statusValue);
-                console.log('character.bottleStatus:', this.character.bottleStatus);
-            };
+            if(bottle.hits <= 0) {
+                if(this.character.touchesObject(bottle)) {
+                    this.character.collectBottle(bottle);
+                    // console.log('collection of:', bottle.constructor.name, 'value:', bottle.statusValue);
+                    // console.log('character.bottleStatus:', this.character.bottleStatus);
+                };
+            }
         });
     }
     
     
     updateGameStatus() {
-        // console.log('livingEnemies', livingEnemies);
+        console.log('livingEnemies', livingEnemies);
         // console.log('gameStatus', gameStatus);
         // this.statusBars[0].updateStatusBar(this.character.healthStatus);
         // this.statusBars[1].updateStatusBar(this.character.coinStatus);
@@ -229,19 +235,21 @@ class World {
 
 
     isGameOver(){
-        if(gameStatus === 9) {
-            let timePassed = new Date().getTime() - this.character.lastHit;
-            return timePassed >= 3000;
-        }
+        return this.character.isDead();
+        // if(gameStatus === 9) {
+        //     let timePassed = new Date().getTime() - this.character.lastHit;
+        //     return timePassed >= 3000;
+        // }
     }
 
 
     isGameWon(){
-        if(gameStatus === 2) {
-            return true;
-            let timePassed = new Date().getTime() - this.character.lastHit;
-            return timePassed >= 3000;
-        }
+        return livingEnemies <= 0;
+        // if(gameStatus === 2) {
+        //     return true;
+        //     let timePassed = new Date().getTime() - this.character.lastHit;
+        //     return timePassed >= 3000;
+        // }
     }
 
 }

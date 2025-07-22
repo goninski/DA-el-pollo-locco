@@ -17,8 +17,7 @@ class Chicken extends MovableObject {
 
     audioFiles = {
         walk : audioPathBase + 'walk-chicken.mp3',
-        hurt : audioPathBase + 'silence.mp3',
-        dead : audioPathBase + 'silence.mp3',
+        dead : audioPathBase + 'dead-chicken.wav',
     }
 
 
@@ -28,7 +27,8 @@ class Chicken extends MovableObject {
         chickenId++;
         this.objectName += chickenId;
 
-        this.x = (widthCanvas * 0.8) + (Math.random() * widthCanvas * 2);
+        this.setRandomPosX(0.5, 3);
+        // this.x = (widthCanvas * 0.8) + (Math.random() * widthCanvas * 2);
         this.setWalkGroundY();
         // this.setBorderCoordinates();
         this.loadImage(this.IMAGES_WALKING[0]);
@@ -47,22 +47,23 @@ class Chicken extends MovableObject {
     animate() {
 
         intervalId = setInterval(() => {
+            // console.log(this.objectName, 'hits:', this.hits, 'health:', this.healthStatus);
             if(this.isDead()) {
-                console.log('isDead', this.healthStatus);
                 this.deadHandling();
             }
-        }, 500);  
+        }, 50);  
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
             if(!this.isDead()) {
                 this.walkingAnimation();
-                this.playAudio(this.audioCache.walk, 'walk-chicken', 0.3);
+                this.playAudio(this.audioCache.walk, 'walk-chicken', 0.3, 3);
             }
         }, 200);  
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
+            // this.audioStopChecker();
             if(!this.isDead()) {
                 this.moveLeft(0.15, 0.45, false);
             }
@@ -70,6 +71,22 @@ class Chicken extends MovableObject {
         this.intervals.push(intervalId);
     }
 
+
+    deadHandling() {
+        // this.playAudio(this.audioCache.dead);
+        if(this.countDeadHandling === 0) {
+            // this.playAudio(this.audioCache.dead, 'dead-chicken', 1);
+            this.playAudio(this.audioCache.dead);
+            livingEnemies--;
+            super.deadHandling();
+        }
+    }
+
+
+    playAudio(audioObj) {
+        this.audio = audioObj;
+        this.audio.play();
+    }
 
 
 }

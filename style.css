@@ -263,7 +263,7 @@ body:not(.game-paused) #btnSurrender,
 body:not(.game-paused) .game-is-paused-msg,
 body:not(.play-screen) :is(#btnTogglePauseGame),
 body:not(.audio-auto-muted) .enable-audio-msg,
-body.no-audio #btnToggleAudioMute {
+body.no-audio x#btnToggleAudioMute {
     display: none;
 }
 

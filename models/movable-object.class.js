@@ -16,7 +16,9 @@ class MovableObject extends DrawableObject {
     audio;
     audioFiles = {};
     audioCache = {};
-    deadCount = 0;
+    countDeadHandling = 0;
+    // lastAudioType;
+    // lastAudioTimeStamp;
 
     constructor() {
         super();
@@ -43,15 +45,24 @@ class MovableObject extends DrawableObject {
         }
     }
 
-
-    playAudio(audioObj, type = '', volume = 1) {
+    // options: 1 run only once / 3 loop
+    playAudio(audioObj, audioSrc = '', volume = 1, option = 0) {
         this.audio = audioObj;
-        gameStatus === 1 ? this.audio.play() : this.audio.pause();
         this.audio.volume = volume;
-        if(type == 'walk-chicken') {
+        if(option == 1) {
+            this.audio.pause();
+        } else if(option == 3) {
             this.audio.loop = true;
         }
+        gameStatus === 1 ? this.audio.play() : this.audio.pause();
     }
+
+
+    // audioStopChecker() {
+    //     if(this.isDead() || gameStatus === -1) {
+    //         this.audio.pause();
+    //     }
+    // }
 
 
     movementAnimation(imagePaths) {
@@ -127,7 +138,6 @@ class MovableObject extends DrawableObject {
 
 
     collectObject() {
-        this.hits++;
         this.x = 0;
         this.y = heightCanvas + this.height;
         this.setBorderCoordinates();
@@ -136,7 +146,9 @@ class MovableObject extends DrawableObject {
 
     touchesObject(counterPartObj) {
         this.setBorderCoordinates();
-        return (this.borderX + this.borderWidth > counterPartObj.borderX) && (this.borderY + this.borderHeight > counterPartObj.borderY) && (this.borderX < counterPartObj.borderX) && (this.borderY < counterPartObj.borderY + counterPartObj.borderY + counterPartObj.borderHeight);
+        // console.log(this.objectName, this.borderX, this.borderY);
+        // console.log(counterPartObj.objectName, 'x:' + counterPartObj.borderX, 'y-bottom:', + counterPartObj.borderY + counterPartObj.borderHeight);
+        return (this.borderX + this.borderWidth > counterPartObj.borderX) && (this.borderX < counterPartObj.borderX) && (this.borderY + this.borderHeight > counterPartObj.borderY) && (this.borderY < counterPartObj.borderY + counterPartObj.borderHeight);
     }
 
 
@@ -145,19 +157,19 @@ class MovableObject extends DrawableObject {
     }
 
 
-    isHitFromAbove(fromObj, buffer = 20) {
+    isHitFromAbove(fromObj, buffer = 0) {
         this.setBorderCoordinates();
-        buffer = (widthCanvas / buffer) * -1 ;
+        buffer = buffer == 0 ? 0 : (widthCanvas / buffer) * -1;
         if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
         return true;
     }
 
-    
-    isHitFromBottle(throwableObj, buffer = 1) {
+
+    isHitFromBottle(throwableObj, buffer = 0) {
         this.setBorderCoordinates();
-        buffer = (widthCanvas / buffer) * -1 ;
+        buffer = buffer == 0 ? 0 : (widthCanvas / buffer) * -1;
         if((throwableObj.borderY + throwableObj.borderHeight + buffer < this.borderY) || throwableObj.borderX + throwableObj.borderWidth + buffer < this.borderX || throwableObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
@@ -166,12 +178,14 @@ class MovableObject extends DrawableObject {
 
     
     hitHandling(obj) {
+        this.hits++;
         this.healthStatus -= obj.statusValue;
         if(this.healthStatus <= 0) {
             this.healthStatus = 0;
         } else {
             this.lastHit = new Date().getTime();
         }
+        console.log(this.objectName, this.hits, this.healthStatus);
     }
 
 
@@ -199,37 +213,66 @@ class MovableObject extends DrawableObject {
     }
 
 
-    isDead() {
-        if(this.healthStatus <= 0) {
-            if(this instanceof Chicken || this instanceof Endboss) {
-                this.deadCount++;
-                this.deadCount === 1 ? livingEnemies-- : null;
-                // livingEnemies <= 0 ? gameStatus = 2 : null;
-                return true;
-            }
-            if(this instanceof Character) {
-                gameStatus = 9;
-                console.log('gameStatus movableObject:', gameStatus);
-                let timePassed = new Date().getTime() - this.lastHit;
-                return timePassed <= 3000;
-            }
-        }
-        return false;
-    }
-
-
     hurtHandling() {
        this.hurtAnimation();
     }
 
 
+    // isDead() {
+    //     if(this.healthStatus <= 0) {
+    //         if(this instanceof Chicken) {
+    //             // this.hits === 1 ? livingEnemies-- : null;
+    //             // livingEnemies <= 0 ? gameStatus = 2 : null;
+    //             return true;
+    //         }
+    //         if(this instanceof Endboss) {
+    //             this.deadCount++;
+    //             this.deadCount === 1 ? livingEnemies-- : null;
+    //             // livingEnemies <= 0 ? gameStatus = 2 : null;
+    //             return true;
+    //         }
+    //         if(this instanceof Character) {
+    //             gameStatus = 9;
+    //             console.log('gameStatus movableObject:', gameStatus);
+    //             let timePassed = new Date().getTime() - this.lastHit;
+    //             return timePassed <= 3000;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+
+    isDead() {
+        if(this.healthStatus <= 0) {
+            if(this instanceof Character) {
+                let timePassed = new Date().getTime() - this.lastHit;
+                return timePassed <= 3000;
+            } else {
+                return true;
+            }
+        }
+    }
+
+
     deadHandling() {
-    //    (this.type == 'enemy' && this.deadCount === 1) ? livingEnemies-- : null;
-       livingEnemies <= 0 ? gameStatus = 2 : null;
+    //    console.log('deadHandling', this.objectName);
+       this.countDeadHandling++;
        this.deadAnimation();
        this.clearIntervals();
-       this.audio.pause();
+       console.log(this.objectName, 'deadHandling#', this.countDeadHandling, 'hits:', this.hits, 'health:', this.healthStatus);
     }
+
+
+        // deadHandling(audioObj, audioSrc = '', volume = 1, option = 0) {
+    //     console.log('deadHandling', this.objectName);
+
+    // //    (this.type == 'enemy' && this.deadCount === 1) ? livingEnemies-- : null;
+    // //    livingEnemies <= 0 ? gameStatus = 2 : null;
+    //    this.deadAnimation();
+    // //    this.playAudio(audioObj, audioSrc, volume, option);
+    //    this.clearIntervals();
+    //    this.audio.pause();
+    // }
 
 
     saveIntervalsGlobally() {

@@ -239,6 +239,7 @@ class Character extends MovableObject {
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
             super.walkingAnimation();
             this.playAudio(this.audioCache.walk, 'walk' + this.objectName);
+            // console.log(this.objectName, this.x);
         }
 }
 
@@ -308,6 +309,7 @@ class Character extends MovableObject {
 
 
     collectBottle(bottle) {
+        // if(this.bottleStatus >= 100) return;
         bottle.collectObject();
         this.playAudio(this.audioCache.collectBottle, 'collectBottle' + this.objectName);
         this.bottles.push(bottle);
@@ -317,7 +319,7 @@ class Character extends MovableObject {
 
 
     throwBottle() {
-        if(this.bottles.length <= 0 || this.healthStatus <= 0) return;
+        if(this.bottlesStatus <= 0 || this.healthStatus <= 0) return;
         let bottle = this.bottles[0];
         bottle.x = this.x;
         bottle.y = this.y;
@@ -330,19 +332,5 @@ class Character extends MovableObject {
         console.log(this.bottleStatus);
     }
 
-
-    // throwCoin() {
-    //     if(this.coins.length <= 0 || this.healthStatus <= 0) return;
-    //     let coin = this.coins[0];
-    //     coin.x = this.x;
-    //     coin.y = this.y;
-    //     coin.speedY = 5;
-    //     coin.applyGravity()
-    //     this.coins.shift();
-    //     this.coinStatus -= coin.statusValue;
-    //     setInterval(() => coin.x += 10, 25);
-    //     console.log(this.coins);
-    //     console.log(this.coinStatus);
-    // }
 
 }
