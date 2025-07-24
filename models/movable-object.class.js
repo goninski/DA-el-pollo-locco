@@ -45,28 +45,9 @@ class MovableObject extends DrawableObject {
         }
     }
 
-    // options: 1 run only once / 3 loop
-    playAudio(audioObj, audioSrc = '', volume = 1, option = 0) {
-        this.audio = audioObj;
-        this.audio.volume = volume;
-        if(option == 1) {
-            this.audio.pause();
-        } else if(option == 3) {
-            this.audio.loop = true;
-        }
-        gameStatus === 1 ? this.audio.play() : this.audio.pause();
-    }
-
-
-    // audioStopChecker() {
-    //     if(this.isDead() || gameStatus === -1) {
-    //         this.audio.pause();
-    //     }
-    // }
-
 
     movementAnimation(imagePaths) {
-        if(gameStatus === -1) return;
+        if(gameIsPaused === true) return;
         let index = this.currentImage % imagePaths.length;
         let path = imagePaths[index];
         this.img = this.imageCache[path];
@@ -99,7 +80,7 @@ class MovableObject extends DrawableObject {
 
 
     moveLeft(speedMin = 0.15, speedMax = null, consoleX = false) {
-        if(gameStatus === -1) return;
+        if(gameIsPaused === true) return;
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         this.x -= speed;
         consoleX ? this.consoleObjectPosition() : null;
@@ -107,7 +88,7 @@ class MovableObject extends DrawableObject {
 
     
     // moveLeftAuto(speedMin = 0.15, speedMax = null, consoleX = false) {
-    //     if(gameStatus === -1) return;
+    //     if(gameIsPaused === true) return;
     //     let speed = speedMax ? speedMin + (Math.random() * speedMax) : speedMin;
     //     intervalId = setInterval(() => {
     //         this.x -= speed;

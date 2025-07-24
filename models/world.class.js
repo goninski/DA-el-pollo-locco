@@ -23,7 +23,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
-        livingEnemies = this.enemies.length;
+        // livingEnemies = this.enemies.length;
     }
 
 
@@ -49,7 +49,7 @@ class World {
 
         // this.updateGameStatus();
 
-        if(!this.isGameOver() && !this.isGameWon()) {
+        if(!this.isGameOver() && !this.isGameWon() && !gameIsPaused) {
             let self = this;
             requestAnimationFrame(() => self.draw());
         }
@@ -93,7 +93,7 @@ class World {
 
     setGlobalIntervals() {
         intervalId = setInterval(() => {
-            if(gameStatus === 1) {
+            if(!gameIsPaused === 1) {
                 timer = timerUpCounter();
                 document.getElementById('playTimer').innerHTML =  timer;
             }
@@ -119,7 +119,8 @@ class World {
 
 
     updateGameStatus() {
-        console.log('livingEnemies', livingEnemies);
+        // console.log('livingEnemies', livingEnemies);
+        // console.log('currentAudios', currentAudios.length);
         // console.log('gameStatus', gameStatus);
         this.statusBars[0].updateStatusBar(this.character.healthStatus);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
@@ -146,6 +147,7 @@ class World {
         if(this.isGameOver() || this.isGameWon()) {
             return false;
         } else {
+            return gameIsPaused === true
             return gameStatus === -1;
         }
     }

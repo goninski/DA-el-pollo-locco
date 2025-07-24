@@ -2,13 +2,8 @@ class Keystrokes {
 
     KEY_LEFT = false;
     KEY_RIGHT = false;
-    KEY_UP = false;
-    KEY_DOWN = false;
     KEY_SPACE = false;
     KEY_B = false;
-    KEY_C = false;
-    // lastKeystroke = new Date().getTime();
-    // lastKeystroke = new Date().getTime();
     
     constructor() {
 
@@ -32,31 +27,23 @@ class Keystrokes {
             case 'ArrowLeft':
                 keystrokes.KEY_LEFT = true
                 lastKeystroke = new Date().getTime();
+                lastKeystroke_LEFT = lastKeystroke;
                 break
             case 'ArrowRight':
                 keystrokes.KEY_RIGHT = true;
                 lastKeystroke = new Date().getTime();
-                break
-            case 'ArrowUp':
-                keystrokes.KEY_UP = true;
-                lastKeystroke = new Date().getTime();
-                break
-            case 'ArrowDown':
-                keystrokes.KEY_DOWN = true;
-                lastKeystroke = new Date().getTime();
+                lastKeystroke_RIGHT = lastKeystroke;
                 break
             case 'b':
                 keystrokes.KEY_B = true;
                 lastKeystroke = new Date().getTime();
-                break;
-            case 'c':
-                keystrokes.KEY_C = true;
-                lastKeystroke = new Date().getTime();
+                lastKeystroke_THROW = lastKeystroke;
                 break;
             case ' ':
                 event.preventDefault();
                 keystrokes.KEY_SPACE = true;
                 lastKeystroke = new Date().getTime();
+                lastKeystroke_JUMP = lastKeystroke;
         }
         // console.log(keystrokes);
     }
@@ -70,17 +57,8 @@ class Keystrokes {
             case 'ArrowRight':
                 keystrokes.KEY_RIGHT = false;
                 break
-            case 'ArrowUp':
-                keystrokes.KEY_UP = false;
-                break
-            case 'ArrowDown':
-                keystrokes.KEY_DOWN = false;
-                break
             case 'b':
                 keystrokes.KEY_B = false;
-            break
-            case 'c':
-                keystrokes.KEY_C = false;
             break
             case ' ':
                 keystrokes.KEY_SPACE = false;
@@ -126,15 +104,6 @@ class Keystrokes {
             event.preventDefault();
             keystrokes.KEY_B = false;
         });
-        // document.getElementById('btnThrowCoin').addEventListener('touchstart', (event) => {
-        //     event.preventDefault();
-        //     keystrokes.KEY_C = true;
-        //     lastKeystroke = new Date().getTime();
-        // });
-        // document.getElementById('btnThrowCoin').addEventListener('touchend', (event) => {
-        //     event.preventDefault();
-        //     keystrokes.KEY_C = false;
-        // });
     }
 
 };

@@ -114,38 +114,37 @@ class Character extends MovableObject {
 
         // interval for fast key observer
         intervalId = setInterval(() => {
-            if(gameStatus === -1) return;
+            if(gameIsPaused === true) return;
             this.keyObserverFast();
         }, 1000 / 60);
         this.intervals.push(intervalId);
 
         // interval for walking/hurt/dead animation
         intervalId = setInterval(() => {
-            if(gameStatus === -1) return;
+            if(gameIsPaused === true) return;
             this.animationsOnGround();
         }, 50); 
         this.intervals.push(intervalId);
 
         // interval for jumping animation (slower)
         intervalId = setInterval(() => {
-            if(gameStatus === -1) return;
+            if(gameIsPaused === true) return;
             if(this.isAboveGround()) {
                 this.jumpingAnimation();
-                this.playAudio(this.audioCache.jump, 'jump' + this.objectName);
              }
         }, 100); 
         this.intervals.push(intervalId);
 
         // interval for idle animation (slower)
         intervalId = setInterval(() => {
-            if(gameStatus === -1) return;
+            if(gameIsPaused === true) return;
             this.idleAnimation();
         }, 300); 
         this.intervals.push(intervalId);
 
         // interval for slow key observer
         intervalId = setInterval(() => {
-            if(gameStatus === -1) return;
+            if(gameIsPaused === true) return;
             this.keyObserverSlow();
         }, 100);
         this.intervals.push(intervalId);
@@ -163,13 +162,14 @@ class Character extends MovableObject {
         else if(this.world.keystrokes.KEY_LEFT) {
             this.otherDirection = true;
             this.moveLeft(this.speed);
-                this.isIdle = false;
-                this.isIdleLong = false;
+            this.isIdle = false;
+            this.isIdleLong = false;
         }
         else if(this.world.keystrokes.KEY_SPACE  && !this.isAboveGround()) {
             this.jump(30);
-                this.isIdle = false;
-                this.isIdleLong = false;
+            startAudioDebounced(this.audioCache.jump, lastKeystroke_JUMP, 125);
+            this.isIdle = false;
+            this.isIdleLong = false;
         }
         else {
             let timePassed = new Date().getTime() - lastKeystroke;
@@ -238,8 +238,11 @@ class Character extends MovableObject {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
             super.walkingAnimation();
-            this.playAudio(this.audioCache.walk, 'walk' + this.objectName);
+            // this.playAudio(this.audioCache.walk, 'walk' + this.objectName);
+            startAudio(this.audioCache.walk);
             // console.log(this.objectName, this.x);
+        } else {
+            stopAudio(this.audioCache.walk);
         }
 }
 
@@ -264,7 +267,7 @@ class Character extends MovableObject {
             imagePaths = 'IMAGES_IDLE'
         } else if(this.isIdleLong) {
             imagePaths = 'IMAGES_IDLE_LONG'
-            this.playAudio(this.audioCache.idle, 'idle' + this.objectName);
+            startAudio(this.audioCache.idle);
         } else {
             return;
         }
@@ -301,7 +304,7 @@ class Character extends MovableObject {
 
     collectCoin(coin) {
         coin.collectObject();
-        this.playAudio(this.audioCache.collectCoin, 'collectCoin' + this.objectName);
+        startAudio(this.audioCache.collectCoin);
         this.coins.push(coin);
         this.coinStatus += coin.statusValue;
         console.log(this.coins);
@@ -311,7 +314,7 @@ class Character extends MovableObject {
     collectBottle(bottle) {
         // if(this.bottleStatus >= 100) return;
         bottle.collectObject();
-        this.playAudio(this.audioCache.collectBottle, 'collectBottle' + this.objectName);
+        startAudio(this.audioCache.collectBottle);
         this.bottles.push(bottle);
         this.bottleStatus += bottle.statusValue;
         console.log(this.bottles);
