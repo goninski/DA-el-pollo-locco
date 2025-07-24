@@ -80,8 +80,8 @@ class Character extends MovableObject {
         idle : audioPathBase + 'idle.mp3',
         walk : audioPathBase + 'walk2.mp3',
         jump : audioPathBase + 'jump.mp3',
-        hurt : audioPathBase + 'silence.mp3',
-        dead : audioPathBase + 'silence.mp3',
+        hurt : audioPathBase + 'hurt.mp3',
+        dead : audioPathBase + 'hurt.mp3',
         collectCoin : audioPathBase + 'collect-coin.mp3',
         collectBottle : audioPathBase + 'collect-bottle.mp3',
     }

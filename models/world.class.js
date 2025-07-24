@@ -1,18 +1,3 @@
-let imgPathBase = '/assets/img/';
-let audioPathBase = '/assets/audio/';
-let widthCanvas = 1000;
-let heightCanvas = widthCanvas / 1.777;
-let walkOffset = 48;
-let intervalId = 0;
-let stoppableIntervals = [];
-let livingEnemies = 999;
-let playStatus = 1;
-let audioCache = {
-    start : new Audio(audioPathBase + 'start.mp3'),
-    gameOver : new Audio(audioPathBase + 'game-over.mp3'),
-    gameWin : new Audio(audioPathBase + 'game-win.wav'),
-};
-
 class World {
     keystrokes;
     canvas;
@@ -34,7 +19,7 @@ class World {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.draw();
-        this.setCheckIntervals();
+        this.setGlobalIntervals();
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
@@ -106,10 +91,18 @@ class World {
     }
 
 
-    setCheckIntervals() {
+    setGlobalIntervals() {
+        intervalId = setInterval(() => {
+            if(gameStatus === 1) {
+                timer = timerUpCounter();
+                document.getElementById('playTimer').innerHTML =  timer;
+            }
+        }, 1000);
+        this.intervals.push(intervalId);
+
         intervalId = setInterval(() => {
             this.updateGameStatus();
-        }, 1000 / 60);
+        }, 300);
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
@@ -118,26 +111,65 @@ class World {
             this.checkEnemyHits();
             this.checkBottleCollection();
             this.checkCoinCollection();
-            // this.updateGameStatus();
         }, 50);
         this.intervals.push(intervalId);
 
-        // intervalId = setInterval(() => {
-        //     this.checkCoinCollection();
-        //     this.checkBottleCollection();
-        // }, 50);
-        // this.intervals.push(intervalId);
-
-        intervalId = setInterval(() => {
-            if(gameStatus === 1) {
-                timer = timerUpCounter();
-                document.getElementById('playTimer').innerHTML =  timer;
-            }
-        }, 1000);
-        this.intervals.push(intervalId);
     }
 
 
+
+    updateGameStatus() {
+        console.log('livingEnemies', livingEnemies);
+        // console.log('gameStatus', gameStatus);
+        this.statusBars[0].updateStatusBar(this.character.healthStatus);
+        this.statusBars[1].updateStatusBar(this.character.coinStatus);
+        this.statusBars[2].updateStatusBar(this.character.bottleStatus);
+        this.updateEndbossStatusBar();
+        if(this.isGameOver()) {
+            return gameOver();
+        } else if(this.isGameWon()) {
+            return gameWon();
+        }
+    }
+
+
+    updateEndbossStatusBar() {
+        this.level.enemies.forEach((enemy) => {
+            if(enemy instanceof Endboss) {
+                this.statusBars[4].updateStatusBar(enemy.healthStatus);
+            }
+        });
+    }
+
+
+    isGamePaused(){
+        if(this.isGameOver() || this.isGameWon()) {
+            return false;
+        } else {
+            return gameStatus === -1;
+        }
+    }
+
+
+    isGameOver(){
+        return this.character.isDead();
+        // if(gameStatus === 9) {
+        //     let timePassed = new Date().getTime() - this.character.lastHit;
+        //     return timePassed >= 3000;
+        // }
+    }
+
+
+    isGameWon(){
+        return livingEnemies <= 0;
+        // if(gameStatus === 2) {
+        //     return true;
+        //     let timePassed = new Date().getTime() - this.character.lastHit;
+        //     return timePassed >= 3000;
+        // }
+    }
+    
+    
     checkEnemyHits() {
         this.level.enemies.forEach((enemy) => {
             // console.log('character healthStatus:', this.character.healthStatus);
@@ -199,57 +231,6 @@ class World {
             }
         });
     }
-    
-    
-    updateGameStatus() {
-        console.log('livingEnemies', livingEnemies);
-        // console.log('gameStatus', gameStatus);
-        // this.statusBars[0].updateStatusBar(this.character.healthStatus);
-        // this.statusBars[1].updateStatusBar(this.character.coinStatus);
-        // this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-        // this.updateEndbossStatusBar();
-        if(this.isGameOver()) {
-            return gameOver();
-        } else if(this.isGameWon()) {
-            return gameWon();
-        }
-    }
-
-
-    updateEndbossStatusBar() {
-        this.level.enemies.forEach((enemy) => {
-            if(enemy instanceof Endboss) {
-                this.statusBars[4].updateStatusBar(enemy.healthStatus);
-            }
-        });
-    }
-
-
-    isGamePaused(){
-        if(this.isGameOver() || this.isGameWon()) {
-            return false;
-        } else {
-            return gameStatus === -1;
-        }
-    }
-
-
-    isGameOver(){
-        return this.character.isDead();
-        // if(gameStatus === 9) {
-        //     let timePassed = new Date().getTime() - this.character.lastHit;
-        //     return timePassed >= 3000;
-        // }
-    }
-
-
-    isGameWon(){
-        return livingEnemies <= 0;
-        // if(gameStatus === 2) {
-        //     return true;
-        //     let timePassed = new Date().getTime() - this.character.lastHit;
-        //     return timePassed >= 3000;
-        // }
-    }
+        
 
 }

@@ -1,48 +1,63 @@
+let imgPathBase = '/assets/img/';
+let audioPathBase = '/assets/audio/';
 let showObjectBorders = true;
 let audioAutoPlay = true;
 let canvas;
+let widthCanvas = 1000;
+let heightCanvas = widthCanvas / 1.777;
+let walkOffset = 48;
 let body;
 let world;
 let keystrokes;
-let gameStatus = 0; // 0:startscreen, -1:paused, 1:play, 2:won; 9:gameover
-let fullscreenAvailable = document.fullscreenEnabled;
-let currentAudio;
-let secondsPlay = 0;
-let timer;
 let lastKeystroke;
+let gameStatus = 0; // 0:startscreen, -1:paused, 1:play, 2:won; 9:gameover
+// let playStatus = 1;
+let livingEnemies = 999;
+let intervalId = 0;
+let stoppableIntervals = [];
+let audioCache = {
+    start : new Audio(audioPathBase + 'start.mp3'),
+    gameOver : new Audio(audioPathBase + 'game-over.mp3'),
+    gameWin : new Audio(audioPathBase + 'game-win.wav'),
+};
+let currentAudios = [];
+let audioIsMuted = true;
+// document.addEventListener('DOMContentLoaded', audioAutoPlayOnPageLoadHandler);
+let fullscreenAvailable = document.fullscreenEnabled;
+let timer;
+let secondsPlay = 0;
+let gameIsPaused = false;
 
 function initGame(restart = false) {
     canvas = document.getElementById('canvas');
     body = document.body;
-    let btnToggleFullscreen = document.getElementById('btnToggleFullscreen')
-    !fullscreenAvailable ? btnToggleFullscreen.classList.add('hide') : btnToggleFullscreen.classList.remove('hide');
     keystrokes = new Keystrokes();
+    setFullscreenToggle();
     setBodyClassIfTouchDevice();
-    if(restart) {
-        startGame();
-    } else {
-        showStartScreen();
-    }
+    audioIsMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
+    restart ? startGame() : showStartScreen();
 }
 
-function startGame(event) {
-    event.stopPropagation();
+
+function startGame(event = null) {
+    event ? event.stopPropagation() : null;
     hideAllScreens();
     stoppableIntervals.forEach(clearInterval);
+    stopAudio(audioCache.start);
     body.classList.add('play-screen');
     gameStatus = 1;
+    secondsPlay = 0;
     initLevel1();
     world = new World(canvas, keystrokes);
-    playAudio(null);
-    secondsPlay = 0;
     lastKeystroke = new Date().getTime();
 }  
 
 
-function restartGame(event) {
+function restartGame(event = null) {
     event ? event.stopPropagation() : null;
-    window.location.reload();
-    initGame(true);
+    // window.location.reload();
+    // initGame(true);
+    initGame();
 }    
 
 
@@ -59,8 +74,7 @@ function hideAllScreens() {
 function showStartScreen() {
     hideAllScreens();
     body.classList.add('start-screen');
-    // body.classList.add('help-screen');
-    playAudio(audioCache.start);
+    startAudio(audioCache.start, 0.1, true);
 }
 
 
@@ -68,10 +82,11 @@ function gameOver(event = null) {
     event ? event.stopPropagation() : null;
     console.log('game is over');
     gameStatus = 9;
+    stopAudios();
     stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
     body.classList.add('game-over-screen');
-    playAudio(audioCache.gameOver);
+    startAudio(audioCache.gameOver);
     document.getElementById('playTimer').innerHTML = timer;
     // setTimeout(() => restartGame(null), 12000);
 }    
@@ -80,76 +95,31 @@ function gameOver(event = null) {
 function gameWon(event = null) {
     event ? event.stopPropagation() : null;
     gameStatus = 2;
+    stopAudios();
     hideAllScreens();
     body.classList.add('win-screen');
-    playAudio(audioCache.gameWin);
+    startAudio(audioCache.gameWin);
     stoppableIntervals.forEach(clearInterval);
-    setTimeout(() => playAudio(null), 4000);
     // setTimeout(() => restartGame(null), 12000);
 }    
 
 
-async function playAudio(audioObj) {
-    if(audioObj === null) {
-        currentAudio ? currentAudio.pause() : null;
-        currentAudio = null;
-        body.classList.remove('audio-auto-muted');
-        body.classList.add('no-audio');
-        return;
-    } else {
-        currentAudio = audioObj;
-        if(currentAudio === audioCache.start) {
-            currentAudio.loop = true;
-            currentAudio.volume = 0.25;
-        }
-    }
-    await handleAudioAutoMute();
+function setBodyClassIfTouchDevice() {
+    isTouchEnabled() ? body.classList.add('is-touch-device'): body.classList.remove('is-touch-device');
 }
 
 
-async function handleAudioAutoMute() {
-    try {
-        await currentAudio.play();
-        body.classList.remove('no-audio');
-        body.classList.remove('audio-auto-muted');
-    } catch (err) {
-        toggleAudioMute();
-        audioAutoPlay ? body.classList.add('audio-auto-muted') : null;
-    }
+function isTouchEnabled() {
+    return ( 'ontouchstart' in window ) || 
+           ( navigator.maxTouchPoints > 0 ) || 
+           ( navigator.msMaxTouchPoints > 0 );
 }
 
 
-function toggleAudioMute(event = null) {
-    if(event) {
-        event.stopPropagation();
-        body.classList.remove('audio-auto-muted');
-    };
-    if(currentAudio === null) return;
-    let btn = document.getElementById('btnToggleAudioMute');
-    let elemEnable = btn.querySelector('.enable');
-    let elemDisable = btn.querySelector('.disable');
-    if(body.classList.contains('audio-muted')) {
-        currentAudio.play();
-        elemEnable.classList.remove('hide');
-        elemDisable.classList.add('hide');
-        body.classList.remove('audio-muted');
-    } else {
-        currentAudio ? currentAudio.pause() : null;
-        elemEnable.classList.add('hide');
-        elemDisable.classList.remove('hide');
-        body.classList.add('audio-muted');
-    }
-}   
-
-
-function removeAudio() {
-    if(currentAudio) {
-        currentAudio.pause();
-    }
-    currentAudio = null;
-    body.classList.remove('audio-auto-muted');
-    body.classList.add('no-audio');
-}   
+function setFullscreenToggle() {
+    let btnToggleFullscreen = document.getElementById('btnToggleFullscreen')
+    !fullscreenAvailable ? btnToggleFullscreen.classList.add('hide') : btnToggleFullscreen.classList.remove('hide');
+}
 
 
 function toggleFullscreen(event) {
@@ -197,13 +167,17 @@ function toggleHelp(event) {
     if(body.classList.contains('help-screen')) {
         body.classList.remove('help-screen');
         if(body.classList.contains('play-screen')) {
+            gameIsPaused = false;
             gameStatus = 1;
+            !audioIsMuted ? unmuteAudios() : null;
         }
     } else {
         body.classList.add('help-screen');
         if(body.classList.contains('play-screen')) {
             body.classList.add('game-paused');
+            gameIsPaused = true;
             gameStatus = -1;
+            !audioIsMuted ? muteAudios() : null;
             // stoppableIntervals.forEach(clearInterval);
         }
     }
@@ -220,22 +194,6 @@ function toggleHelp(event) {
 //         body.classList.add('game-paused');
 //     }
 // }    
-
-
-function isTouchEnabled() {
-    return ( 'ontouchstart' in window ) || 
-           ( navigator.maxTouchPoints > 0 ) || 
-           ( navigator.msMaxTouchPoints > 0 );
-}
-
-
-function setBodyClassIfTouchDevice() {
-    if(isTouchEnabled()) {
-        body.classList.add('is-touch-device');
-    } else {
-        body.classList.remove('is-touch-device');
-    }
-}
 
 
 function saveIntervalsGlobally(intervals) {
@@ -269,5 +227,70 @@ function timerUpCounter() {
     }
     // console.log(timer);
     return timer;
+}
+
+
+function startAudio(audioObj, volume = 1, loop = false) {
+    currentAudios.push(audioObj);
+    audioObj.volume = volume;
+    audioObj.loop = loop;
+    console.log(audioIsMuted);
+    if(!audioIsMuted) {
+        try {
+            audioObj.play();
+            audioIsMuted = false;
+            body.classList.remove('audio-muted');
+        } catch (error) {
+            audioIsMuted = true;
+            body.classList.add('audio-muted', 'audio-auto-muted');
+        }
+    }
+}
+
+
+function stopAudio(audioObj) {
+    audioObj.pause();
+    let index = currentAudios.findIndex(item => item === audioObj);
+    index >= 0 ? currentAudios.splice(index, 1) : null;
+}
+
+
+function stopAudios() {
+    currentAudios.forEach(item => item.pause());
+    currentAudios = [];
+}
+
+
+function toggleAudioMute(event = null) {
+    event ? event.stopPropagation() : null;
+    if(audioIsMuted) {
+        unmuteAudios();
+    } else {
+        muteAudios();
+    }
+}
+
+
+function muteAudios() {
+    currentAudios.forEach(item => item.pause());
+    audioIsMuted = true;
+    body.classList.add('audio-muted');
+}
+
+
+function unmuteAudios() {
+    currentAudios.forEach(item => item.play());
+    audioIsMuted = false;
+    body.classList.remove('audio-muted');
+}
+
+
+function audioAutoPlayOnPageLoadHandler() {
+    currentAudios.forEach(item => {
+        item.play().catch(error => {
+            body.classList.add('audio-muted');
+            audioIsMuted = true;
+        });
+    });
 }
 

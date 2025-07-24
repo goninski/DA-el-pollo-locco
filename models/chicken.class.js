@@ -57,7 +57,8 @@ class Chicken extends MovableObject {
         intervalId = setInterval(() => {
             if(!this.isDead()) {
                 this.walkingAnimation();
-                this.playAudio(this.audioCache.walk, 'walk-chicken', 0.3, 3);
+                // this.playAudio(this.audioCache.walk, 'walk-chicken', 0.3, 3);
+                startAudio(this.audioCache.walk, 0.15, true);
             }
         }, 200);  
         this.intervals.push(intervalId);
@@ -75,6 +76,7 @@ class Chicken extends MovableObject {
     deadHandling() {
         // this.playAudio(this.audioCache.dead);
         if(this.countDeadHandling === 0) {
+            stopAudio(this.audioCache.walk);
             // this.playAudio(this.audioCache.dead, 'dead-chicken', 1);
             this.playAudio(this.audioCache.dead);
             livingEnemies--;
