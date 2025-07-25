@@ -37,6 +37,7 @@ function initGame(restart = false) {
     keystrokes = new Keystrokes();
     setFullscreenToggle();
     setBodyClassIfTouchDevice();
+    stopAudios();
     audioIsMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
     gameIsPaused = false;
     livingEnemies = 999;
@@ -83,7 +84,7 @@ function showStartScreen() {
 }
 
 
-function gameOver(event = null) {
+function gameOverHandling(event = null) {
     event ? event.stopPropagation() : null;
     console.log('game is over');
     // gameStatus = 9;
@@ -97,7 +98,7 @@ function gameOver(event = null) {
 }    
 
 
-function gameWon(event = null) {
+function gameWonHandling(event = null) {
     event ? event.stopPropagation() : null;
     // gameStatus = 2;
     stopAudios();

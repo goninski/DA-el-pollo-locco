@@ -45,17 +45,14 @@
                     <button id="btnStartGame" class="button" onclick="startGame(event)" data-after="Start Game">
                         <img src="assets/icons/play.svg" alt="play-icon">
                     </button>
-                    <div id="playTimer" class="option-msg"></div>
                     <div class="game-is-paused-msg option-msg">Game is paused</div>
+                    <div id="playTimer" class="option-msg"></div>
                     <button id="btnRestartGame" class="button" onclick="restartGame(event)" title="New game (startscreen)">
                         <img src="assets/icons/forward.svg" alt="replay-icon">
                     </button>
-                    <button id="btnSurrender" onclick="gameOver(event)" title="Surrender (Game Over)">
+                    <button id="btnSurrender" onclick="gameOverHandler(event)" title="Surrender (Game Over)">
                         <img src="assets/icons/flag.svg" alt="white-flag-icon">
                     </button>
-                    <!-- <button id="btnTogglePauseGame" onclick="togglePauseGame(event)" title="Play/Pause game">
-                        <img class="" src="assets/icons/play-pause.svg" alt="play-pause-icon">
-                    </button> -->
                     <!-- <div class="enable-audio-msg option-msg">enable Audio >></div> -->
                     <button id="btnToggleHelp" onclick="toggleHelp(event)" title="Help/Pause on/off">
                         <!-- <img class="" src="assets/icons/info-alert.svg" alt="question-mark-icon"> -->

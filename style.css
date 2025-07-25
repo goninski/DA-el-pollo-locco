@@ -164,11 +164,11 @@ body.help-screen #screenOverlay {
         background-color: transparent;
     }
     button:not(#btnStartGame):hover {
-        scale: 1.1;
+        /* scale: 1.1; */
     }
     #btnStartGame {
         margin-left: 2.75rem;
-        margin-right: auto;
+        /* margin-right: auto; */
         /* display: flex; */
         img {
             height: 9vw;
@@ -195,8 +195,16 @@ body.help-screen #screenOverlay {
     }
 }
 body:is(.start-screen) .option-panel { 
-    #btnToggleHelp img {
-        height: 40px;
+    #btnToggleHelp {
+        align-self: center;
+        margin-top: -12px;
+        margin-right: auto;
+        img {
+            height: 40px;
+        }
+    }
+    #playTimer {
+        display: none;
     }
 }
 body:is(.win-screen, .game-over-screen) .option-panel {
@@ -234,6 +242,8 @@ body:is(.win-screen, .game-over-screen) .option-panel {
         content: 'Restart Game';
         position: absolute;
         translate: 100% 25%;
+        text-align: left;
+        /* font-size: 100%; */
     }
     .option-msg {
         color:hsla(39, 100%, 50%, 0.8);
@@ -247,7 +257,8 @@ body.win-screen .option-panel {
     }
 }
 
-body.game-paused :is(#btnTogglePauseGame, #btnToggleHelp) img,
+body.help-screen .nav-panel button.close,
+/* body.game-paused :is(#btnTogglePauseGame, #btnToggleHelp) img, */
 body.start-screen:not(.help-screen) #btnToggleHelp img {
     --pulse-scale: 1.3;
     animation: pulse 1.5s infinite ease-in-out;
@@ -268,12 +279,14 @@ body:is(.win-screen, .game-over-screen) #btnToggleHelp {
     display: none;
 }
 
+
 /* NAV PANEL */
-.nav-panel {
+.nav-panel, .nav-panel button.close {
     display: none;
 }
 body.help-screen .nav-panel,
-body.is-touch-device:is(.start-screen, .play-screen) .nav-panel {
+body.help-screen .nav-panel button.close,
+body.is-touch-device.play-screen .nav-panel {
     display: flex;
 }
 .nav-panel {
@@ -370,7 +383,7 @@ body.is-touch-device .nav-panel .key-info {
 }
 body.is-touch-device:not(.help-screen) {
     .nav-panel {
-        bottom: 0.5rem;
+        bottom: 1%;
         padding-top: 0.7rem;
         background: transparent;
         border: none;
@@ -387,6 +400,9 @@ body.is-touch-device:not(.help-screen) {
     .nav-panel .help {
         display: none;
     }
+}
+body.help-screen .nav-panel button.close img {
+
 }
 
 
@@ -418,6 +434,9 @@ body.is-touch-device:not(.help-screen) {
     canvas {
         width: calc(100% - 12px - 12px);
     }
+    .nav-panel {
+        right: unset;
+    }
 }
 @media(max-width: 719px) {
     .page-title {
@@ -426,6 +445,7 @@ body.is-touch-device:not(.help-screen) {
         white-space: nowrap;
     }
     .nav-panel {
+        padding-inline: 1.5rem;
         button img {
             height: 32px;
         }
@@ -460,6 +480,9 @@ body.is-touch-device:not(.help-screen) {
     }
     body:is(.win-screen, .game-over-screen) #btnRestartGame {
         translate: -110% 27vh !important;
+    }
+    body:is(.help-screen) .nav-panel {
+        bottom: 4%;
     }
 }
 @media (orientation: landscape) and (min-aspect-ratio: 13/10) {

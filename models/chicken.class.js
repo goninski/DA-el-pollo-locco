@@ -1,7 +1,8 @@
 let chickenId = 0;
 
 class Chicken extends MovableObject {
-    type = 'enemy';
+    isEnemy = false;
+    // type = 'enemy';
     height = this.width / 1.02;
     statusValue = 3;
 
@@ -57,7 +58,7 @@ class Chicken extends MovableObject {
         intervalId = setInterval(() => {
             if(!this.isDead()) {
                 this.walkingAnimation();
-                startAudio(this.audioCache.walk, 0.1, true);
+                startAudio(this.audioCache.walk, 0.25, true);
             }
         }, 200);  
         this.intervals.push(intervalId);
@@ -75,7 +76,6 @@ class Chicken extends MovableObject {
         if(this.countDeadHandling === 0) {
             stopAudio(this.audioCache.walk);
             this.playAudio(this.audioCache.dead);
-            livingEnemies--;
             super.deadHandling();
         }
     }

@@ -81,7 +81,7 @@ class Character extends MovableObject {
         walk : audioPathBase + 'walk2.mp3',
         jump : audioPathBase + 'jump.mp3',
         hurt : audioPathBase + 'hurt.mp3',
-        dead : audioPathBase + 'hurt.mp3',
+        dead : audioPathBase + 'dead.mp3',
         collectCoin : audioPathBase + 'collect-coin.mp3',
         collectBottle : audioPathBase + 'collect-bottle.mp3',
     }
@@ -114,21 +114,21 @@ class Character extends MovableObject {
 
         // interval for fast key observer
         intervalId = setInterval(() => {
-            if(gameIsPaused === true) return;
+            if(gameIsPaused || this.isDead()) return;
             this.keyObserverFast();
         }, 1000 / 60);
         this.intervals.push(intervalId);
 
         // interval for walking/hurt/dead animation
         intervalId = setInterval(() => {
-            if(gameIsPaused === true) return;
+            if(gameIsPaused) return;
             this.animationsOnGround();
         }, 50); 
         this.intervals.push(intervalId);
 
         // interval for jumping animation (slower)
         intervalId = setInterval(() => {
-            if(gameIsPaused === true) return;
+            if(gameIsPaused) return;
             if(this.isAboveGround()) {
                 this.jumpingAnimation();
              }
@@ -137,14 +137,14 @@ class Character extends MovableObject {
 
         // interval for idle animation (slower)
         intervalId = setInterval(() => {
-            if(gameIsPaused === true) return;
+            if(gameIsPaused) return;
             this.idleAnimation();
         }, 300); 
         this.intervals.push(intervalId);
 
         // interval for slow key observer
         intervalId = setInterval(() => {
-            if(gameIsPaused === true) return;
+            if(gameIsPaused) return;
             this.keyObserverSlow();
         }, 100);
         this.intervals.push(intervalId);
@@ -203,8 +203,12 @@ class Character extends MovableObject {
         if(!this.isAboveGround()) {
             if(this.isDead()) {
                 this.deadHandling();
+                startAudioDebounced(this.audioCache.dead, this.lastHit, 125, 0.7);
             } else if(this.isHurt()) {
                 this.hurtHandling();
+                // resumeAudio(this.audioCache.hurt);
+                startAudioDebounced(this.audioCache.hurt, this.lastHit, 125);
+                // startAudio(this.audioCache.hurt);
             // } else if(this.isWalking()) {
             //     this.walkingAnimation();
             // }

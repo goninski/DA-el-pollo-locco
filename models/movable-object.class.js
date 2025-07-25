@@ -1,5 +1,6 @@
 class MovableObject extends DrawableObject {
 
+    isEnemy = false;
     groundY;
     objectPadding = null;
     borderX;
@@ -190,7 +191,7 @@ class MovableObject extends DrawableObject {
 
     isHurt() {
         let timePassed = new Date().getTime() - this.lastHit;
-        return timePassed < 1000;
+        return timePassed <= 500;
     }
 
 
@@ -199,61 +200,17 @@ class MovableObject extends DrawableObject {
     }
 
 
-    // isDead() {
-    //     if(this.healthStatus <= 0) {
-    //         if(this instanceof Chicken) {
-    //             // this.hits === 1 ? livingEnemies-- : null;
-    //             // livingEnemies <= 0 ? gameStatus = 2 : null;
-    //             return true;
-    //         }
-    //         if(this instanceof Endboss) {
-    //             this.deadCount++;
-    //             this.deadCount === 1 ? livingEnemies-- : null;
-    //             // livingEnemies <= 0 ? gameStatus = 2 : null;
-    //             return true;
-    //         }
-    //         if(this instanceof Character) {
-    //             gameStatus = 9;
-    //             console.log('gameStatus movableObject:', gameStatus);
-    //             let timePassed = new Date().getTime() - this.lastHit;
-    //             return timePassed <= 3000;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-
     isDead() {
-        if(this.healthStatus <= 0) {
-            if(this instanceof Character) {
-                let timePassed = new Date().getTime() - this.lastHit;
-                return timePassed <= 3000;
-            } else {
-                return true;
-            }
-        }
+        return this.healthStatus <= 0;
     }
 
 
     deadHandling() {
-    //    console.log('deadHandling', this.objectName);
-       this.countDeadHandling++;
-       this.deadAnimation();
-       this.clearIntervals();
-       console.log(this.objectName, 'deadHandling#', this.countDeadHandling, 'hits:', this.hits, 'health:', this.healthStatus);
+        this.isEnemy ? livingEnemies-- : null;
+        this.countDeadHandling++;
+        this.deadAnimation();
+        this.clearIntervals();
     }
-
-
-        // deadHandling(audioObj, audioSrc = '', volume = 1, option = 0) {
-    //     console.log('deadHandling', this.objectName);
-
-    // //    (this.type == 'enemy' && this.deadCount === 1) ? livingEnemies-- : null;
-    // //    livingEnemies <= 0 ? gameStatus = 2 : null;
-    //    this.deadAnimation();
-    // //    this.playAudio(audioObj, audioSrc, volume, option);
-    //    this.clearIntervals();
-    //    this.audio.pause();
-    // }
 
 
     saveIntervalsGlobally() {

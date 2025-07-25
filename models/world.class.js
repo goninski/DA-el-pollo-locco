@@ -29,7 +29,6 @@ class World {
 
     applyWorldToObjects() {
         this.character.world = this;
-        // this.statusBars.world = this;
     }
 
 
@@ -114,11 +113,6 @@ class World {
         }, 50);
         this.intervals.push(intervalId);
 
-        intervalId = setInterval(() => {
-            // this.checkBottleCollection();
-            // this.checkCoinCollection();
-        }, 100);
-        this.intervals.push(intervalId);
     }
 
 
@@ -132,9 +126,9 @@ class World {
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
         this.updateEndbossStatusBar();
         if(this.isGameOver()) {
-            return gameOver();
+            return gameOverHandling();
         } else if(this.isGameWon()) {
-            return gameWon();
+            return gameWonHandling();
         }
     }
 
@@ -158,21 +152,19 @@ class World {
 
 
     isGameOver(){
-        return this.character.isDead();
-        // if(gameStatus === 9) {
-        //     let timePassed = new Date().getTime() - this.character.lastHit;
-        //     return timePassed >= 3000;
-        // }
+        if(this.character.isDead()) {
+            let timePassed = new Date().getTime() - this.character.lastHit;
+            return timePassed >= 1900;
+        }
     }
 
 
     isGameWon(){
-        return livingEnemies <= 0;
-        // if(gameStatus === 2) {
-        //     return true;
-        //     let timePassed = new Date().getTime() - this.character.lastHit;
-        //     return timePassed >= 3000;
-        // }
+        // return livingEnemies <= 0;
+        if(livingEnemies <= 0) {
+            let timePassed = new Date().getTime() - this.character.lastHit;
+            return timePassed >= 1900;
+        }
     }
     
     
@@ -194,20 +186,20 @@ class World {
 
     handleEnemyHitFromAbove(enemy, character) {
         enemy.hitHandlingFromAbove(character);
-        console.log(enemy.objectName, 'isHitFromAbove:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
+        // console.log(enemy.objectName, 'isHitFromAbove:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
     }
     
 
     EnemyHitFromBottle(enemy, character) {
         enemy.hitHandlingFromBottle(character);
-        console.log(enemy.objectName, 'isHitFromBottle:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
+        // console.log(enemy.objectName, 'isHitFromBottle:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
     }
 
     
     handleHitFromEnemy(enemy, character) {
         character.hitHandling(enemy);
-        console.log('character isHit from:', enemy.constructor.name, 'value:', enemy.statusValue);
-        console.log('character healthStatus:', character.healthStatus);
+        // console.log('character isHit from:', enemy.constructor.name, 'value:', enemy.statusValue);
+        // console.log('character healthStatus:', character.healthStatus);
     }
 
     
