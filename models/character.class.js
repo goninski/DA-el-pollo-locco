@@ -304,7 +304,7 @@ class Character extends MovableObject {
 
     collectCoin(coin) {
         coin.collectObject();
-        startAudio(this.audioCache.collectCoin);
+        resumeAudio(this.audioCache.collectCoin);
         this.coins.push(coin);
         this.coinStatus += coin.statusValue;
         console.log(this.coins);
@@ -314,7 +314,7 @@ class Character extends MovableObject {
     collectBottle(bottle) {
         // if(this.bottleStatus >= 100) return;
         bottle.collectObject();
-        startAudio(this.audioCache.collectBottle);
+        resumeAudio(this.audioCache.collectBottle);
         this.bottles.push(bottle);
         this.bottleStatus += bottle.statusValue;
         console.log(this.bottles);

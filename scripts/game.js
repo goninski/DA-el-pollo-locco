@@ -1,7 +1,7 @@
 let imgPathBase = '/assets/img/';
 let audioPathBase = '/assets/audio/';
-let showObjectBorders = true;
 let audioIsMuted = false;
+let showObjectBorders = false;
 let canvas;
 let widthCanvas = 1000;
 let heightCanvas = widthCanvas / 1.777;
@@ -190,7 +190,7 @@ function toggleHelp(event) {
 }   
 
 
-function gameTimeCounter() {
+function playTimeCounter() {
     let timeDiff = 60 * 60 * 1000
     let dateObj = new Date(secondsPlay * 1000 - timeDiff);
     secondsPlay++;
@@ -225,16 +225,37 @@ function clearIntervallTimeout(intervalId, timeout = 5000) {
 
 
 function startAudio(audioObj, volume = 1, loop = false) {
-    currentAudios.push(audioObj);
+    !currentAudios.includes(audioObj) ? currentAudios.push(audioObj) : null;
     audioObj.volume = volume;
     audioObj.loop = loop;
+    checkNSetAudioMuting(audioObj);
     audioObj.play().catch(error => {
         audioObj.muted = true;
         audioIsMuted = true;
         body.classList.add('audio-muted');
         console.log('audioplay error:', error);
     });
-    // audioObj.play();
+    // !audioObj.loop ? currentAudios.pop() : null;
+}
+
+
+function startAudioDebounced(audioObj, eventStart, delay = 150, volume = 1, loop = false) {
+    let currentTime = new Date().getTime();
+    let diff = currentTime - eventStart;
+    // console.log(eventStart, currentTime, diff);
+    if(diff > delay) return;
+    startAudio(audioObj, volume, loop)
+}
+
+
+function resumeAudio(audioObj, volume = 1) {
+    // audioObj.pause();
+    audioObj.currentTime = 0;
+    startAudio(audioObj, volume, false)
+}
+
+
+function checkNSetAudioMuting(audioObj) {
     if(audioIsMuted) {
         audioObj.muted = true;
         body.classList.add('audio-muted');
@@ -242,20 +263,6 @@ function startAudio(audioObj, volume = 1, loop = false) {
         audioObj.muted = false;
         body.classList.remove('audio-muted');
     }
-    // console.log('audioObj has ended:', audioObj.ended);
-    !audioObj.loop ? currentAudios.pop() : null;
-    // if(!audioObj.loop) {
-    //     audioObj.ended === true ? currentAudios.pop() : null;
-    // }
-}
-
-
-function startAudioDebounced(audioObj, eventStart, delay = 150, volume = 1, loop = false) {
-    let currentTime = new Date().getTime();
-    let diff = currentTime - eventStart;
-    console.log(eventStart, currentTime, diff);
-    if(diff > delay) return;
-    startAudio(audioObj, volume, loop)
 }
 
 

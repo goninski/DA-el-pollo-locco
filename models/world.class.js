@@ -93,8 +93,8 @@ class World {
 
     setGlobalIntervals() {
         intervalId = setInterval(() => {
-            if(!gameIsPaused === 1) {
-                timer = timerUpCounter();
+            if(!gameIsPaused) {
+                timer = playTimeCounter();
                 document.getElementById('playTimer').innerHTML =  timer;
             }
         }, 1000);
@@ -114,6 +114,11 @@ class World {
         }, 50);
         this.intervals.push(intervalId);
 
+        intervalId = setInterval(() => {
+            // this.checkBottleCollection();
+            // this.checkCoinCollection();
+        }, 100);
+        this.intervals.push(intervalId);
     }
 
 
@@ -147,8 +152,7 @@ class World {
         if(this.isGameOver() || this.isGameWon()) {
             return false;
         } else {
-            return gameIsPaused === true
-            return gameStatus === -1;
+            return gameIsPaused = true
         }
     }
 
@@ -222,7 +226,7 @@ class World {
 
 
     checkBottleCollection() {
-        if(this.character.bottleStatus >= 100) return;
+        if(this.character.bottleStatus >= 10000) return;
         this.level.bottles.forEach((bottle) => {
             if(bottle.hits <= 0) {
                 if(this.character.touchesObject(bottle)) {
