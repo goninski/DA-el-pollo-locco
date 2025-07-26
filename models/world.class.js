@@ -101,8 +101,6 @@ class World {
 
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
-            // console.log('screenTranslateX:', this.screenTranslateX);
-            // console.log('character x:', this.character.x)
             this.checkEnemyHits();
             this.checkBottleCollection();
             this.checkCoinCollection();
@@ -114,7 +112,7 @@ class World {
 
 
     updateGameStatus() {
-        console.log('livingEnemies', livingEnemies);
+        // console.log('livingEnemies', livingEnemies);
         this.statusBars[0].updateStatusBar(this.character.healthStatus);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
@@ -147,9 +145,7 @@ class World {
 
     isGameOver(){
         if(this.character.isDead()) {
-            return during(this.character.lastHit, 1900);
-            // let timePassed = new Date().getTime() - this.character.lastHit;
-            // return timePassed >= 1900;
+            return during(this.character.lastHit, 2500);
         }
     }
 
@@ -164,15 +160,16 @@ class World {
             if(enemy.isDead() || this.character.isDead()) {
               return;  
             }
+            // console.log(this.character.bottles);
             if(this.character.bottles.length > 0) {
                 if(enemy.isHitFromBottle(this.character.bottles[0])) {
-                    enemy.hitHandlingFromThrowable(this.character);                    
+                    enemy.handlingHitFromBottle(this.character.bottles[0]);                    
                 }
             }
             if(enemy.isHitFromAbove(this.character)) {
-                enemy.hitHandlingFromAbove(this.character);
+                enemy.handlingHitFromAbove(this.character);
             } else if(this.character.isHit(enemy)) {
-                this.character.hitHandling(enemy);
+                this.character.handlingHit(enemy);
             }
         });
     }

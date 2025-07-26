@@ -74,7 +74,7 @@ class Endboss extends MovableObject {
         intervalId = setInterval(() => {
             if(this.isDead()) {
                 // console.log('isDead', this.healthStatus);
-                this.deadHandling();
+                this.handlingDead();
             }
         }, 500);  
         this.intervals.push(intervalId);

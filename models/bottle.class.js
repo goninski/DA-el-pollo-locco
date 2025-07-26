@@ -6,8 +6,6 @@ class Bottle extends ThrowableObject {
     objectPadding = [0.1, 0.2, 0.1, 0.2];
     statusValue = 20;
     isCollectable = true;
-    // isCollected = false;
-    isThrowing = false;
     isSplashed = false;
     throwInterval;
 
@@ -71,7 +69,7 @@ class Bottle extends ThrowableObject {
 
     }
 
-
+   
     isSplashing() {
         if(this.isCollectable || this.isAboveGround()) return;
         // console.log(this.objectName, 'isSplashing');
@@ -80,14 +78,19 @@ class Bottle extends ThrowableObject {
 
 
     handleFlying() {
+        console.log('isThrowing?', this.isThrowing);
+        console.log('Border from', this.objectName, '(x-left, x-right, y-bottom):',this.borderX, this.borderX + this.borderWidth, this.borderY + this.borderHeight);
+
         if(this.isSplashing() && !this.isSplashed) {
             clearInterval(this.throwInterval);
             this.y = this.groundY + (this.height / 2);
             this.splashingAnimation();
             setTimeout(() => this.isSplashed = true, 750);
         } else if(this.isSplashed) {
+            this.isThrowing = false;
             this.loadImage(this.IMAGES_SPLASH[5]);
             this.clearIntervals(0);
+            // gameIsPaused = true;
         } else {
             this.flyingAnimation();
         }
@@ -103,7 +106,6 @@ class Bottle extends ThrowableObject {
 
 
     splashingAnimation() {
-        console.log('splashingAnimation');
         startAudio(this.audioCache.splash);
         let imagePaths = 'IMAGES_SPLASH';
         this.img = this.imageCache[this[imagePaths][0]];

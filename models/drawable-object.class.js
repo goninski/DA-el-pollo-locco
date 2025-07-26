@@ -53,11 +53,12 @@ class DrawableObject {
 
 
     consoleObjectPosition(obj = null) {
-        if(obj =! null) {
-            console.log(obj.objectName, 'x:' + obj.x, 'y:' + obj.y);
-        } else {
-            console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
-        }
+        console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
+        // if(obj =! null) {
+        //     console.log(obj.objectName, 'x:' + obj.x, 'y:' + obj.y);
+        // } else {
+        //     console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
+        // }
     }
 
     

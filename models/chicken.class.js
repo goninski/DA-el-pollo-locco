@@ -44,7 +44,7 @@ class Chicken extends MovableObject {
         intervalId = setInterval(() => {
             // console.log(this.objectName, 'hits:', this.hits, 'health:', this.healthStatus);
             if(this.isDead()) {
-                this.deadHandling();
+                this.handlingDead();
             }
         }, 50);  
         this.intervals.push(intervalId);
@@ -66,11 +66,11 @@ class Chicken extends MovableObject {
     }
 
 
-    deadHandling() {
-        if(this.countDeadHandling === 0) {
+    handlingDead() {
+        if(this.counthandlingDead === 0) {
             stopAudio(this.audioCache.walk);
             this.playAudio(this.audioCache.dead);
-            super.deadHandling();
+            super.handlingDead();
         }
     }
 

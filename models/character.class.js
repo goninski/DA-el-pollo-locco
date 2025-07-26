@@ -190,6 +190,7 @@ class Character extends MovableObject {
 
     keyObserverSlow() {
         if(this.world.keystrokes.KEY_B) {
+            // this.throwBottle();
             debounced(lastKeystroke_THROW) ? this.throwBottle() : null;
         } 
     }
@@ -198,10 +199,10 @@ class Character extends MovableObject {
     animationsOnGround() {
         if(!this.isAboveGround()) {
             if(this.isDead()) {
-                this.deadHandling();
+                this.handlingDead();
                 startAudioDebounced(this.audioCache.dead, this.lastHit, 125, 0.7);
             } else if(this.isHurt()) {
-                this.hurtHandling();
+                this.handlingHurt();
                 startAudioDebounced(this.audioCache.hurt, this.lastHit, 125);
             } else if(!this.isIdle && !this.isIdleLong) {
                 this.walkingAnimation();
@@ -280,8 +281,8 @@ class Character extends MovableObject {
         bottle.isCollected = true;
         this.bottles.push(bottle);
         this.bottleStatus += bottle.statusValue;
-        // console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
-        // console.log('total bottle points:', this.bottleStatus);
+        console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
+        console.log('total bottle points:', this.bottleStatus);
     }
 
 
@@ -290,16 +291,18 @@ class Character extends MovableObject {
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
         // console.log('characterX:', this.x);
-        bottle.x = this.x;
-        bottle.y = this.y
-        bottle.applyGravity()
-        bottle.speedY = 5;
-        bottle.isThrowing = true;
-        this.bottles.shift();
         this.bottleStatus -= bottle.statusValue;
-        bottle.throwInterval = setInterval(() => bottle.x += 15, 25);
+        bottle.x = this.x;
+        bottle.y = this.y;
+        bottle.isThrowing = true;
+        bottle.speedY = 5;
+        bottle.applyGravity()
+        bottle.throwInterval = setInterval(() => {
+            this.otherDirection ? bottle.x -= 15 : bottle.x += 15;
+        }, 25);
+        this.bottles.shift();
         // console.log(bottle);
-        // this.consoleObjectPosition(bottle);
+        // bottle.consoleObjectPosition();
     }
 
 
