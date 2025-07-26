@@ -1,8 +1,7 @@
 let chickenId = 0;
 
 class Chicken extends MovableObject {
-    isEnemy = false;
-    // type = 'enemy';
+    isEnemy = true;
     height = this.width / 1.02;
     statusValue = 3;
 
@@ -29,16 +28,11 @@ class Chicken extends MovableObject {
         this.objectName += chickenId;
 
         this.setRandomPosX(0.5, 3);
-        // this.x = (widthCanvas * 0.8) + (Math.random() * widthCanvas * 2);
         this.setWalkGroundY();
-        // this.setBorderCoordinates();
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_DEAD);
         this.setAudioCache(this.audioFiles);
-
-        // this.movementAnimationAuto(this.IMAGES_WALKING, 200);
-        // this.moveLeftAuto(0.15, 0.45, false);
 
         this.animate();
         this.saveIntervalsGlobally();

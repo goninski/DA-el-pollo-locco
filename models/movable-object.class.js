@@ -2,11 +2,6 @@ class MovableObject extends DrawableObject {
 
     isEnemy = false;
     groundY;
-    objectPadding = null;
-    borderX;
-    borderY;
-    borderWidth;
-    borderHeight;
     speedY = 0;
     acceleration = 2.5;
     statusValue = 0;
@@ -18,8 +13,6 @@ class MovableObject extends DrawableObject {
     audioFiles = {};
     audioCache = {};
     countDeadHandling = 0;
-    // lastAudioType;
-    // lastAudioTimeStamp;
 
     constructor() {
         super();
@@ -88,17 +81,6 @@ class MovableObject extends DrawableObject {
     }
 
     
-    // moveLeftAuto(speedMin = 0.15, speedMax = null, consoleX = false) {
-    //     if(gameIsPaused === true) return;
-    //     let speed = speedMax ? speedMin + (Math.random() * speedMax) : speedMin;
-    //     intervalId = setInterval(() => {
-    //         this.x -= speed;
-    //         consoleX ? this.consoleObjectPosition() : null;
-    //     }, 1000 / 60);
-    //     this.intervals.push(intervalId);
-    // }
-
-
     applyGravity() {
         setInterval(() => {
             if(this.isAboveGround() || this instanceof ThrowableObject || this.speedY > 0) {
@@ -141,7 +123,7 @@ class MovableObject extends DrawableObject {
 
     isHitFromAbove(fromObj, buffer = 0) {
         this.setBorderCoordinates();
-        buffer = buffer == 0 ? 0 : (widthCanvas / buffer) * -1;
+        buffer = buffer === 0 ? 0 : (widthCanvas / buffer) * -1;
         if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
@@ -151,7 +133,8 @@ class MovableObject extends DrawableObject {
 
     isHitFromBottle(throwableObj, buffer = 0) {
         this.setBorderCoordinates();
-        buffer = buffer == 0 ? 0 : (widthCanvas / buffer) * -1;
+        buffer = buffer === 0 ? 0 : (widthCanvas / buffer) * -1;
+        // console.log('throwableObj.borderY:', throwableObj.borderY);
         if((throwableObj.borderY + throwableObj.borderHeight + buffer < this.borderY) || throwableObj.borderX + throwableObj.borderWidth + buffer < this.borderX || throwableObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
         };
@@ -167,7 +150,8 @@ class MovableObject extends DrawableObject {
         } else {
             this.lastHit = new Date().getTime();
         }
-        console.log(this.objectName, this.hits, this.healthStatus);
+        console.log(this.objectName, 'is hit from', obj.objectName);
+        console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hits:', this.hits);
     }
 
 
@@ -176,6 +160,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.statusValue = 25;
         }
+        console.log(this.objectName, 'is hit from above');
         this.hitHandling(obj);
     }
 
@@ -185,6 +170,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.statusValue = 25;
         }
+        console.log(this.objectName, 'is hit from throwable');
         this.hitHandling(obj);
     }
 

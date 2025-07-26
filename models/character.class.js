@@ -311,7 +311,8 @@ class Character extends MovableObject {
         resumeAudio(this.audioCache.collectCoin);
         this.coins.push(coin);
         this.coinStatus += coin.statusValue;
-        console.log(this.coins);
+        console.log('collected:', coin.objectName, '(+' + coin.statusValue + ')');
+        console.log('total coin points:', this.coinStatus);
     }
 
 
@@ -321,22 +322,26 @@ class Character extends MovableObject {
         resumeAudio(this.audioCache.collectBottle);
         this.bottles.push(bottle);
         this.bottleStatus += bottle.statusValue;
-        console.log(this.bottles);
+        console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
+        console.log('total bottle points:', this.bottleStatus);
     }
 
 
     throwBottle() {
-        if(this.bottlesStatus <= 0 || this.healthStatus <= 0) return;
+        if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
+        // console.log('characterX:', this.x);
         bottle.x = this.x;
-        bottle.y = this.y;
-        bottle.speedY = 5;
+        bottle.y = this.y
         bottle.applyGravity()
+        bottle.speedY = 5;
         this.bottles.shift();
         this.bottleStatus -= bottle.statusValue;
-        setInterval(() => bottle.x += 10, 25);
-        console.log(this.bottles);
-        console.log(this.bottleStatus);
+        setInterval(() => bottle.x += 15, 25);
+        // console.log(bottle);
+        // this.consoleObjectPosition(bottle);
+        // console.log(this.bottles);
+        // console.log(this.bottleStatus);
     }
 
 

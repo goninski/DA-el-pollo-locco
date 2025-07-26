@@ -4,6 +4,11 @@ class DrawableObject {
     y = 0;
     width = widthCanvas * 0.15;
     height = this.width;
+    objectPadding = null;
+    borderX = 0;
+    borderY = 0;
+    borderWidth;
+    borderHeight;
     img;
     imageCache = {};
     currentImage = 0;
@@ -47,15 +52,19 @@ class DrawableObject {
     }
 
 
-    consoleObjectPosition() {
-         console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
+    consoleObjectPosition(obj = null) {
+        if(obj =! null) {
+            console.log(obj.objectName, 'x:' + obj.x, 'y:' + obj.y);
+        } else {
+            console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
+        }
     }
 
     
     drawRectangle(ctx) {
         if(showObjectBorders) {
-            if(this instanceof MovableObject && !(this instanceof Clouds) ) {
-            // if(this instanceof Character || this instanceof Chicken || this instanceof Endboss ) {
+            if(this instanceof Clouds) return;
+            if(this instanceof MovableObject) {
                 this.setBorderCoordinates();
                 ctx.beginPath();
                 ctx.rect(this.borderX, this.borderY, this.borderWidth, this.borderHeight);

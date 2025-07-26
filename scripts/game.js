@@ -1,7 +1,7 @@
 let imgPathBase = '/assets/img/';
 let audioPathBase = '/assets/audio/';
 let audioIsMuted = false;
-let showObjectBorders = false;
+let showObjectBorders = true;
 let canvas;
 let widthCanvas = 1000;
 let heightCanvas = widthCanvas / 1.777;
@@ -14,8 +14,6 @@ let lastKeystroke_LEFT;
 let lastKeystroke_RIGHT;
 let lastKeystroke_JUMP;
 let lastKeystroke_THROW;
-// let gameStatus = 0; // 0:startscreen, -1:paused, 1:play, 2:won; 9:gameover
-// let playStatus = 1;
 let gameIsPaused = false;
 let timer;
 let secondsPlay = 0;
@@ -100,7 +98,6 @@ function gameOverHandling(event = null) {
 
 function gameWonHandling(event = null) {
     event ? event.stopPropagation() : null;
-    // gameStatus = 2;
     stopAudios();
     hideAllScreens();
     body.classList.add('win-screen');
@@ -174,7 +171,6 @@ function toggleHelp(event) {
         body.classList.remove('help-screen');
         if(body.classList.contains('play-screen')) {
             gameIsPaused = false;
-            // gameStatus = 1;
             !audioIsMuted ? unmuteAudios() : null;
             world.draw();
         }
@@ -183,9 +179,7 @@ function toggleHelp(event) {
         if(body.classList.contains('play-screen')) {
             body.classList.add('game-paused');
             gameIsPaused = true;
-            // gameStatus = -1;
             !audioIsMuted ? muteAudios() : null;
-            // stoppableIntervals.forEach(clearInterval);
         }
     }
 }   
@@ -233,7 +227,7 @@ function startAudio(audioObj, volume = 1, loop = false) {
     audioObj.play().catch(error => {
         audioObj.muted = true;
         audioIsMuted = true;
-        body.classList.add('audio-muted');
+        body.classList.add('audio-muted', 'audio-auto-muted');
         console.log('audioplay error:', error);
     });
     // !audioObj.loop ? currentAudios.pop() : null;
@@ -288,15 +282,21 @@ function toggleAudioMute(event = null) {
 
 function muteAudios() {
     currentAudios.forEach(item => item.muted = true);
-    // currentAudios.forEach(item => item.mute = true);
     audioIsMuted = true;
     body.classList.add('audio-muted');
 }
 
 
 function unmuteAudios() {
-    currentAudios.forEach(item => item.muted = false);
+    if(body.classList.contains('audio-auto-muted')) {
+        currentAudios.forEach(item => {
+            item.muted = false;
+            item.play();
+        });
+    } else {
+        currentAudios.forEach(item => item.muted = false);
+    }
     audioIsMuted = false;
-    body.classList.remove('audio-muted');
+    body.classList.remove('audio-muted', 'audio-auto-muted');
 }
 

@@ -4,8 +4,6 @@ class World {
     ctx;
     screenTranslateX = 0;
     intervals = [];
-    // timer = 0;
-
     level = level1;
     backgrounds = level1.backgrounds;
     clouds = level1.clouds;
@@ -23,7 +21,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
-        // livingEnemies = this.enemies.length;
+        livingEnemies = this.enemies.length;
     }
 
 
@@ -46,8 +44,6 @@ class World {
         this.ctx.translate(-this.screenTranslateX, 0);
         this.drawObjects(this.statusBars);
 
-        // this.updateGameStatus();
-
         if(!this.isGameOver() && !this.isGameWon() && !gameIsPaused) {
             let self = this;
             requestAnimationFrame(() => self.draw());
@@ -55,11 +51,11 @@ class World {
     };
 
 
-    drawStartScreenObjects(objs) {
-        objs.forEach(obj => {
-            this.drawObject(obj);
-        });
-    }
+    // drawStartScreenObjects(objs) {
+    //     objs.forEach(obj => {
+    //         this.drawObject(obj);
+    //     });
+    // }
 
     drawObjects(objs) {
         objs.forEach(obj => {
@@ -92,10 +88,9 @@ class World {
 
     setGlobalIntervals() {
         intervalId = setInterval(() => {
-            if(!gameIsPaused) {
-                timer = playTimeCounter();
-                document.getElementById('playTimer').innerHTML =  timer;
-            }
+            if(gameIsPaused) return;
+            timer = playTimeCounter();
+            document.getElementById('playTimer').innerHTML =  timer;
         }, 1000);
         this.intervals.push(intervalId);
 
@@ -105,6 +100,7 @@ class World {
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
+            if(gameIsPaused) return;
             // console.log('screenTranslateX:', this.screenTranslateX);
             // console.log('character x:', this.character.x)
             this.checkEnemyHits();
@@ -118,9 +114,7 @@ class World {
 
 
     updateGameStatus() {
-        // console.log('livingEnemies', livingEnemies);
-        // console.log('currentAudios', currentAudios.length);
-        // console.log('gameStatus', gameStatus);
+        console.log('livingEnemies', livingEnemies);
         this.statusBars[0].updateStatusBar(this.character.healthStatus);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
@@ -160,57 +154,35 @@ class World {
 
 
     isGameWon(){
-        // return livingEnemies <= 0;
-        if(livingEnemies <= 0) {
-            let timePassed = new Date().getTime() - this.character.lastHit;
-            return timePassed >= 1900;
-        }
+        return livingEnemies <= 0;
     }
     
     
     checkEnemyHits() {
         this.level.enemies.forEach((enemy) => {
-            // console.log('character healthStatus:', this.character.healthStatus);
-            // console.log(enemy.objectName, 'healthStatus:', enemy.healthStatus);
-            if(enemy.healthStatus <= 0 || this.character.healthStatus <= 0) return;
+            if(enemy.isDead() || this.character.isDead()) {
+              return;  
+            }
+            if(this.character.bottles.length > 0) {
+                if(enemy.isHitFromBottle(this.character.bottles[0])) {
+                    enemy.hitHandlingFromThrowable(this.character);                    
+                }
+            }
             if(enemy.isHitFromAbove(this.character)) {
-                this.handleEnemyHitFromAbove(enemy, this.character);
-            // } else if(enemy.isHitFromBottle(this.character.bottles[0])) {
-            //     this.handleEnemyHitFromBottle(enemy, this.character);
+                enemy.hitHandlingFromAbove(this.character);
             } else if(this.character.isHit(enemy)) {
-                this.handleHitFromEnemy(enemy, this.character);
+                this.character.hitHandling(enemy);
             }
         });
     }
 
-
-    handleEnemyHitFromAbove(enemy, character) {
-        enemy.hitHandlingFromAbove(character);
-        // console.log(enemy.objectName, 'isHitFromAbove:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
-    }
-    
-
-    EnemyHitFromBottle(enemy, character) {
-        enemy.hitHandlingFromBottle(character);
-        // console.log(enemy.objectName, 'isHitFromBottle:', 'healthStatus:', enemy.healthStatus, 'hits:', enemy.hits);
-    }
-
-    
-    handleHitFromEnemy(enemy, character) {
-        character.hitHandling(enemy);
-        // console.log('character isHit from:', enemy.constructor.name, 'value:', enemy.statusValue);
-        // console.log('character healthStatus:', character.healthStatus);
-    }
-
-    
+   
     checkCoinCollection() {
         if(this.character.coinStatus >= 100) return;
         this.level.coins.forEach((coin) => {
             if(coin.hits <= 0) {
                 if(this.character.touchesObject(coin)) {
                     this.character.collectCoin(coin);
-                    // console.log('collection of:', coin.constructor.name, 'value:', coin.statusValue);
-                    // console.log('character.coinStatus:', this.character.coinStatus);
                 };
             }
         });
@@ -223,8 +195,6 @@ class World {
             if(bottle.hits <= 0) {
                 if(this.character.touchesObject(bottle)) {
                     this.character.collectBottle(bottle);
-                    // console.log('collection of:', bottle.constructor.name, 'value:', bottle.statusValue);
-                    // console.log('character.bottleStatus:', this.character.bottleStatus);
                 };
             }
         });
