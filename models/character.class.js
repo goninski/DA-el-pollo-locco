@@ -82,8 +82,8 @@ class Character extends MovableObject {
         jump : audioPathBase + 'jump.mp3',
         hurt : audioPathBase + 'hurt.mp3',
         dead : audioPathBase + 'dead.mp3',
-        collectCoin : audioPathBase + 'collect-coin.mp3',
-        collectBottle : audioPathBase + 'collect-bottle.mp3',
+        collectCoin : audioPathBase + 'coin-collect.mp3',
+        collectBottle : audioPathBase + 'bottle-collect.mp3',
     }
 
 
@@ -93,7 +93,6 @@ class Character extends MovableObject {
         super();
         this.x = widthCanvas * 0.05;
         this.setWalkGroundY();
-        // this.setBorderCoordinates();
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_IDLE);
         this.setImageCache(this.IMAGES_IDLE_LONG);
@@ -191,11 +190,8 @@ class Character extends MovableObject {
 
     keyObserverSlow() {
         if(this.world.keystrokes.KEY_B) {
-            this.throwBottle();
+            debounced(lastKeystroke_THROW) ? this.throwBottle() : null;
         } 
-        else if(this.world.keystrokes.KEY_C) {
-            this.throwCoin();
-        }
     }
 
 
@@ -206,63 +202,23 @@ class Character extends MovableObject {
                 startAudioDebounced(this.audioCache.dead, this.lastHit, 125, 0.7);
             } else if(this.isHurt()) {
                 this.hurtHandling();
-                // resumeAudio(this.audioCache.hurt);
                 startAudioDebounced(this.audioCache.hurt, this.lastHit, 125);
-                // startAudio(this.audioCache.hurt);
-            // } else if(this.isWalking()) {
-            //     this.walkingAnimation();
-            // }
             } else if(!this.isIdle && !this.isIdleLong) {
                 this.walkingAnimation();
             }
-            // } else {
-            //     this.walkingAnimation();
-            // }
-            // } else if(this.isIdle()) {
-            //     this.idleAnimation();
-            // } else if(this.isIdleLong()) {
-            //     this.idleLongAnimation();
-            // }
         }
     }
-
-    
-    // isWalking() {
-    //     return (this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT);
-    // }
-
-
-    // walkingAnimation() {
-    //     this.img = this.imageCache[this.IMAGES_WALKING[0]];
-    //     super.walkingAnimation();
-    // }
 
 
     walkingAnimation() {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
             super.walkingAnimation();
-            // this.playAudio(this.audioCache.walk, 'walk' + this.objectName);
             startAudio(this.audioCache.walk);
-            // console.log(this.objectName, this.x);
         } else {
             stopAudio(this.audioCache.walk);
         }
-}
-
-
-    // isIdle(isIdle = false) {
-    //     return isIdle;
-    //     let timePassed = new Date().getTime() - lastKeystroke;
-    //     return timePassed >= 3000 && timePassed < 6000;
-    // }
-
-
-    // isIdleLong(isIdleLong = false) {
-    //     return isIdleLong;
-    //     let timePassed = new Date().getTime() - lastKeystroke;
-    //     return timePassed >= 6000;
-    // }
+    }
 
 
     idleAnimation() {
@@ -280,16 +236,16 @@ class Character extends MovableObject {
     }
 
   
-    idleAnimationShort(imagePaths = 'IMAGES_IDLE') {
-        this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);    
-    }
+    // idleAnimationShort(imagePaths = 'IMAGES_IDLE') {
+    //     this.img = this.imageCache[this[imagePaths][0]];
+    //     this.movementAnimation(this[imagePaths]);    
+    // }
 
 
-    idleLongAnimation(imagePaths = 'IMAGES_IDLE_LONG') {
-        this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);    
-    }
+    // idleLongAnimation(imagePaths = 'IMAGES_IDLE_LONG') {
+    //     this.img = this.imageCache[this[imagePaths][0]];
+    //     this.movementAnimation(this[imagePaths]);    
+    // }
 
 
     moveLeft(speed) {
@@ -308,26 +264,29 @@ class Character extends MovableObject {
 
     collectCoin(coin) {
         coin.collectObject();
-        resumeAudio(this.audioCache.collectCoin);
-        this.coins.push(coin);
+        startAudioResumed(this.audioCache.collectCoin);
+         this.coins.push(coin);
         this.coinStatus += coin.statusValue;
-        console.log('collected:', coin.objectName, '(+' + coin.statusValue + ')');
-        console.log('total coin points:', this.coinStatus);
+        // console.log('collected:', coin.objectName, '(+' + coin.statusValue + ')');
+         // console.log('total coin points:', this.coinStatus);
     }
 
 
     collectBottle(bottle) {
+        if(!bottle.isCollectable) return;
         // if(this.bottleStatus >= 100) return;
         bottle.collectObject();
-        resumeAudio(this.audioCache.collectBottle);
+        startAudioResumed(this.audioCache.collectBottle);
+        bottle.isCollected = true;
         this.bottles.push(bottle);
         this.bottleStatus += bottle.statusValue;
-        console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
-        console.log('total bottle points:', this.bottleStatus);
+        // console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
+        // console.log('total bottle points:', this.bottleStatus);
     }
 
 
     throwBottle() {
+        // console.log('throwBottle');
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
         // console.log('characterX:', this.x);
@@ -335,13 +294,12 @@ class Character extends MovableObject {
         bottle.y = this.y
         bottle.applyGravity()
         bottle.speedY = 5;
+        bottle.isThrowing = true;
         this.bottles.shift();
         this.bottleStatus -= bottle.statusValue;
-        setInterval(() => bottle.x += 15, 25);
+        bottle.throwInterval = setInterval(() => bottle.x += 15, 25);
         // console.log(bottle);
         // this.consoleObjectPosition(bottle);
-        // console.log(this.bottles);
-        // console.log(this.bottleStatus);
     }
 
 

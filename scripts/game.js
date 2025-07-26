@@ -234,16 +234,14 @@ function startAudio(audioObj, volume = 1, loop = false) {
 }
 
 
-function startAudioDebounced(audioObj, eventStart, delay = 150, volume = 1, loop = false) {
-    let currentTime = new Date().getTime();
-    let diff = currentTime - eventStart;
-    // console.log(eventStart, currentTime, diff);
-    if(diff > delay) return;
-    startAudio(audioObj, volume, loop)
+function startAudioDebounced(audioObj, startTime, delay = 150, volume = 1, loop = false) {
+    if(debounced(startTime, delay)) {
+        startAudio(audioObj, volume, loop);
+    }
 }
 
 
-function resumeAudio(audioObj, volume = 1) {
+function startAudioResumed(audioObj, volume = 1) {
     // audioObj.pause();
     audioObj.currentTime = 0;
     startAudio(audioObj, volume, false)
@@ -300,3 +298,13 @@ function unmuteAudios() {
     body.classList.remove('audio-muted', 'audio-auto-muted');
 }
 
+
+function debounced(startTime, delay = 150) {
+    let currentTime = new Date().getTime();
+    return (currentTime - startTime) <= delay;
+}
+
+
+function during(startTime, duration = 1000) {
+    return (new Date().getTime() - startTime) >= duration;
+}

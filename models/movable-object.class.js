@@ -1,6 +1,7 @@
 class MovableObject extends DrawableObject {
 
     isEnemy = false;
+    isCollectable = false;
     groundY;
     speedY = 0;
     acceleration = 2.5;
@@ -82,12 +83,14 @@ class MovableObject extends DrawableObject {
 
     
     applyGravity() {
-        setInterval(() => {
-            if(this.isAboveGround() || this instanceof ThrowableObject || this.speedY > 0) {
+        intervalId = setInterval(() => {
+            // if(this.isAboveGround() || this instanceof ThrowableObject || this.speedY > 0) {
+            if(this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             }
         }, 1000 / 25);
+        this.intervals.push(intervalId);
     }
 
 
@@ -105,6 +108,7 @@ class MovableObject extends DrawableObject {
         this.x = 0;
         this.y = heightCanvas + this.height;
         this.setBorderCoordinates();
+        this.isCollectable = false;
     }
 
 
@@ -150,8 +154,8 @@ class MovableObject extends DrawableObject {
         } else {
             this.lastHit = new Date().getTime();
         }
-        console.log(this.objectName, 'is hit from', obj.objectName);
-        console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hits:', this.hits);
+        // console.log(this.objectName, 'is hit from', obj.objectName);
+        // console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hits:', this.hits);
     }
 
 
@@ -160,7 +164,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.statusValue = 25;
         }
-        console.log(this.objectName, 'is hit from above');
+        // console.log(this.objectName, 'is hit from above');
         this.hitHandling(obj);
     }
 
@@ -205,8 +209,8 @@ class MovableObject extends DrawableObject {
     }
 
 
-    clearIntervals() {
-       setTimeout(() => this.intervals.forEach(clearInterval), 10000);
+    clearIntervals(timeout = 10000) {
+       setTimeout(() => this.intervals.forEach(clearInterval), timeout);
     }
 
 

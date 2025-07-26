@@ -147,8 +147,9 @@ class World {
 
     isGameOver(){
         if(this.character.isDead()) {
-            let timePassed = new Date().getTime() - this.character.lastHit;
-            return timePassed >= 1900;
+            return during(this.character.lastHit, 1900);
+            // let timePassed = new Date().getTime() - this.character.lastHit;
+            // return timePassed >= 1900;
         }
     }
 
