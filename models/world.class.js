@@ -21,7 +21,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
-        livingEnemies = this.enemies.length;
+        // livingEnemies = this.enemies.length;
     }
 
 
@@ -50,12 +50,6 @@ class World {
         }
     };
 
-
-    // drawStartScreenObjects(objs) {
-    //     objs.forEach(obj => {
-    //         this.drawObject(obj);
-    //     });
-    // }
 
     drawObjects(objs) {
         objs.forEach(obj => {
@@ -188,8 +182,10 @@ class World {
 
 
     checkBottleCollection() {
+        // console.log(this.character.bottleStatus);
         if(this.character.bottleStatus >= 10000) return;
         this.level.bottles.forEach((bottle) => {
+            // console.log(bottle.hits);
             if(bottle.hits <= 0) {
                 if(this.character.touchesObject(bottle)) {
                     this.character.collectBottle(bottle);

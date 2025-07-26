@@ -266,7 +266,7 @@ class Character extends MovableObject {
     collectCoin(coin) {
         coin.collectObject();
         startAudioResumed(this.audioCache.collectCoin);
-         this.coins.push(coin);
+        this.coins.push(coin);
         this.coinStatus += coin.statusValue;
         // console.log('collected:', coin.objectName, '(+' + coin.statusValue + ')');
          // console.log('total coin points:', this.coinStatus);
@@ -278,16 +278,15 @@ class Character extends MovableObject {
         // if(this.bottleStatus >= 100) return;
         bottle.collectObject();
         startAudioResumed(this.audioCache.collectBottle);
-        bottle.isCollected = true;
         this.bottles.push(bottle);
         this.bottleStatus += bottle.statusValue;
-        console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
-        console.log('total bottle points:', this.bottleStatus);
+        // bottle.isCollectable = false;
+        // console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
+        // console.log('total bottle points:', this.bottleStatus);
     }
 
 
     throwBottle() {
-        // console.log('throwBottle');
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
         // console.log('characterX:', this.x);

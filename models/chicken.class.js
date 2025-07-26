@@ -67,7 +67,7 @@ class Chicken extends MovableObject {
 
 
     handlingDead() {
-        if(this.counthandlingDead === 0) {
+        if(this.countDeadHandling === 0) {
             stopAudio(this.audioCache.walk);
             this.playAudio(this.audioCache.dead);
             super.handlingDead();

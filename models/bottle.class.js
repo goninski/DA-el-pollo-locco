@@ -44,7 +44,7 @@ class Bottle extends ThrowableObject {
 
         this.setRandomPosX();
         this.setWalkGroundY();
-
+        // this.consoleObjectPosition();
         this.setImageCache(this.IMAGES_THROW);
         this.setImageCache(this.IMAGES_SPLASH);
         this.setAudioCache(this.audioFiles);
@@ -62,7 +62,6 @@ class Bottle extends ThrowableObject {
         intervalId = setInterval(() => {
             if(this.isThrowing) {
                 this.handleFlying();
-                // this.flyingAnimation();
             }
         }, 100);  
         this.intervals.push(intervalId);
@@ -78,8 +77,8 @@ class Bottle extends ThrowableObject {
 
 
     handleFlying() {
-        console.log('isThrowing?', this.isThrowing);
-        console.log('Border from', this.objectName, '(x-left, x-right, y-bottom):',this.borderX, this.borderX + this.borderWidth, this.borderY + this.borderHeight);
+        console.log('\n\nisThrowing', this.objectName);
+        console.log('Border from', this.objectName, '(x-right, y-bottom):', this.borderX + this.borderWidth, this.borderY + this.borderHeight);
 
         if(this.isSplashing() && !this.isSplashed) {
             clearInterval(this.throwInterval);
@@ -90,7 +89,7 @@ class Bottle extends ThrowableObject {
             this.isThrowing = false;
             this.loadImage(this.IMAGES_SPLASH[5]);
             this.clearIntervals(0);
-            // gameIsPaused = true;
+            pauseGame();
         } else {
             this.flyingAnimation();
         }

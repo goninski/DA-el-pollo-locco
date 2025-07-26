@@ -170,18 +170,28 @@ function toggleHelp(event) {
     if(body.classList.contains('help-screen')) {
         body.classList.remove('help-screen');
         if(body.classList.contains('play-screen')) {
-            gameIsPaused = false;
-            !audioIsMuted ? unmuteAudios() : null;
-            world.draw();
+            resumeGame();
         }
     } else {
         body.classList.add('help-screen');
         if(body.classList.contains('play-screen')) {
-            body.classList.add('game-paused');
-            gameIsPaused = true;
-            !audioIsMuted ? muteAudios() : null;
+            pauseGame();
         }
     }
+}   
+
+
+function pauseGame() {
+    body.classList.add('game-paused');
+    gameIsPaused = true;
+    !audioIsMuted ? muteAudios() : null;
+}   
+
+
+function resumeGame() {
+    gameIsPaused = false;
+    !audioIsMuted ? unmuteAudios() : null;
+    world.draw();
 }   
 
 

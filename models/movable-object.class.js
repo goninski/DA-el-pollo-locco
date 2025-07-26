@@ -13,8 +13,8 @@ class MovableObject extends DrawableObject {
     audio;
     audioFiles = {};
     audioCache = {};
-    counthandlingDead = 0;
-    isThrowing= false;
+    countDeadHandling = 0;
+    isThrowing = false;
 
     constructor() {
         super();
@@ -116,7 +116,9 @@ class MovableObject extends DrawableObject {
     touchesObject(counterPartObj) {
         this.setBorderCoordinates();
         // console.log(this.objectName, this.borderX, this.borderY);
+        // // console.log(counterPartObj.objectName, 'x:' + counterPartObj.x, 'y-bottom:', + counterPartObj.y + counterPartObj.height);
         // console.log(counterPartObj.objectName, 'x:' + counterPartObj.borderX, 'y-bottom:', + counterPartObj.borderY + counterPartObj.borderHeight);
+        // console.log(counterPartObj);
         return (this.borderX + this.borderWidth > counterPartObj.borderX) && (this.borderX < counterPartObj.borderX) && (this.borderY + this.borderHeight > counterPartObj.borderY) && (this.borderY < counterPartObj.borderY + counterPartObj.borderHeight);
     }
 
@@ -137,13 +139,12 @@ class MovableObject extends DrawableObject {
 
 
     isHitFromBottle(fromObj, buffer = 0) {
-        return true;
+        this.setBorderCoordinates();
         // console.log('isThrowing:', fromObj.isThrowing);
         // if(!fromObj.isThrowing) return;
-        this.setBorderCoordinates();
         console.log('Border', this.objectName, '(x-left, x-right, y-top):', this.borderX, this.borderX + this.borderWidth, this.borderY);
         // console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.x, fromObj.x + fromObj.width, fromObj.y + fromObj.height);
-        // console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.borderX, fromObj.borderX + fromObj.borderWidth, fromObj.borderY + fromObj.borderHeight);
+        console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.borderX, fromObj.borderX + fromObj.borderWidth, fromObj.borderY + fromObj.borderHeight);
 
         if((fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
@@ -203,7 +204,7 @@ class MovableObject extends DrawableObject {
 
     handlingDead() {
         this.isEnemy ? livingEnemies-- : null;
-        this.counthandlingDead++;
+        this.countDeadHandling++;
         this.deadAnimation();
         this.clearIntervals();
     }
