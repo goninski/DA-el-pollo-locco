@@ -77,11 +77,5 @@ class Chicken extends MovableObject {
     }
 
 
-    // playAudio(audioObj) {
-    //     this.audio = audioObj;
-    //     this.audio.play();
-    // }
-
-
 }
 

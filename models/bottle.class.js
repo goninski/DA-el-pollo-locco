@@ -89,7 +89,7 @@ class Bottle extends ThrowableObject {
             this.isThrowing = false;
             this.loadImage(this.IMAGES_SPLASH[5]);
             this.clearIntervals(0);
-            pauseGame();
+            // pauseGame();
         } else {
             this.flyingAnimation();
         }

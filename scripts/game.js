@@ -89,21 +89,20 @@ function hideAllScreens() {
 }
 
 
-function gameOverHandling(event = null) {
+function handlingGameOver(event = null) {
     event ? event.stopPropagation() : null;
-    console.log('game is over');
-    // gameStatus = 9;
+    resumeGame();
     stopAudios();
     stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
     body.classList.add('game-over-screen');
-    startAudio(audioCache.gameOver);
     document.getElementById('playTimer').innerHTML = timer;
+    startAudio(audioCache.gameOver);
     // setTimeout(() => restartGame(null), 12000);
 }    
 
 
-function gameWonHandling(event = null) {
+function handlingGameWon(event = null) {
     event ? event.stopPropagation() : null;
     stopAudios();
     hideAllScreens();
@@ -268,6 +267,7 @@ function startAudioResumed(audioObj, volume = 1) {
 
 
 function checkNSetAudioMuting(audioObj) {
+    // console.log('audioIsMuted ?', audioIsMuted);
     if(audioIsMuted) {
         audioObj.muted = true;
         body.classList.add('audio-muted');

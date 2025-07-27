@@ -50,7 +50,7 @@
                     <button id="btnRestartGame" class="button" onclick="restartGame(event)" title="New game (startscreen)">
                         <img src="assets/icons/forward.svg" alt="replay-icon">
                     </button>
-                    <button id="btnSurrender" onclick="gameOverHandler(event)" title="Surrender (Game Over)">
+                    <button id="btnSurrender" onclick="handlingGameOver(event)" title="Surrender (Game Over)">
                         <img src="assets/icons/flag.svg" alt="white-flag-icon">
                     </button>
                     <button id="btnToggleHelp" onclick="toggleHelp(event)" title="Help/Pause on/off">
@@ -67,13 +67,13 @@
                     </button>
                 </div>
 
-                <div class="nav-panel" data-before="Instructions for Pepe">
+                <div class="nav-panel" data-before="Instructions | Level 1">
                     <button class="close" onclick="toggleHelp(event)"><img src="assets/icons/close-fill.svg" alt="close-icon"></button>
                     <div class="play-info help">
-                        LEVEL 1 :<br>
-                        Eliminate all chickens whether they are small or big.<br>
-                        Use jumps and throw bottles.<br> 
-                        Collect 5 coins to get 1 extra bottle.
+                        Pepe has been hit by a plague of chickens. <br>                         
+                        You are Pepe and you need to eliminate all chickens. <br>
+                        Use jumps and throw collected bottles. Collect coins to<br> 
+                        have some compensation for the damage and suffering.
                         <hr>
                     </div>
                     <div class="buttons-wrapper">

@@ -22,7 +22,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
-        // livingEnemies = this.enemies.length;
+        livingEnemies = this.enemies.length;
     }
 
 
@@ -108,27 +108,17 @@ class World {
 
 
     updateGameStatus() {
-        // console.log('livingEnemies', livingEnemies);
+        console.log('livingEnemies', livingEnemies);
         this.statusBars[0].updateStatusBar(this.character.healthStatus);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-        this.statusBars[3].updateStatusBar(this.endboss.bottleStatus);
-        // this.updateEndbossStatusBar();
+        this.statusBars[3].updateStatusBar(this.endboss.healthStatus);
         if(this.isGameOver()) {
-            return gameOverHandling();
+            return handlingGameOver();
         } else if(this.isGameWon()) {
-            return gameWonHandling();
+            return handlingGameWon();
         }
     }
-
-
-    // updateEndbossStatusBar() {
-    //     this.level.enemies.forEach((enemy) => {
-    //         if(enemy instanceof Endboss) {
-    //             this.statusBars[3].updateStatusBar(enemy.healthStatus);
-    //         }
-    //     });
-    // }
 
 
     isGamePaused(){
@@ -148,10 +138,9 @@ class World {
 
 
     isGameWon(){
-        if(this.endboss.isDead()) {
+        if(livingEnemies <= 0) {
             return during(this.endboss.lastHit, 1500);
         }
-        return livingEnemies <= 0;
     }
     
     
@@ -189,7 +178,7 @@ class World {
 
     checkBottleCollection() {
         // console.log(this.character.bottleStatus);
-        if(this.character.bottleStatus >= 10000) return;
+        if(this.character.bottleStatus >= 200) return;
         this.level.bottles.forEach((bottle) => {
             // console.log(bottle.hits);
             if(bottle.hits <= 0) {

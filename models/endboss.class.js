@@ -63,8 +63,8 @@ class Endboss extends MovableObject {
         endbossId++;
         this.objectName += endbossId;
 
-        // this.setRandomPosX(2, 3);
-        this.setRandomPosX(1);
+        this.setRandomPosX(2, 3);
+        // this.setRandomPosX(1);
         this.setWalkGroundY();
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_ALERT);
@@ -164,7 +164,8 @@ class Endboss extends MovableObject {
 
 
     isAttacking() {
-        return this.isVeryCloseToCharacter() && (this.healthStatus > 0 && this.healthStatus < 70)
+        // return this.isVeryCloseToCharacter() && (this.healthStatus > 0 && this.healthStatus < 70);
+        return this.isVeryCloseToCharacter();
     }
 
 
