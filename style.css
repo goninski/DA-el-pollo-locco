@@ -148,6 +148,11 @@ body.help-screen #screenOverlay {
     content: attr(data-after);
     display: block;
 }
+:is(#btnStartGame, #btnRestartGame, #btnSurrender, #btnToggleHelp, .game-is-paused-msg),
+body.audio-muted #btnToggleAudioMute .enabled,
+body:not(.audio-muted) #btnToggleAudioMute .disabled {
+    display: none;
+}
 
 
 /* OPTION PANEL */
@@ -258,25 +263,22 @@ body.win-screen .option-panel {
 }
 
 body.help-screen .nav-panel button.close,
-/* body.game-paused :is(#btnTogglePauseGame, #btnToggleHelp) img, */
 body.start-screen:not(.help-screen) #btnToggleHelp img {
     --pulse-scale: 1.3;
     animation: pulse 1.5s infinite ease-in-out;
 }
-body.audio-muted:not(.game-paused) #btnToggleAudioMute img {
-    --pulse-scale: 1.3;
+body #btnToggleAudioMute img {
+    --pulse-scale: 1.2;
     animation: pulse 1.5s infinite ease-in-out;
 }
-body:not(.start-screen) #btnStartGame,
-body:not(.game-paused, .win-screen, .game-over-screen) #btnRestartGame,
-body:not(.game-paused) #btnSurrender,
-body:not(.game-paused) .game-is-paused-msg,
-body:not(.play-screen) :is(#btnTogglePauseGame),
-body:not(.audio-auto-muted) .enable-audio-msg,
-body.audio-muted #btnToggleAudioMute .enable,
-body:not(.audio-muted) #btnToggleAudioMute .disable,
-body:is(.win-screen, .game-over-screen) #btnToggleHelp {
-    display: none;
+body #btnToggleAudioMute img.enabled {
+    --pulse-scale: 1.075;
+}
+body.start-screen #btnStartGame,
+body:is(.start-screen, .play-screen) #btnToggleHelp,
+body.play-screen.game-paused :is(.game-is-paused-msg),
+body.play-screen.help-screen :is(#btnRestartGame, #btnSurrender) {
+    display: unset;
 }
 
 

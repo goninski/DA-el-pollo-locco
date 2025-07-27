@@ -1,6 +1,6 @@
 let imgPathBase = '/assets/img/';
 let audioPathBase = '/assets/audio/';
-let audioIsMuted = false;
+let muteAudio = false;
 let showObjectBorders = true;
 let canvas;
 let widthCanvas = 1000;
@@ -29,38 +29,63 @@ let audioCache = {
 };
 
 
-function initGame(restart = false) {
+function initGame(startPlay = false) {
     canvas = document.getElementById('canvas');
     body = document.body;
     keystrokes = new Keystrokes();
     setFullscreenToggle();
     setBodyClassIfTouchDevice();
     stopAudios();
-    audioIsMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
+    stoppableIntervals.forEach(clearInterval);
+    muteAudio ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
     gameIsPaused = false;
+    startPlay ? startGame() : showStartScreen();
+}
+
+
+function showStartScreen() {
+    hideAllScreens();
+    body.classList.add('start-screen');
+    startAudio(audioCache.start, 0.2, true);
+    preloadLevel1();
+    pauseGame();
+}
+
+
+function preloadLevel1() {
+    initLevel1();
+    world = new World(canvas, keystrokes);
     livingEnemies = 999;
-    restart ? startGame() : showStartScreen();
 }
 
 
 function startGame(event = null) {
     event ? event.stopPropagation() : null;
-    hideAllScreens();
-    stoppableIntervals.forEach(clearInterval);
-    stopAudio(audioCache.start);
-    body.classList.add('play-screen');
-    // gameStatus = 1;
+    resumeGame()
     secondsPlay = 0;
-    initLevel1();
-    world = new World(canvas, keystrokes);
     lastKeystroke = new Date().getTime();
+    hideAllScreens();
+    body.classList.add('play-screen');
+    stopAudio(audioCache.start);
 }  
+
+
+// function startGame(event = null) {
+//     event ? event.stopPropagation() : null;
+//     hideAllScreens();
+//     body.classList.add('play-screen');
+//     stoppableIntervals.forEach(clearInterval);
+//     stopAudio(audioCache.start);
+//     secondsPlay = 0;
+//     initLevel1();
+//     world = new World(canvas, keystrokes);
+//     lastKeystroke = new Date().getTime();
+// }  
 
 
 function restartGame(event = null) {
     event ? event.stopPropagation() : null;
     // window.location.reload();
-    // initGame(true);
     initGame();
 }    
 
@@ -72,13 +97,6 @@ function hideAllScreens() {
     body.classList.remove('play-screen');
     body.classList.remove('game-paused');
     body.classList.remove('help-screen');
-}
-
-
-function showStartScreen() {
-    hideAllScreens();
-    body.classList.add('start-screen');
-    startAudio(audioCache.start, 0.2, true);
 }
 
 
@@ -184,13 +202,13 @@ function toggleHelp(event) {
 function pauseGame() {
     body.classList.add('game-paused');
     gameIsPaused = true;
-    !audioIsMuted ? muteAudios() : null;
+    !muteAudio ? muteAudios() : null;
 }   
 
 
 function resumeGame() {
     gameIsPaused = false;
-    !audioIsMuted ? unmuteAudios() : null;
+    !muteAudio ? unmuteAudios() : null;
     world.draw();
 }   
 
@@ -236,7 +254,7 @@ function startAudio(audioObj, volume = 1, loop = false) {
     checkNSetAudioMuting(audioObj);
     audioObj.play().catch(error => {
         audioObj.muted = true;
-        audioIsMuted = true;
+        muteAudio = true;
         body.classList.add('audio-muted', 'audio-auto-muted');
         console.log('audioplay error:', error);
     });
@@ -259,7 +277,7 @@ function startAudioResumed(audioObj, volume = 1) {
 
 
 function checkNSetAudioMuting(audioObj) {
-    if(audioIsMuted) {
+    if(muteAudio) {
         audioObj.muted = true;
         body.classList.add('audio-muted');
     } else {
@@ -284,13 +302,13 @@ function stopAudios() {
 
 function toggleAudioMute(event = null) {
     event ? event.stopPropagation() : null;
-    audioIsMuted ? unmuteAudios() : muteAudios();
+    muteAudio ? unmuteAudios() : muteAudios();
 }
 
 
 function muteAudios() {
     currentAudios.forEach(item => item.muted = true);
-    audioIsMuted = true;
+    muteAudio = true;
     body.classList.add('audio-muted');
 }
 
@@ -304,7 +322,7 @@ function unmuteAudios() {
     } else {
         currentAudios.forEach(item => item.muted = false);
     }
-    audioIsMuted = false;
+    muteAudio = false;
     body.classList.remove('audio-muted', 'audio-auto-muted');
 }
 
