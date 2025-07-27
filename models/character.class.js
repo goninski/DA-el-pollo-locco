@@ -91,7 +91,7 @@ class Character extends MovableObject {
     constructor() {
 
         super();
-        this.x = widthCanvas * 0.05;
+        this.x = 0;
         this.setWalkGroundY();
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_IDLE);

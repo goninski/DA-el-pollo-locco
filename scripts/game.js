@@ -36,10 +36,7 @@ function initGame(startPlay = false) {
     keystrokes = new Keystrokes();
     setFullscreenToggle();
     setBodyClassIfTouchDevice();
-    stopAudios();
-    stoppableIntervals.forEach(clearInterval);
     audioIsMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
-    gameIsPaused = false;
     startPlay ? startGame() : showStartScreen();
 }
 
@@ -47,9 +44,10 @@ function initGame(startPlay = false) {
 function showStartScreen() {
     hideAllScreens();
     body.classList.add('start-screen');
-    startAudio(audioCache.start, 0.2, true);
     loadLevel1();
     pauseGame();
+    startAudio(audioCache.start, 0.2, true);
+    unmuteAudio();
 }
 
 
@@ -62,17 +60,20 @@ function loadLevel1() {
 
 function startGame(event = null) {
     event ? event.stopPropagation() : null;
+    stopAudio(audioCache.start);
     resumeGame()
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();
     hideAllScreens();
     body.classList.add('play-screen');
-    stopAudio(audioCache.start);
 }  
 
 
 function restartGame(event = null) {
     event ? event.stopPropagation() : null;
+    stopAudios();
+    stoppableIntervals.forEach(clearInterval);
+    gameIsPaused = false;
     // window.location.reload();
     initGame();
 }    
@@ -293,11 +294,11 @@ function stopAudios() {
 function toggleAudioMute(event = null) {
     event ? event.stopPropagation() : null;
     if(audioIsMuted) {
-        unmuteAudio();
         audioMutedByUser = false;
+        unmuteAudio(event);
     } else {
-        muteAudio();
         audioMutedByUser = true;
+        muteAudio();
     }
 }
 
@@ -309,17 +310,11 @@ function muteAudio() {
 }
 
 
-function unmuteAudio() {
+function unmuteAudio(event = null) {
+    event ? event.stopPropagation() : null;
     if(audioMutedByUser) return;
+    if(body.classList.contains('audio-auto-muted') && event === null) return;
     currentAudios.forEach(item => item.muted = false);
-    // if(body.classList.contains('audio-muted')) {
-    //     currentAudios.forEach(item => {
-    //         item.muted = false;
-    //         item.play();
-    //     });
-    // } else {
-    //     currentAudios.forEach(item => item.muted = false);
-    // }
     audioIsMuted = false;
     body.classList.remove('audio-muted', 'audio-auto-muted');
 }
