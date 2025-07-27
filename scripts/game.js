@@ -239,7 +239,9 @@ function clearIntervallTimeout(intervalId, timeout = 5000) {
 
 
 function startAudio(audioObj, volume = 1, loop = false) {
-    !currentAudios.includes(audioObj) ? currentAudios.push(audioObj) : null;
+    if(!currentAudios.includes(audioObj)) {
+        currentAudios.push(audioObj);        
+    };
     audioObj.volume = volume;
     audioObj.loop = loop;
     checkNSetAudioMuting(audioObj);

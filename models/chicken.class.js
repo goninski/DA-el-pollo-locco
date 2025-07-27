@@ -43,6 +43,7 @@ class Chicken extends MovableObject {
 
         intervalId = setInterval(() => {
             // console.log(this.objectName, 'hits:', this.hits, 'health:', this.healthStatus);
+            if(gameIsPaused) return;
             if(this.isDead()) {
                 this.handlingDead();
             }
@@ -50,6 +51,7 @@ class Chicken extends MovableObject {
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
+            if(gameIsPaused) return;
             if(!this.isDead()) {
                 this.walkingAnimation();
                 startAudio(this.audioCache.walk, 0.25, true);
@@ -58,6 +60,7 @@ class Chicken extends MovableObject {
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
+            if(gameIsPaused) return;
             if(!this.isDead()) {
                 this.moveLeft(0.15, 0.45, false);
             }
@@ -75,10 +78,10 @@ class Chicken extends MovableObject {
     }
 
 
-    playAudio(audioObj) {
-        this.audio = audioObj;
-        this.audio.play();
-    }
+    // playAudio(audioObj) {
+    //     this.audio = audioObj;
+    //     this.audio.play();
+    // }
 
 
 }
