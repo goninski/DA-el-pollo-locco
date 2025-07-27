@@ -78,6 +78,7 @@ body:is(.win-screen, .xgame-over-screen) #screenOverlay {
 #startScreen {
     display: none;
     background-image: url(assets/img/9_intro_outro_screens/start/startscreen_1.png);
+    transition: transform 1s;
 }
 #gameOverScreen {
     display: none;
@@ -94,6 +95,10 @@ body.win-screen :is(#winScreen, #screenOverlay),
 body.game-over-screen :is(#gameOverScreen, #screenOverlay) {
     display: block
 }
+body.start-screen.slide-out #startScreen {
+    transform: translateY(-100%);
+}
+
 body.help-screen #screenOverlay {
     display: block;
     backdrop-filter: blur(3px);

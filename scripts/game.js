@@ -65,7 +65,9 @@ function startGame(event = null) {
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();
     hideAllScreens();
+    body.classList.add('start-screen', 'slide-out');
     body.classList.add('play-screen');
+    setTimeout(() => body.classList.remove('start-screen', 'slide-out'), 700);
 }  
 
 
@@ -80,7 +82,7 @@ function restartGame(event = null) {
 
 
 function hideAllScreens() {
-    body.classList.remove('start-screen');
+    body.classList.remove('start-screen', 'slide-out');
     body.classList.remove('win-screen');
     body.classList.remove('game-over-screen');
     body.classList.remove('play-screen');
@@ -104,12 +106,15 @@ function handlingGameOver(event = null) {
 
 function handlingGameWon(event = null) {
     event ? event.stopPropagation() : null;
+    // world.character.winJump();
+    world.character.jump(30);
+    world.character.loadImage(world.character.IMAGES_JUMPING[3]);
     stopAudios();
     hideAllScreens();
     body.classList.add('win-screen');
     startAudio(audioCache.gameWin);
     stoppableIntervals.forEach(clearInterval);
-    // setTimeout(() => restartGame(null), 12000);
+    setTimeout(() => restartGame(null), 12000);
 }    
 
 

@@ -4,7 +4,7 @@ class Coin extends MovableObject {
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.3, 0.3, 0.3, 0.3];
-    statusValue = 5;
+    strength = 5;
 
     IMAGES_GROUND = [
         imgPathBase + '8_coin/coin_1.png',

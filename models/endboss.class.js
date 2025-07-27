@@ -1,10 +1,11 @@
 let endbossId = 0;
 
 class Endboss extends MovableObject {
-    isEnemy = false;
+    isEnemy = true;
     width = this.width * 2;
     height = this.width / 0.86;
-    statusValue = 10;
+    strength = 10;
+    active = false;
 
     IMAGES_WALKING = [
         imgPathBase + '4_enemie_boss_chicken/1_walk/G1.png',
@@ -63,9 +64,10 @@ class Endboss extends MovableObject {
         endbossId++;
         this.objectName += endbossId;
 
-        this.setRandomPosX(2, 3);
+        this.setRandomPosX(2.2, 2.75);
         // this.setRandomPosX(1);
-        this.setWalkGroundY();
+        // this.setWalkGroundY();
+        this.y = heightCanvas;
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_ALERT);
         this.setImageCache(this.IMAGES_ATTACK);
@@ -83,7 +85,7 @@ class Endboss extends MovableObject {
     animate() {
 
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gameIsPaused || !this.active) return;
             if(this.isAttacking()) {
                 this.handlingAttack();
             } else if(this.isAlert()) {
@@ -93,7 +95,7 @@ class Endboss extends MovableObject {
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gameIsPaused || !this.active) return;
             if(this.isDead()) {
                 this.handlingDead();
             } else if(this.isHurt()) {
@@ -103,7 +105,7 @@ class Endboss extends MovableObject {
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gameIsPaused || !this.active) return;
             if(this.isDead() || this.isHurt()) return;
             startAudio(this.audioCache.walkSteps, 1);
             this.stopWalkAudios();
@@ -119,7 +121,7 @@ class Endboss extends MovableObject {
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gameIsPaused || !this.active) return;
             if(this.isDead() || this.isHurt() || this.isAlert()) return;
             if(this.isAttacking()) {
                 this.moveLeft(1, 1.5, false);

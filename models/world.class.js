@@ -22,7 +22,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
-        livingEnemies = this.enemies.length;
+        livingEnemies = this.enemies.length - 1;
     }
 
 
@@ -117,8 +117,13 @@ class World {
             return handlingGameOver();
         } else if(this.isGameWon()) {
             return handlingGameWon();
+        } else if(livingEnemies <= 0 && !this.endboss.active) {
+            this.endboss.active = true;
+            this.endboss.setWalkGroundY();
+            this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
         }
     }
+
 
 
     isGamePaused(){
@@ -138,7 +143,7 @@ class World {
 
 
     isGameWon(){
-        if(livingEnemies <= 0) {
+        if(this.endboss.isDead()) {
             return during(this.endboss.lastHit, 1500);
         }
     }
@@ -178,7 +183,7 @@ class World {
 
     checkBottleCollection() {
         // console.log(this.character.bottleStatus);
-        if(this.character.bottleStatus >= 200) return;
+        if(this.character.bottleStatus >= 100) return;
         this.level.bottles.forEach((bottle) => {
             // console.log(bottle.hits);
             if(bottle.hits <= 0) {

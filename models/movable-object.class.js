@@ -5,7 +5,7 @@ class MovableObject extends DrawableObject {
     groundY;
     speedY = 0;
     acceleration = 2.5;
-    statusValue = 0;
+    strength = 0;
     healthStatus = 100;
     hits = 0;
     lastHit = 0;
@@ -156,7 +156,7 @@ class MovableObject extends DrawableObject {
     
     handlingHit(obj) {
         this.hits++;
-        this.healthStatus -= obj.statusValue;
+        this.healthStatus -= obj.strength;
         if(this.healthStatus <= 0) {
             this.healthStatus = 0;
         } else {
@@ -168,9 +168,9 @@ class MovableObject extends DrawableObject {
 
 
     handlingHitFromAbove(obj) {
-        obj.statusValue = 100;
+        obj.strength = 100;
         if(this instanceof Endboss) {
-            obj.statusValue = 10;
+            obj.strength = 10;
         }
         // console.log(this.objectName, 'is hit from above');
         this.handlingHit(obj);
@@ -178,9 +178,9 @@ class MovableObject extends DrawableObject {
 
 
     handlingHitFromBottle(obj) {
-        obj.statusValue = 100;
+        obj.strength = 100;
         if(this instanceof Endboss) {
-            obj.statusValue = 25;
+            obj.strength = 25;
         }
         console.log(this.objectName, 'is hit from throwable');
         this.handlingHit(obj);
@@ -204,7 +204,9 @@ class MovableObject extends DrawableObject {
 
 
     handlingDead(clearTimeout = 3000) {
-        this.isEnemy ? livingEnemies-- : null;
+        if(this.isEnemy && !(this instanceof Endboss)) {
+            livingEnemies--;
+        }
         this.countDeadHandling++;
         this.deadAnimation();
         this.clearIntervals(clearTimeout);

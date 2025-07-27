@@ -4,7 +4,7 @@ class Bottle extends ThrowableObject {
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.1, 0.2, 0.1, 0.2];
-    statusValue = 20;
+    strength = 20;
     isCollectable = true;
     isSplashed = false;
     throwInterval;

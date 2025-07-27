@@ -103,7 +103,6 @@ class Character extends MovableObject {
         this.setAudioCache(this.audioFiles);
         this.applyGravity();
 
-
         this.animate();
         this.saveIntervalsGlobally();
     }
@@ -302,6 +301,12 @@ class Character extends MovableObject {
         this.bottles.shift();
         // console.log(bottle);
         // bottle.consoleObjectPosition();
+    }
+
+    
+    winJump() {
+        this.jump(30);
+        this.loadImage(this.IMAGES_JUMPING[3]);
     }
 
 

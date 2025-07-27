@@ -3,7 +3,7 @@ let chickenId = 0;
 class Chicken extends MovableObject {
     isEnemy = true;
     height = this.width / 1.02;
-    statusValue = 3;
+    strength = 3;
 
     IMAGES_WALKING = [
         imgPathBase + '3_enemies_chicken/chicken_normal/1_walk/1_w.png',

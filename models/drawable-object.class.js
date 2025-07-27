@@ -33,6 +33,12 @@ class DrawableObject {
     }
     
     
+    positionObject(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+
     setScreenSlidePos(screenSlide) {
         this.x = screenSlide * (widthCanvas - 0);
     }
@@ -48,6 +54,11 @@ class DrawableObject {
     setWalkGroundY() {
         this.groundY = heightCanvas - this.height - walkOffset;
         this.y = this.groundY;
+    }
+
+
+    hideObject() {
+        this.y = heightCanvas;
     }
 
 
