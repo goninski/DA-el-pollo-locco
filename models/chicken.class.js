@@ -42,7 +42,6 @@ class Chicken extends MovableObject {
     animate() {
 
         intervalId = setInterval(() => {
-            // console.log(this.objectName, 'hits:', this.hits, 'health:', this.healthStatus);
             if(gameIsPaused) return;
             if(this.isDead()) {
                 this.handlingDead();
@@ -72,7 +71,7 @@ class Chicken extends MovableObject {
     handlingDead() {
         if(this.countDeadHandling === 0) {
             stopAudio(this.audioCache.walk);
-            this.playAudio(this.audioCache.dead);
+            startAudio(this.audioCache.dead);
             super.handlingDead();
         }
     }

@@ -2,10 +2,9 @@ let endbossId = 0;
 
 class Endboss extends MovableObject {
     isEnemy = false;
-    // type = 'enemy';
     width = this.width * 2;
     height = this.width / 0.86;
-    statusValue = 15;
+    statusValue = 10;
 
     IMAGES_WALKING = [
         imgPathBase + '4_enemie_boss_chicken/1_walk/G1.png',
@@ -48,20 +47,32 @@ class Endboss extends MovableObject {
         imgPathBase + '4_enemie_boss_chicken/5_dead/G26.png',
     ];
 
+    audioFiles = {
+        walk : audioPathBase + 'endboss-walk.mp3',
+        walkSteps : audioPathBase + 'walk.mp3',
+        alert : audioPathBase + 'endboss-alert.mp3',
+        attack : audioPathBase + 'endboss-attack.mp3',
+        hurt : audioPathBase + 'endboss-hurt.mp3',
+        dead : audioPathBase + 'endboss-dead.mp3',
+    }
+
 
     constructor() {
 
         super();
         endbossId++;
         this.objectName += endbossId;
-        this.setRandomPosX(2, 3);
-        this.setWalkGroundY();
-        // this.setBorderCoordinates();
-        this.loadImage(this.IMAGES_WALKING[0]);
-        this.setImageCache(this.IMAGES_WALKING);
 
-        // this.movementAnimationAuto(this.IMAGES_WALKING, 150);
-        // this.moveLeftAuto(0.15, 0.66, false);
+        // this.setRandomPosX(2, 3);
+        this.setRandomPosX(1);
+        this.setWalkGroundY();
+        this.setImageCache(this.IMAGES_WALKING);
+        this.setImageCache(this.IMAGES_ALERT);
+        this.setImageCache(this.IMAGES_ATTACK);
+        this.setImageCache(this.IMAGES_HURT);
+        this.setImageCache(this.IMAGES_DEAD);
+        this.setAudioCache(this.audioFiles);
+        this.loadImage(this.IMAGES_WALKING[0]);
 
         this.animate();
         this.saveIntervalsGlobally();
@@ -72,27 +83,114 @@ class Endboss extends MovableObject {
     animate() {
 
         intervalId = setInterval(() => {
-            if(this.isDead()) {
-                // console.log('isDead', this.healthStatus);
-                this.handlingDead();
+            if(gameIsPaused) return;
+            if(this.isAttacking()) {
+                this.handlingAttack();
+            } else if(this.isAlert()) {
+                this.handlingAlert();
             }
-        }, 500);  
+        }, 50);  
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
-            if(!this.isDead()) {
+            if(gameIsPaused) return;
+            if(this.isDead()) {
+                this.handlingDead();
+            } else if(this.isHurt()) {
+                this.handlingHurt();
+            }
+        }, 100);  
+        this.intervals.push(intervalId);
+
+        intervalId = setInterval(() => {
+            if(gameIsPaused) return;
+            if(this.isDead() || this.isHurt()) return;
+            startAudio(this.audioCache.walkSteps, 1);
+            this.stopWalkAudios();
+            if(this.isAttacking()) {
+                startAudio(this.audioCache.attack, 1);
+            } else if(this.isAlert()) {
+                startAudio(this.audioCache.alert, 1);
+            } else {
                 this.walkingAnimation();
+                startAudio(this.audioCache.walk, 0.33, true);
             }
         }, 150);  
         this.intervals.push(intervalId);
 
         intervalId = setInterval(() => {
-            if(!this.isDead()) {
+            if(gameIsPaused) return;
+            if(this.isDead() || this.isHurt() || this.isAlert()) return;
+            if(this.isAttacking()) {
+                this.moveLeft(1, 1.5, false);
+            } else {
                 this.moveLeft(0.15, 0.66, false);
             }
         }, 1000 / 60); 
         this.intervals.push(intervalId);
 
+    }
+
+
+    stopWalkAudios() {
+        stopAudio(this.audioCache.walk);
+        stopAudio(this.audioCache.alert);
+        stopAudio(this.audioCache.attack);
+    }
+
+
+    isCloseToCharacter() {
+        let characterCenterX = this.world.character.x + (this.world.character.width  / 2);
+        return (this.borderX -characterCenterX < (widthCanvas / 2));
+    }
+
+
+    isVeryCloseToCharacter() {
+        let characterCenterX = this.world.character.x + (this.world.character.width  / 2);
+        return (this.borderX -characterCenterX < (widthCanvas / 3));
+    }
+
+
+    isAlert() {
+        return this.isCloseToCharacter() && !this.isAttacking();
+    }
+
+
+    handlingAlert() {
+        let imagePaths = 'IMAGES_ALERT';
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);    
+    }
+
+
+    isAttacking() {
+        return this.isVeryCloseToCharacter() && (this.healthStatus > 0 && this.healthStatus < 70)
+    }
+
+
+    handlingAttack() {
+        let imagePaths = 'IMAGES_ATTACK';
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);    
+    }
+
+
+    handlingHurt() {
+        stopAudio(this.audioCache.walk);
+        stopAudio(this.audioCache.walkSteps);
+        startAudio(this.audioCache.hurt, 0.6);
+        super.handlingHurt();
+    }
+
+
+    handlingDead() {
+        // console.log(this.countDeadHandling);
+        // if(this.countDeadHandling === 0) {
+            stopAudio(this.audioCache.walk);
+            stopAudio(this.audioCache.walkSteps);
+            startAudio(this.audioCache.dead);
+            super.handlingDead();
+        // }
     }
 
 

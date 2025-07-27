@@ -5,13 +5,14 @@ class World {
     screenTranslateX = 0;
     intervals = [];
     level = level1;
+    character = new Character();
     backgrounds = level1.backgrounds;
     clouds = level1.clouds;
     enemies = level1.enemies;
+    endboss = level1.endboss;
     bottles = level1.bottles;
     coins = level1.coins;
     statusBars = level1.statusBars;
-    character = new Character();
 
     constructor(canvas, keystrokes) {
         this.canvas = canvas;
@@ -27,6 +28,7 @@ class World {
 
     applyWorldToObjects() {
         this.character.world = this;
+        this.endboss.world = this;
     }
 
 
@@ -110,7 +112,8 @@ class World {
         this.statusBars[0].updateStatusBar(this.character.healthStatus);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-        this.updateEndbossStatusBar();
+        this.statusBars[3].updateStatusBar(this.endboss.bottleStatus);
+        // this.updateEndbossStatusBar();
         if(this.isGameOver()) {
             return gameOverHandling();
         } else if(this.isGameWon()) {
@@ -119,13 +122,13 @@ class World {
     }
 
 
-    updateEndbossStatusBar() {
-        this.level.enemies.forEach((enemy) => {
-            if(enemy instanceof Endboss) {
-                this.statusBars[4].updateStatusBar(enemy.healthStatus);
-            }
-        });
-    }
+    // updateEndbossStatusBar() {
+    //     this.level.enemies.forEach((enemy) => {
+    //         if(enemy instanceof Endboss) {
+    //             this.statusBars[3].updateStatusBar(enemy.healthStatus);
+    //         }
+    //     });
+    // }
 
 
     isGamePaused(){
@@ -145,6 +148,9 @@ class World {
 
 
     isGameWon(){
+        if(this.endboss.isDead()) {
+            return during(this.endboss.lastHit, 1500);
+        }
         return livingEnemies <= 0;
     }
     

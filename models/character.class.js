@@ -78,7 +78,7 @@ class Character extends MovableObject {
 
     audioFiles = {
         idle : audioPathBase + 'idle.mp3',
-        walk : audioPathBase + 'walk2.mp3',
+        walk : audioPathBase + 'walk.mp3',
         jump : audioPathBase + 'jump.mp3',
         hurt : audioPathBase + 'hurt.mp3',
         dead : audioPathBase + 'dead.mp3',

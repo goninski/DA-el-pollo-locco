@@ -1,17 +1,9 @@
 class Level {
 
-    // imgPathBase = '/assets/img/';
-    // widthCanvas = 960;
-    // heightCanvas = widthCanvas / 1.777;
-    // walkOffset = 48;
-    // stoppableIntervals = [];
-
-    // screenStartX = (widthCanvas * -1) + 1;
-    // screenEndX = (widthCanvas * 2) - 1;
-
     backgrounds;
     clouds;
     enemies;
+    endboss;
     bottles;
     coins;
     statusBars;
@@ -20,9 +12,11 @@ class Level {
         this.backgrounds = backgrounds;
         this.clouds = clouds;
         this.enemies = enemies;
+        this.endboss = enemies[enemies.length - 1];
         this.bottles = bottles;
         this.coins = coins;
         this.statusBars = statusBars;
+
     }
 
 }

@@ -142,9 +142,10 @@ class MovableObject extends DrawableObject {
         this.setBorderCoordinates();
         // console.log('isThrowing:', fromObj.isThrowing);
         // if(!fromObj.isThrowing) return;
-        console.log('Border', this.objectName, '(x-left, x-right, y-top):', this.borderX, this.borderX + this.borderWidth, this.borderY);
+
+        // console.log('Border', this.objectName, '(x-left, x-right, y-top):', this.borderX, this.borderX + this.borderWidth, this.borderY);
+        // console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.borderX, fromObj.borderX + fromObj.borderWidth, fromObj.borderY + fromObj.borderHeight);
         // console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.x, fromObj.x + fromObj.width, fromObj.y + fromObj.height);
-        console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.borderX, fromObj.borderX + fromObj.borderWidth, fromObj.borderY + fromObj.borderHeight);
 
         if((fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
             return false;
@@ -169,7 +170,7 @@ class MovableObject extends DrawableObject {
     handlingHitFromAbove(obj) {
         obj.statusValue = 100;
         if(this instanceof Endboss) {
-            obj.statusValue = 25;
+            obj.statusValue = 10;
         }
         // console.log(this.objectName, 'is hit from above');
         this.handlingHit(obj);
@@ -202,11 +203,11 @@ class MovableObject extends DrawableObject {
     }
 
 
-    handlingDead() {
+    handlingDead(clearTimeout = 3000) {
         this.isEnemy ? livingEnemies-- : null;
         this.countDeadHandling++;
         this.deadAnimation();
-        this.clearIntervals();
+        this.clearIntervals(clearTimeout);
     }
 
 

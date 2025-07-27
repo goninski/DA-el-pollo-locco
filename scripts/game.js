@@ -2,7 +2,7 @@ let imgPathBase = '/assets/img/';
 let audioPathBase = '/assets/audio/';
 let audioIsMuted = false;
 let audioMutedByUser = false;
-let showObjectBorders = true;
+let showObjectBorders = false;
 let canvas;
 let widthCanvas = 1000;
 let heightCanvas = widthCanvas / 1.777;
@@ -153,8 +153,6 @@ function pauseGame() {
 function resumeGame() {
     gameIsPaused = false;
     unmuteAudio();
-    // audioIsMuted ? null : unmuteAudio();
-    console.log('audioIsMuted?', audioIsMuted);
     world.draw();
 }   
 
