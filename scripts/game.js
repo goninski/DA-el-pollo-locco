@@ -1,6 +1,7 @@
 let imgPathBase = '/assets/img/';
 let audioPathBase = '/assets/audio/';
-let muteAudio = false;
+let audioIsMuted = false;
+let audioMutedByUser = false;
 let showObjectBorders = true;
 let canvas;
 let widthCanvas = 1000;
@@ -37,7 +38,7 @@ function initGame(startPlay = false) {
     setBodyClassIfTouchDevice();
     stopAudios();
     stoppableIntervals.forEach(clearInterval);
-    muteAudio ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
+    audioIsMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
     gameIsPaused = false;
     startPlay ? startGame() : showStartScreen();
 }
@@ -47,15 +48,15 @@ function showStartScreen() {
     hideAllScreens();
     body.classList.add('start-screen');
     startAudio(audioCache.start, 0.2, true);
-    preloadLevel1();
+    loadLevel1();
     pauseGame();
 }
 
 
-function preloadLevel1() {
+function loadLevel1() {
+    livingEnemies = 999;
     initLevel1();
     world = new World(canvas, keystrokes);
-    livingEnemies = 999;
 }
 
 
@@ -68,19 +69,6 @@ function startGame(event = null) {
     body.classList.add('play-screen');
     stopAudio(audioCache.start);
 }  
-
-
-// function startGame(event = null) {
-//     event ? event.stopPropagation() : null;
-//     hideAllScreens();
-//     body.classList.add('play-screen');
-//     stoppableIntervals.forEach(clearInterval);
-//     stopAudio(audioCache.start);
-//     secondsPlay = 0;
-//     initLevel1();
-//     world = new World(canvas, keystrokes);
-//     lastKeystroke = new Date().getTime();
-// }  
 
 
 function restartGame(event = null) {
@@ -137,6 +125,39 @@ function isTouchEnabled() {
 }
 
 
+function toggleHelp(event) {
+    event.stopPropagation();
+    body.classList.remove('game-paused');
+    if(body.classList.contains('help-screen')) {
+        body.classList.remove('help-screen');
+        if(body.classList.contains('play-screen')) {
+            resumeGame();
+        }
+    } else {
+        body.classList.add('help-screen');
+        if(body.classList.contains('play-screen')) {
+            pauseGame();
+        }
+    }
+}   
+
+
+function pauseGame() {
+    body.classList.add('game-paused');
+    gameIsPaused = true;
+    muteAudio();
+}   
+
+
+function resumeGame() {
+    gameIsPaused = false;
+    unmuteAudio();
+    // audioIsMuted ? null : unmuteAudio();
+    console.log('audioIsMuted?', audioIsMuted);
+    world.draw();
+}   
+
+
 function setFullscreenToggle() {
     let btnToggleFullscreen = document.getElementById('btnToggleFullscreen')
     !fullscreenAvailable ? btnToggleFullscreen.classList.add('hide') : btnToggleFullscreen.classList.remove('hide');
@@ -182,37 +203,6 @@ function closeFullscreen() {
 }
 
 
-function toggleHelp(event) {
-    event.stopPropagation();
-    body.classList.remove('game-paused');
-    if(body.classList.contains('help-screen')) {
-        body.classList.remove('help-screen');
-        if(body.classList.contains('play-screen')) {
-            resumeGame();
-        }
-    } else {
-        body.classList.add('help-screen');
-        if(body.classList.contains('play-screen')) {
-            pauseGame();
-        }
-    }
-}   
-
-
-function pauseGame() {
-    body.classList.add('game-paused');
-    gameIsPaused = true;
-    !muteAudio ? muteAudios() : null;
-}   
-
-
-function resumeGame() {
-    gameIsPaused = false;
-    !muteAudio ? unmuteAudios() : null;
-    world.draw();
-}   
-
-
 function playTimeCounter() {
     let timeDiff = 60 * 60 * 1000
     let dateObj = new Date(secondsPlay * 1000 - timeDiff);
@@ -254,7 +244,7 @@ function startAudio(audioObj, volume = 1, loop = false) {
     checkNSetAudioMuting(audioObj);
     audioObj.play().catch(error => {
         audioObj.muted = true;
-        muteAudio = true;
+        audioIsMuted = true;
         body.classList.add('audio-muted', 'audio-auto-muted');
         console.log('audioplay error:', error);
     });
@@ -277,12 +267,12 @@ function startAudioResumed(audioObj, volume = 1) {
 
 
 function checkNSetAudioMuting(audioObj) {
-    if(muteAudio) {
+    if(audioIsMuted) {
         audioObj.muted = true;
         body.classList.add('audio-muted');
     } else {
         audioObj.muted = false;
-        body.classList.remove('audio-muted');
+        body.classList.remove('audio-muted', 'audio-auto-muted');
     }
 }
 
@@ -302,27 +292,35 @@ function stopAudios() {
 
 function toggleAudioMute(event = null) {
     event ? event.stopPropagation() : null;
-    muteAudio ? unmuteAudios() : muteAudios();
+    if(audioIsMuted) {
+        unmuteAudio();
+        audioMutedByUser = false;
+    } else {
+        muteAudio();
+        audioMutedByUser = true;
+    }
 }
 
 
-function muteAudios() {
+function muteAudio() {
     currentAudios.forEach(item => item.muted = true);
-    muteAudio = true;
+    audioIsMuted = true;
     body.classList.add('audio-muted');
 }
 
 
-function unmuteAudios() {
-    if(body.classList.contains('audio-auto-muted')) {
-        currentAudios.forEach(item => {
-            item.muted = false;
-            item.play();
-        });
-    } else {
-        currentAudios.forEach(item => item.muted = false);
-    }
-    muteAudio = false;
+function unmuteAudio() {
+    if(audioMutedByUser) return;
+    currentAudios.forEach(item => item.muted = false);
+    // if(body.classList.contains('audio-muted')) {
+    //     currentAudios.forEach(item => {
+    //         item.muted = false;
+    //         item.play();
+    //     });
+    // } else {
+    //     currentAudios.forEach(item => item.muted = false);
+    // }
+    audioIsMuted = false;
     body.classList.remove('audio-muted', 'audio-auto-muted');
 }
 
