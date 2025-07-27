@@ -154,7 +154,6 @@ class World {
             if(enemy.isDead() || this.character.isDead()) {
               return;  
             }
-            // console.log(this.character.bottles);
             if(this.character.bottles.length > 0) {
                 if(enemy.isHitFromBottle(this.character.bottles[0])) {
                     enemy.handlingHitFromBottle(this.character.bottles[0]);                    
@@ -168,15 +167,12 @@ class World {
         });
     }
 
-    
+
     checkBottleCollection() {
-        // console.log(this.character.bottleStatus);
         if(this.character.bottleStatus >= 100) return;
         this.level.bottles.forEach((bottle) => {
-            // console.log(bottle.hits);
-            if(bottle.hits <= 0) {
+            if(bottle.isCollectable) {
                 if(this.character.touchesObject(bottle)) {
-                    // this.character.collectBottle(bottle);
                     this.character.collectObject(bottle);
                 };
             }
@@ -187,9 +183,8 @@ class World {
     checkCoinCollection() {
         if(this.character.coinStatus >= 100) return;
         this.level.coins.forEach((coin) => {
-            if(coin.hits <= 0) {
+            if(coin.isCollectable) {
                 if(this.character.touchesObject(coin)) {
-                    // this.character.collectCoin(coin);
                     this.character.collectObject(coin);
                 };
             }

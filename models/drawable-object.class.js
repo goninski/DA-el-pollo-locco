@@ -36,6 +36,21 @@ class DrawableObject {
     positionObject(x, y) {
         this.x = x;
         this.y = y;
+        this.setBorderCoordinates();
+    }
+
+
+    setBorderCoordinates() {
+        this.borderX = this.x;
+        this.borderY = this.y;
+        this.borderWidth = this.width;
+        this.borderHeight = this.height;
+        if(this.objectPadding) {
+            this.borderX = this.x + (this.width * this.objectPadding[1]);
+            this.borderY = this.y + (this.height * this.objectPadding[0]);
+            this.borderWidth = this.width * (1 - this.objectPadding[1] - this.objectPadding[3]);
+            this.borderHeight = this.height * (1 - this.objectPadding[2] - this.objectPadding[0]);
+        }
     }
 
 
