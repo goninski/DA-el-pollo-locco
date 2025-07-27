@@ -394,6 +394,7 @@ body.is-touch-device .nav-panel .key-info {
 body.is-touch-device:not(.help-screen) {
     .nav-panel {
         bottom: 1%;
+        right: unset;
         padding-top: 0.7rem;
         background: transparent;
         border: none;

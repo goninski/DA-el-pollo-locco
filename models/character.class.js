@@ -252,13 +252,13 @@ class Character extends MovableObject {
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
         // console.log('characterX:', this.x);
-        this.bottleStatus -= bottle.strength;
+        this.bottleStatus -= bottle.value;
         bottle.x = this.x;
         bottle.y = this.y;
-        bottle.isThrowing = true;
+        bottle.throwing = true;
         bottle.speedY = 5;
         bottle.applyGravity()
-        bottle.throwInterval = setInterval(() => {
+        bottle.throwingInterval = setInterval(() => {
             this.otherDirection ? bottle.x -= 15 : bottle.x += 15;
         }, 25);
         this.bottles.shift();

@@ -1,13 +1,12 @@
 let bottleId = 0;
 
-class Bottle extends ThrowableObject {
+class Bottle extends CollectableObject {
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.1, 0.2, 0.1, 0.2];
+    value = 10;
     strength = 10;
-    isCollectable = true;
-    isSplashed = false;
-    throwInterval;
+    throwable = true;
 
     IMAGES_GROUND = [
         imgPathBase + '6_salsa_bottle/1_salsa_bottle_on_ground.png',
@@ -51,7 +50,6 @@ class Bottle extends ThrowableObject {
         this.setImageCache(this.IMAGES_SPLASH);
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);
-
         this.setAudioCache(this.audioFiles);
 
         this.animate();
@@ -62,7 +60,7 @@ class Bottle extends ThrowableObject {
     animate() {
 
         intervalId = setInterval(() => {
-            if(this.isThrowing) {
+            if(this.throwing) {
                 this.handleFlying();
             }
         }, 100);  
@@ -71,27 +69,21 @@ class Bottle extends ThrowableObject {
     }
 
    
-    isSplashing() {
-        if(this.isCollectable || this.isAboveGround()) return;
-        // console.log(this.objectName, 'isSplashing');
-        return true;
-    }
-
-
     handleFlying() {
         console.log('\n\nisThrowing', this.objectName);
         console.log('Border from', this.objectName, '(x-right, y-bottom):', this.borderX + this.borderWidth, this.borderY + this.borderHeight);
 
-        if(this.isSplashing() && !this.isSplashed) {
-            clearInterval(this.throwInterval);
+        if(this.isSplashing() && !this.splashed) {
+            clearInterval(this.throwingInterval);
             this.y = this.groundY + (this.height / 2);
             this.splashingAnimation();
-            setTimeout(() => this.isSplashed = true, 750);
-        } else if(this.isSplashed) {
-            this.isThrowing = false;
+            setTimeout(() => this.splashed = true, 750);
+        } else if(this.splashed) {
+            this.throwing = false;
+            this.used = true;
             this.loadImage(this.IMAGES_SPLASH[5]);
             this.clearIntervals(0);
-            // pauseGame();
+            // this.handleSplash();
         } else {
             this.flyingAnimation();
         }
@@ -106,11 +98,29 @@ class Bottle extends ThrowableObject {
     }
 
 
+
+    isSplashing() {
+        if(!this.collected || this.used || this.isAboveGround()) return;
+        // console.log(this.objectName, 'isSplashing');
+        return true;
+    }
+
+
+    handleSplash() {
+        this.throwing = false;
+        this.used = true;
+        this.loadImage(this.IMAGES_SPLASH[5]);
+        this.clearIntervals(0);
+        // pauseGame();
+    }
+
+    
     splashingAnimation() {
         startAudio(this.audioCache.splash);
         let imagePaths = 'IMAGES_SPLASH';
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);
     }
+
 }
 

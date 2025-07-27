@@ -1,17 +1,18 @@
 let coinId = 0;
 
-class Coin extends MovableObject {
+class Coin extends CollectableObject {
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.3, 0.3, 0.3, 0.3];
+    value = 5; 
     strength = 5;
-    isCollectable = true;
 
     IMAGES_GROUND = [
         imgPathBase + '8_coin/coin_1.png',
         imgPathBase + '8_coin/coin_2.png',
 
     ];
+
     audioFiles = {
         collect : audioPathBase + 'coin-collect.mp3',
     }

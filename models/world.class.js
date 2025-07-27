@@ -171,11 +171,9 @@ class World {
     checkBottleCollection() {
         if(this.character.bottleStatus >= 100) return;
         this.level.bottles.forEach((bottle) => {
-            if(bottle.isCollectable) {
-                if(this.character.touchesObject(bottle)) {
-                    this.character.collectObject(bottle);
-                };
-            }
+            if(this.character.touchesObject(bottle)) {
+                this.character.collectObject(bottle);
+            };
         });
     }
 
@@ -183,11 +181,9 @@ class World {
     checkCoinCollection() {
         if(this.character.coinStatus >= 100) return;
         this.level.coins.forEach((coin) => {
-            if(coin.isCollectable) {
-                if(this.character.touchesObject(coin)) {
-                    this.character.collectObject(coin);
-                };
-            }
+            if(this.character.touchesObject(coin)) {
+                this.character.collectObject(coin);
+            };
         });
     }
 

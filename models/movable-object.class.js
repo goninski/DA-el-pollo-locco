@@ -1,7 +1,6 @@
 class MovableObject extends DrawableObject {
 
     isEnemy = false;
-    isCollectable = false;
     groundY;
     speedY = 0;
     acceleration = 2.5;
@@ -14,7 +13,6 @@ class MovableObject extends DrawableObject {
     audioFiles = {};
     audioCache = {};
     countDeadHandling = 0;
-    isThrowing = false;
 
     constructor() {
         super();
@@ -92,21 +90,21 @@ class MovableObject extends DrawableObject {
 
 
     collectObject(obj) {
-        if(!(this instanceof Character)) return;
+        if(!obj.collectable || obj.collected) return;
         if(obj instanceof Bottle) {
             this.bottles.push(obj);
-            this.bottleStatus += obj.strength;
+            this.bottleStatus += obj.value;
             console.log(this.bottleStatus);
         } else {
             this.coins.push(obj);
-            this.coinStatus += obj.strength;
+            this.coinStatus += obj.value;
             console.log(this.coinStatus);
         }
-        obj.isCollectable = false;
+        obj.collected = true;
         obj.hideObject();
         startAudioResumed(obj.audioCache.collect);
     }
-
+    
 
     touchesObject(counterPartObj) {
         this.setBorderCoordinates();
