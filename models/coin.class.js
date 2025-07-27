@@ -5,12 +5,16 @@ class Coin extends MovableObject {
     height = this.width * 1;
     objectPadding = [0.3, 0.3, 0.3, 0.3];
     strength = 5;
+    isCollectable = true;
 
     IMAGES_GROUND = [
         imgPathBase + '8_coin/coin_1.png',
         imgPathBase + '8_coin/coin_2.png',
 
     ];
+    audioFiles = {
+        collect : audioPathBase + 'coin-collect.mp3',
+    }
 
     
     constructor() {
@@ -27,6 +31,7 @@ class Coin extends MovableObject {
 
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);
+        this.setAudioCache(this.audioFiles);
 
     }
 

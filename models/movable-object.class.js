@@ -105,11 +105,20 @@ class MovableObject extends DrawableObject {
     }
 
 
-    collectObject() {
-        this.x = 0;
-        this.y = heightCanvas + this.height;
-        this.setBorderCoordinates();
-        this.isCollectable = false;
+    collectObject(obj) {
+        if(!(this instanceof Character) || !obj.isCollectable) return;
+        if(obj instanceof Bottle) {
+            this.bottles.push(obj);
+            this.bottleStatus += obj.strength;
+            console.log(this.bottleStatus);
+        } else {
+            this.coins.push(obj);
+            this.coinStatus += obj.strength;
+            console.log(this.coinStatus);
+        }
+        startAudioResumed(obj.audioCache.collect);
+        obj.hideObject();
+        obj.isCollectable = false;
     }
 
 

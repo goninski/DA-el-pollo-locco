@@ -106,13 +106,13 @@ function handlingGameOver(event = null) {
 
 function handlingGameWon(event = null) {
     event ? event.stopPropagation() : null;
-    // world.character.winJump();
-    world.character.jump(30);
-    world.character.loadImage(world.character.IMAGES_JUMPING[3]);
     stopAudios();
     hideAllScreens();
     body.classList.add('win-screen');
     startAudio(audioCache.gameWin);
+    world.character.winJump();
+    // world.character.jump(30);
+    // world.character.loadImage(world.character.IMAGES_JUMPING[3]);
     stoppableIntervals.forEach(clearInterval);
     setTimeout(() => restartGame(null), 12000);
 }    

@@ -4,7 +4,7 @@ class Bottle extends ThrowableObject {
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.1, 0.2, 0.1, 0.2];
-    strength = 20;
+    strength = 10;
     isCollectable = true;
     isSplashed = false;
     throwInterval;
@@ -31,6 +31,7 @@ class Bottle extends ThrowableObject {
     ];
 
     audioFiles = {
+        collect : audioPathBase + 'bottle-collect.mp3',
         flying : audioPathBase + 'bottle-flying.mp3',
         splash : audioPathBase + 'bottle-splash.mp3',
     }
@@ -44,13 +45,14 @@ class Bottle extends ThrowableObject {
 
         this.setRandomPosX();
         this.setWalkGroundY();
-        // this.consoleObjectPosition();
+        // this.setBorderCoordinates();
+
         this.setImageCache(this.IMAGES_THROW);
         this.setImageCache(this.IMAGES_SPLASH);
-        this.setAudioCache(this.audioFiles);
-
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);
+
+        this.setAudioCache(this.audioFiles);
 
         this.animate();
 

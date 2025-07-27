@@ -51,8 +51,6 @@ class StatusBar extends DrawableObject {
     constructor(statusType, x, y) {
         super();
         this.positionObject(x, y);
-        // this.x = x;
-        // this.y = y;
         this.statusType = statusType;
         if(this.statusType === 'HEALTH' || this.statusType === 'ENDBOSS') {
             this.statusReverse = true;

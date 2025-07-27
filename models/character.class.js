@@ -82,8 +82,6 @@ class Character extends MovableObject {
         jump : audioPathBase + 'jump.mp3',
         hurt : audioPathBase + 'hurt.mp3',
         dead : audioPathBase + 'dead.mp3',
-        collectCoin : audioPathBase + 'coin-collect.mp3',
-        collectBottle : audioPathBase + 'bottle-collect.mp3',
     }
 
 
@@ -235,18 +233,6 @@ class Character extends MovableObject {
         this.movementAnimation(this[imagePaths]);
     }
 
-  
-    // idleAnimationShort(imagePaths = 'IMAGES_IDLE') {
-    //     this.img = this.imageCache[this[imagePaths][0]];
-    //     this.movementAnimation(this[imagePaths]);    
-    // }
-
-
-    // idleLongAnimation(imagePaths = 'IMAGES_IDLE_LONG') {
-    //     this.img = this.imageCache[this[imagePaths][0]];
-    //     this.movementAnimation(this[imagePaths]);    
-    // }
-
 
     moveLeft(speed) {
         if(this.x > (widthCanvas * -1) + 8) {
@@ -262,34 +248,11 @@ class Character extends MovableObject {
     }
 
 
-    collectCoin(coin) {
-        coin.collectObject();
-        startAudioResumed(this.audioCache.collectCoin);
-        this.coins.push(coin);
-        this.coinStatus += coin.statusValue;
-        // console.log('collected:', coin.objectName, '(+' + coin.statusValue + ')');
-         // console.log('total coin points:', this.coinStatus);
-    }
-
-
-    collectBottle(bottle) {
-        if(!bottle.isCollectable) return;
-        // if(this.bottleStatus >= 100) return;
-        bottle.collectObject();
-        startAudioResumed(this.audioCache.collectBottle);
-        this.bottles.push(bottle);
-        this.bottleStatus += bottle.statusValue;
-        // bottle.isCollectable = false;
-        // console.log('collected:', bottle.objectName, '(+' + bottle.statusValue + ')');
-        // console.log('total bottle points:', this.bottleStatus);
-    }
-
-
     throwBottle() {
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
         // console.log('characterX:', this.x);
-        this.bottleStatus -= bottle.statusValue;
+        this.bottleStatus -= bottle.strength;
         bottle.x = this.x;
         bottle.y = this.y;
         bottle.isThrowing = true;
@@ -303,7 +266,7 @@ class Character extends MovableObject {
         // bottle.consoleObjectPosition();
     }
 
-    
+
     winJump() {
         this.jump(30);
         this.loadImage(this.IMAGES_JUMPING[3]);

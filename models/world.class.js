@@ -108,7 +108,7 @@ class World {
 
 
     updateGameStatus() {
-        console.log('livingEnemies', livingEnemies);
+        // console.log('livingEnemies', livingEnemies);
         this.statusBars[0].updateStatusBar(this.character.healthStatus);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
@@ -168,19 +168,7 @@ class World {
         });
     }
 
-   
-    checkCoinCollection() {
-        if(this.character.coinStatus >= 100) return;
-        this.level.coins.forEach((coin) => {
-            if(coin.hits <= 0) {
-                if(this.character.touchesObject(coin)) {
-                    this.character.collectCoin(coin);
-                };
-            }
-        });
-    }
-
-
+    
     checkBottleCollection() {
         // console.log(this.character.bottleStatus);
         if(this.character.bottleStatus >= 100) return;
@@ -188,11 +176,26 @@ class World {
             // console.log(bottle.hits);
             if(bottle.hits <= 0) {
                 if(this.character.touchesObject(bottle)) {
-                    this.character.collectBottle(bottle);
+                    // this.character.collectBottle(bottle);
+                    this.character.collectObject(bottle);
                 };
             }
         });
     }
-        
+
+    
+    checkCoinCollection() {
+        if(this.character.coinStatus >= 100) return;
+        this.level.coins.forEach((coin) => {
+            if(coin.hits <= 0) {
+                if(this.character.touchesObject(coin)) {
+                    // this.character.collectCoin(coin);
+                    this.character.collectObject(coin);
+                };
+            }
+        });
+    }
+
+    
 
 }
