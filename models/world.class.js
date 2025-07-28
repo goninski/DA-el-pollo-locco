@@ -1,4 +1,8 @@
+/**
+ * Class for the game world
+ */
 class World {
+
     keystrokes;
     canvas;
     ctx;
@@ -14,6 +18,7 @@ class World {
     coins = level1.coins;
     statusBars = level1.statusBars;
 
+
     constructor(canvas, keystrokes) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -26,12 +31,18 @@ class World {
     }
 
 
+    /**
+     * Apply world object to character and endboss
+     */
     applyWorldToObjects() {
         this.character.world = this;
         this.endboss.world = this;
     }
 
 
+    /**
+     * Draw Canvas
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -53,6 +64,10 @@ class World {
     };
 
 
+    /**
+     * Draw objects on canvas (loop)
+     * @param {array} objs - array of objects
+     */
     drawObjects(objs) {
         objs.forEach(obj => {
             this.drawObject(obj);
@@ -60,6 +75,10 @@ class World {
     }
 
 
+    /**
+     * Draw single object on canvas (iteration of a loop )
+     * @param {object} obj - single object to draw
+     */
     drawObject(obj) {
         obj.otherDirection ? this.flipImage(obj) : null;
         this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
@@ -68,6 +87,10 @@ class World {
     }
 
 
+    /**
+     * Flip image on canvas
+     * @param {object} obj - object to flip
+     */    
     flipImage(obj) {
         this.ctx.save();
         this.ctx.translate(obj.width, 0);
@@ -76,12 +99,19 @@ class World {
     }
 
 
+    /**
+     * Revers image flip
+     * @param {object} obj - object to flip reverse
+     */    
     flipImageBack(obj) {
         obj.x = obj.x * -1;
         this.ctx.restore();
     }
 
 
+    /**
+     * Set global intervals
+     */
     setGlobalIntervals() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
@@ -106,12 +136,12 @@ class World {
     }
 
 
+    /**
+     * Update the game status
+     */
     updateGameStatus() {
-        this.debugLogs();
-        this.statusBars[0].updateStatusBar(this.character.healthStatus);
-        this.statusBars[1].updateStatusBar(this.character.coinStatus);
-        this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-        this.statusBars[3].updateStatusBar(this.endboss.healthStatus);
+        // this.debugLogs();
+        this.updateStatusBars();
         if(this.isGameOver()) {
             return handlingGameOver();
         } else if(this.isGameWon()) {
@@ -124,12 +154,30 @@ class World {
     }
 
 
+    /**
+     * Debug logs within game status update interval
+     */
     debugLogs() {
-        // console.log('livingEnemies', livingEnemies);
-        // console.log('this.character.bottles #', this.character.bottles.length);
+        console.log('livingEnemies', livingEnemies);
+        console.log('this.character.bottles #', this.character.bottles.length);
     }
 
 
+    /**
+     * Update the status bars
+     */
+    updateStatusBars() {
+        this.statusBars[0].updateStatusBar(this.character.healthStatus);
+        this.statusBars[1].updateStatusBar(this.character.coinStatus);
+        this.statusBars[2].updateStatusBar(this.character.bottleStatus);
+        this.statusBars[3].updateStatusBar(this.endboss.healthStatus);
+    }
+
+
+    /**
+     * Check if game is paused
+     * @returns {boolean}
+     */
     isGamePaused(){
         if(this.isGameOver() || this.isGameWon()) {
             return false;
@@ -139,21 +187,34 @@ class World {
     }
 
 
-    isGameOver(){
-        if(this.character.isDead()) {
-            return during(this.character.lastHit, 2500);
-        }
-    }
-
-
+    /**
+     * Check if game is won
+     * @returns {boolean} - during ??
+     */
     isGameWon() {
         // return livingEnemies <= 0;
-        if(this.character.coinStatus >= 100 && this.endboss.isDead()) {
-            return during(lastWinRelevantHit, 1500);
+        if(this.endboss.isDead()) {
+            return trueDuring(this.endboss.lastHit, 1500);
+            // return during(this.endboss.lastHit, 1500);
         }
     }
     
     
+    /**
+     * Check if game is over
+     * @returns {boolean} - during ??
+     */
+    isGameOver(){
+        if(this.character.isDead()) {
+            return trueDuring(this.character.lastHit, 2500);
+            // return during(this.character.lastHit, 2500);
+        }
+    }
+  
+    
+    /**
+     * Check enemy hits (in both directions)
+     */
     checkEnemyHits() {
         this.level.enemies.forEach((enemy) => {
             if(enemy.isDead() || this.character.isDead()) {
@@ -162,11 +223,8 @@ class World {
             if(this.character.bottles.length > 0) {
                 let bottle = this.character.bottles[0];
                 if(enemy.isHitFromAbove(bottle, bottle.borderWidth * 0.5)) {
-                    enemy.handlingHitFromAbove(bottle);                    
+                    enemy.handlingHitFromBottle(bottle);                    
                 }
-                // if(enemy.isHitFromBottle(this.character.bottles[0])) {
-                //     enemy.handlingHitFromBottle(this.character.bottles[0]);                    
-                // }
             }
             if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
                 enemy.handlingHitFromAbove(this.character);
@@ -177,11 +235,15 @@ class World {
     }
 
 
+    /**
+     * Check object collection (coin/bottle collection)
+     * @param {string} objectName - class name of the collectable object (lower case)
+     */
     checkObjectCollection(objectName) {
         if(this.character[objectName + 'Status'] >= 100) return;
         this.level[objectName + 's'].forEach((item) => {
-            if(this.character.touchesObject(item, this.character.width * -0.25)) {
-                this.character.collectObject(item, this.character.width * -0.25);
+            if(this.character.touchesObject(item, this.character.borderWidth * 0.25)) {
+                this.character.collectObject(item);
             };
         });
     }

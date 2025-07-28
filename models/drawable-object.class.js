@@ -1,4 +1,8 @@
+/**
+ * Class for drawables objects
+ */
 class DrawableObject {
+    
     skipDrawing = false;
     x = 0;
     y = 0;
@@ -21,12 +25,20 @@ class DrawableObject {
     }
 
 
+    /**
+     * Load single image
+     * @param {string} path - image path
+     */
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
     }
 
 
+    /**
+     * Set image cache
+     * @param {array} imagePaths - image paths
+     */
     setImageCache(imagePaths) {
         imagePaths.forEach(path => {
             this.loadImage(path);
@@ -35,19 +47,20 @@ class DrawableObject {
     }
     
     
-    positionObject(x, y) {
-        this.x = x;
-        this.y = y;
-        this.roundCoordinates()
-        this.setBorderCoordinates();
-    }
-
-
+    /**
+     * Set x position with screen slide no
+     * @param {number} screenSlide - currently -1 to 3, default 0
+     */
     setScreenSlidePos(screenSlide) {
         this.x = screenSlide * (widthCanvas - 0);
     }
 
 
+    /**
+     * Set x position randomly 
+     * @param {number} screenStart - starting screen slide no
+     * @param {number} screenEnd - ending screen slide no
+     */
     setRandomPosX(screenStart = -1, screenEnd = 2) {
         let min = widthCanvas * screenStart;
         let max = (widthCanvas * screenEnd) - this.width;
@@ -56,6 +69,22 @@ class DrawableObject {
     }
 
 
+    /**
+     * Set a manual position
+     * @param {number} x - x position
+     * @param {number} y - y position
+     */
+    positionObject(x, y) {
+        this.x = x;
+        this.y = y;
+        this.roundCoordinates()
+        this.setBorderCoordinates();
+    }
+
+
+    /**
+     * Position object to the walk ground height
+     */
     setWalkGroundY() {
         this.groundY = heightCanvas - this.height - walkOffset;
         this.y = this.groundY;
@@ -63,12 +92,36 @@ class DrawableObject {
     }
 
 
+    /**
+     * Hide object (position beneath the canvas)
+     */
     hideObject() {
         this.y = heightCanvas + 1;
         this.roundCoordinates()
     }
 
 
+    /**
+     * Round dimensions to nearest integer
+     */
+    roundDimensions() {
+        this.width = Math.round(this.width);
+        this.height = Math.round(this.height);
+    }
+
+
+    /**
+     * Round coordinates to nearest integer
+     */
+    roundCoordinates() {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+    }
+    
+      
+    /**
+     * Set border coordinates considering image padding
+     */
     setBorderCoordinates() {
         this.roundCoordinates();
         this.borderX = this.x;
@@ -82,32 +135,12 @@ class DrawableObject {
             this.borderHeight = Math.round(this.height * (1 - this.objectPadding[2] - this.objectPadding[0]));
         }
     }
-
-
-    roundDimensions() {
-        this.width = Math.round(this.width);
-        this.height = Math.round(this.height);
-    }
-
-
-    roundCoordinates() {
-        this.x = Math.round(this.x);
-        this.y = Math.round(this.y);
-    }
     
-
-    consoleObjectCoordinates(sourceInfo = '', borderPos = true) {
-        let x = borderPos ? this.borderX : this.x;
-        let xr = borderPos ? this.borderX + this.borderWidth : this.x + this.width;
-        let y = borderPos ? this.borderY : this.y;
-        let yb = borderPos ? this.borderY + this.borderHeight : this.y + this.height;
-        let borderSuffix = borderPos ? 'B-' : '';
-        let msgTitle = '\n' + borderSuffix + 'Coordinates ' + this.objectName + '  ' + sourceInfo;
-        let msgContent = '\nx/xr ' + x + '-' + xr + ' | y/yb ' + y + '-' + yb;
-        console.log(msgTitle, msgContent)
-    }
-
     
+    /**
+     * Draw border rectangle (for debugging)
+     * @param {ctx} ctx - canvas context
+     */
     drawRectangle(ctx) {
         if(this instanceof Clouds) return;
         if(this instanceof MovableObject) {
@@ -123,5 +156,21 @@ class DrawableObject {
         }
     }
 
+
+    /**
+     * Log the coordinates to the console (for debugging)
+     * @param {string} sourceInfo - optional info, e.g. to indicate the log source
+     * @param {boolean} borderCoordinates - true / false=image coordinates
+     */
+    consoleObjectCoordinates(sourceInfo = '', borderCoordinates = true) {
+        let x = borderCoordinates ? this.borderX : this.x;
+        let xr = borderCoordinates ? this.borderX + this.borderWidth : this.x + this.width;
+        let y = borderCoordinates ? this.borderY : this.y;
+        let yb = borderCoordinates ? this.borderY + this.borderHeight : this.y + this.height;
+        let borderSuffix = borderCoordinates ? 'B-' : '';
+        let msgTitle = '\n' + borderSuffix + 'Coordinates ' + this.objectName + '  ' + sourceInfo;
+        let msgContent = '\nx/xr ' + x + '-' + xr + ' | y/yb ' + y + '-' + yb;
+        console.log(msgTitle, msgContent)
+    }
 
 }

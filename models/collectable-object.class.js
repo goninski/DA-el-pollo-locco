@@ -1,3 +1,6 @@
+/**
+ * Class for collectable objects
+ */
 class CollectableObject extends MovableObject {
 
     value = 0;
@@ -8,6 +11,7 @@ class CollectableObject extends MovableObject {
     splashed = false;
     throwingInterval;
 
+    
     constructor() {
         super();
     }

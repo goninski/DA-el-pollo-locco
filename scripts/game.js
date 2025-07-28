@@ -1,8 +1,5 @@
 let imgPathBase = '/assets/img/';
-let audioPathBase = '/assets/audio/';
-let audioIsMuted = false;
-let audioMutedByUser = false;
-let showObjectBorders = true;
+let showObjectBorders = false;
 let canvas;
 let widthCanvas = 1000;
 let heightCanvas = Math.round(widthCanvas / 1.777);
@@ -22,26 +19,26 @@ let livingEnemies;
 let intervalId = 0;
 let stoppableIntervals = [];
 let fullscreenAvailable = document.fullscreenEnabled;
-let currentAudios = [];
-let audioCache = {
-    start : new Audio(audioPathBase + 'start.mp3'),
-    gameOver : new Audio(audioPathBase + 'game-over.mp3'),
-    gameWin : new Audio(audioPathBase + 'game-win.wav'),
-};
-let lastWinRelevantHit;
 
 
-function initGame(startPlay = false) {
+/**
+ * Initial on load - and restart
+ * @param {boolean} skipStartScreen
+ */
+function initGame(skipStartScreen = false) {
     canvas = document.getElementById('canvas');
     body = document.body;
     keystrokes = new Keystrokes();
     setFullscreenToggle();
     setBodyClassIfTouchDevice();
     audioIsMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
-    startPlay ? startGame() : showStartScreen();
+    skipStartScreen ? startGame() : showStartScreen();
 }
 
 
+/**
+ * Show start screen
+ */
 function showStartScreen() {
     hideAllScreens();
     body.classList.add('start-screen');
@@ -52,6 +49,9 @@ function showStartScreen() {
 }
 
 
+/**
+ * Load level 1
+ */
 function loadLevel1() {
     livingEnemies = 999;
     initLevel1();
@@ -59,10 +59,14 @@ function loadLevel1() {
 }
 
 
+/**
+ * Start the game
+ * @param {event} event - start button
+ */
 function startGame(event = null) {
     event ? event.stopPropagation() : null;
     stopAudio(audioCache.start);
-    currentAudios = [];
+    loopedAudios = [];
     resumeGame()
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();
@@ -73,6 +77,10 @@ function startGame(event = null) {
 }  
 
 
+/**
+ * Restart the game
+ * @param {event} event - restart button
+ */
 function restartGame(event = null) {
     event ? event.stopPropagation() : null;
     stopAudios();
@@ -83,6 +91,9 @@ function restartGame(event = null) {
 }    
 
 
+/**
+ * Hide all screens
+ */
 function hideAllScreens() {
     body.classList.remove('start-screen', 'slide-out');
     body.classList.remove('win-screen');
@@ -93,6 +104,29 @@ function hideAllScreens() {
 }
 
 
+/**
+ * Check if touch device
+ * @return {boolean}
+ */
+function isTouchEnabled() {
+    return ( 'ontouchstart' in window ) || 
+           ( navigator.maxTouchPoints > 0 ) || 
+           ( navigator.msMaxTouchPoints > 0 );
+}
+
+
+/**
+ * Set body class if/not touch device
+ */
+function setBodyClassIfTouchDevice() {
+    isTouchEnabled() ? body.classList.add('is-touch-device'): body.classList.remove('is-touch-device');
+}
+
+
+/**
+ * Handling game won
+ * @param {event} event - game over button (temporary)
+ */
 function handlingGameWon(event = null) {
     event ? event.stopPropagation() : null;
     console.log('handlingGameWon');
@@ -108,6 +142,10 @@ function handlingGameWon(event = null) {
 }    
 
 
+/**
+ * Handling game over
+ * @param {event} event - surrender button
+ */
 function handlingGameOver(event = null) {
     event ? event.stopPropagation() : null;
     console.log('handlingGameOver');
@@ -122,18 +160,10 @@ function handlingGameOver(event = null) {
 }    
 
 
-function setBodyClassIfTouchDevice() {
-    isTouchEnabled() ? body.classList.add('is-touch-device'): body.classList.remove('is-touch-device');
-}
-
-
-function isTouchEnabled() {
-    return ( 'ontouchstart' in window ) || 
-           ( navigator.maxTouchPoints > 0 ) || 
-           ( navigator.msMaxTouchPoints > 0 );
-}
-
-
+/**
+ * Toggle helpscreen (including pausing/resuming game)
+ * @param {event} event - help button
+ */
 function toggleHelp(event) {
     event.stopPropagation();
     body.classList.remove('game-paused');
@@ -151,26 +181,19 @@ function toggleHelp(event) {
 }   
 
 
-function pauseGame() {
-    body.classList.add('game-paused');
-    gameIsPaused = true;
-    muteAudio();
-}   
-
-
-function resumeGame() {
-    gameIsPaused = false;
-    unmuteAudio();
-    world.draw();
-}   
-
-
+/**
+ * Set fullscreen button if fullscreen available
+ */
 function setFullscreenToggle() {
     let btnToggleFullscreen = document.getElementById('btnToggleFullscreen')
     !fullscreenAvailable ? btnToggleFullscreen.classList.add('hide') : btnToggleFullscreen.classList.remove('hide');
 }
 
 
+/**
+ * Toggle fullscreen
+ * @param {event} event - fullscreen button
+ */
 function toggleFullscreen(event) {
     event.stopPropagation();
     let fullscreenElem = document.querySelector('.fullscreen-element');
@@ -188,6 +211,10 @@ function toggleFullscreen(event) {
 }    
 
 
+/**
+ * Open fullscreen mode
+ * @param {element} elem - fullscreen element
+ */
 function openFullscreen(elem) {
     if (elem.requestFullscreen) {
         elem.requestFullscreen();
@@ -199,6 +226,9 @@ function openFullscreen(elem) {
 }
 
 
+/**
+ * Close fullscreen
+ */
 function closeFullscreen() {
   if (document.exitFullscreen) {
     document.exitFullscreen();
@@ -210,6 +240,29 @@ function closeFullscreen() {
 }
 
 
+/**
+ * Pause game
+ */
+function pauseGame() {
+    body.classList.add('game-paused');
+    gameIsPaused = true;
+    muteAudio();
+}   
+
+
+/**
+ * Resume game
+ */
+function resumeGame() {
+    gameIsPaused = false;
+    unmuteAudio();
+    world.draw();
+}   
+
+
+/**
+ * Returns a playtime counter
+ */
 function playTimeCounter() {
     let timeDiff = 60 * 60 * 1000
     let dateObj = new Date(secondsPlay * 1000 - timeDiff);
@@ -234,105 +287,23 @@ function playTimeCounter() {
 }
 
 
+/**
+ * Save intervals globally
+ * @param {array} intervals - array of intervals
+ */
 function saveIntervalsGlobally(intervals) {
     stoppableIntervals.push(...intervals);
 }
 
 
-function clearIntervallTimeout(intervalId, timeout = 5000) {
+/**
+ * Clear an interval after timeout
+ * @param {intervalId} intervalId 
+ * @param {number} timeout 
+ */
+function clearIntervalAfterTimeout(intervalId, timeout = 5000) {
     setTimeout(function() {clearInterval(intervalId)}, timeout);
 }    
-
-
-function startAudio(audioObj, volume = 1, loop = false) {
-    if(!currentAudios.includes(audioObj)) {
-        currentAudios.push(audioObj);        
-    };
-    audioObj.volume = volume;
-    audioObj.loop = loop;
-    checkNSetAudioMuting(audioObj);
-    audioObj.play().catch(error => {
-        audioObj.muted = true;
-        audioIsMuted = true;
-        body.classList.add('audio-muted', 'audio-auto-muted');
-        console.log('audioplay error:', error);
-    });
-    // !audioObj.loop ? currentAudios.pop() : null;
-}
-
-
-function startAudioDebounced(audioObj, startTime, delay = 150, volume = 1, loop = false) {
-    if(debounced(startTime, delay)) {
-        startAudio(audioObj, volume, loop);
-    }
-}
-
-
-function startAudioResumed(audioObj, volume = 1) {
-    // audioObj.pause();
-    audioObj.currentTime = 0;
-    startAudio(audioObj, volume, false)
-}
-
-
-function checkNSetAudioMuting(audioObj) {
-    // console.log('audioIsMuted ?', audioIsMuted);
-    if(audioIsMuted) {
-        audioObj.muted = true;
-        body.classList.add('audio-muted');
-    } else {
-        audioObj.muted = false;
-        body.classList.remove('audio-muted', 'audio-auto-muted');
-    }
-}
-
-
-function stopAudio(audioObj) {
-    audioObj.pause();
-    let index = currentAudios.findIndex(item => item === audioObj);
-    index >= 0 ? currentAudios.splice(index, 1) : null;
-}
-
-
-function stopAudios() {
-    currentAudios.forEach(item => item.pause());
-    currentAudios = [];
-}
-
-
-function toggleAudioMute(event = null) {
-    event ? event.stopPropagation() : null;
-    if(audioIsMuted) {
-        audioMutedByUser = false;
-        unmuteAudio(event);
-    } else {
-        audioMutedByUser = true;
-        muteAudio();
-    }
-}
-
-
-function muteAudio() {
-    currentAudios.forEach(item => item.muted = true);
-    audioIsMuted = true;
-    body.classList.add('audio-muted');
-}
-
-
-function unmuteAudio(event = null) {
-    if(event) {
-        event.stopPropagation();
-        currentAudios.forEach(item => {
-            item.muted = false;
-            body.classList.contains('audio-auto-muted') ? item.play() : null;
-        });
-    } else {
-        if(audioMutedByUser) return;
-        currentAudios.forEach(item => item.muted = false);
-    }
-    audioIsMuted = false;
-    body.classList.remove('audio-muted', 'audio-auto-muted');
-}
 
 
 /**
@@ -349,26 +320,28 @@ function getPassedTime(startTime, sourceInfo = '') {
 /**
  * Helper: returns true only for a certain duration since start time
  * 
- * @param {Date} startTime
- * @param {number} delay - ms
+ * @param {Date} startTime - will be compared to now
+ * @param {number} duration - ms
  * @returns {boolean}
  */
-function debounced(startTime, delay = 150) {
+function trueDuring(startTime, duration = 1000) {
     let currentTime = new Date().getTime();
-    return (currentTime - startTime) <= delay;
+    return (currentTime - startTime) <= duration;
 }
 
 
 /**
  * Helper: returns true only after a certain duration since start time
  * 
- * @param {Date} startTime - will be compared to now
- * @param {number} duration - ms
+ * @param {Date} startTime
+ * @param {number} delay - ms
  * @returns {boolean}
  */
-function during(startTime, duration = 1000) {
+function trueDebounced(startTime, delay = 150) {
     let currentTime = new Date().getTime();
-    return (currentTime - startTime) >= duration;
+    return (currentTime - startTime) >= delay;
 }
-
-
+function debounced(startTime, delay = 150) {
+    let currentTime = new Date().getTime();
+    return (currentTime - startTime) <= delay;
+}

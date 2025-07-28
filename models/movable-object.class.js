@@ -1,3 +1,6 @@
+/**
+ * Class for moveable objects
+ */
 class MovableObject extends DrawableObject {
 
     isEnemy = false;
@@ -20,6 +23,10 @@ class MovableObject extends DrawableObject {
     }
 
 
+    /**
+     * Set audio cache
+     * @param {object} audioFiles - object with audiofile names
+     */
     setAudioCache(audioFiles) {
         for (let [type, path] of Object.entries(audioFiles)) {
             this.audioCache[type] = new Audio(path);
@@ -27,6 +34,10 @@ class MovableObject extends DrawableObject {
     }
 
 
+    /**
+     * Movement animation (acts as a loop within intervals)
+     * @param {array} imagePaths - image paths
+     */
     movementAnimation(imagePaths) {
         if(gameIsPaused === true) return;
         let index = this.currentImage % imagePaths.length;
@@ -36,41 +47,63 @@ class MovableObject extends DrawableObject {
     }    
 
 
+    /**
+     * Execute walking animation
+     * @param {string} imagePaths - variable name for the walking images array
+     */
     walkingAnimation(imagePaths = 'IMAGES_WALKING') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);
     }
 
 
+    /**
+     * Execute jumping animation
+     * @param {string} imagePaths - variable name for the jumping images array
+     */
     jumpingAnimation(imagePaths = 'IMAGES_JUMPING') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
-}
+    }
 
 
+    /**
+     * Execute hurt animation
+     * @param {string} imagePaths - variable name for the hurting images array
+     */
     hurtAnimation(imagePaths = 'IMAGES_HURT') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
     }
 
 
-    deadAnimation(imagePaths = 'IMAGES_DEAD') {
+    /**
+     * Execute death animation
+     * @param {string} imagePaths - variable name for the death images array
+     */
+    deathAnimation(imagePaths = 'IMAGES_DEATH') {
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);
     }
 
 
-    moveLeft(speedMin = 0.15, speedMax = null, consoleX = false) {
+    /**
+     * Move left
+     * @param {number} speedMin - minimal speed
+     * @param {number} speedMax - maximal speed
+     */
+    moveLeft(speedMin = 0.15, speedMax = null) {
         if(gameIsPaused === true) return;
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         this.x -= speed;
-        consoleX ? this.consoleObjectPosition() : null;
     }
 
     
+    /**
+     * Apply gravity
+     */
     applyGravity() {
         intervalId = setInterval(() => {
-            // if(this.isAboveGround() || this instanceof ThrowableObject || this.speedY > 0) {
             if(this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
@@ -80,23 +113,32 @@ class MovableObject extends DrawableObject {
     }
 
 
+    /**
+     * Jump (apply speed)
+     * @param {number} speedY - vertical speed
+     */
     jump(speedY) {
         this.speedY = speedY;
     }
 
     
+    /**
+     * Check if is above ground
+     * @returns {boolean}
+     */
     isAboveGround() {
         return this.y < this.groundY;
     }
 
 
-    // touchesObject(counterPartObj, xBuffer = 0) {
-    //     this.setBorderCoordinates();
-    //     return ( (this.borderX + xBuffer < counterPartObj.borderX) && (this.borderX + this.borderWidth + xBuffer > counterPartObj.borderX) && (this.borderY < counterPartObj.borderY + counterPartObj.borderHeight) && (this.borderY + this.borderHeight > counterPartObj.borderY) );
-    // }
-
-
+    /**
+     * Check if touches a counter object
+     * @param {object} fromObj - counter object to check
+     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @returns {boolean}
+     */
     touchesObject(fromObj, xBuffer = 0) {
+        this.setBorderCoordinates();
         // this.consoleObjectCoordinates('(isHitFromAbove ?)');
         if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
         if((this.borderY + this.borderHeight < fromObj.borderY)) return;
@@ -105,36 +147,95 @@ class MovableObject extends DrawableObject {
     }
 
 
+    // touchesObject(fromObj, xBuffer = 0) {
+    //     this.setBorderCoordinates();
+    //     return ( (this.borderX < fromObj.borderX) && (this.borderX + this.borderWidth > fromObj.borderX) && (this.borderY < fromObj.borderY + fromObj.borderHeight) && (this.borderY + this.borderHeight > fromObj.borderY) );
+    // }
+
+
+    /**
+     * Check if is hit from a counter object
+     * @param {object} fromObj - counter object to check
+     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @returns {boolean}
+     */
     isHit(fromObj, xBuffer = 0) {
         return this.touchesObject(fromObj, xBuffer);
     }
 
 
+    /**
+     * Check if is hit from the sides
+     * @param {object} fromObj - counter object to check
+     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @returns {boolean}
+     */
     isHitFromSide(fromObj, xBuffer = 0) {
         // xBuffer = 0;
-        let fromX = fromObj.otherDirection ? (fromObj.borderX * -1) : fromObj.borderX;
-        if((this.borderX + xBuffer > fromX + fromObj.borderWidth)) return;
-        if((this.borderX + this.borderWidth < fromX + xBuffer)) return;
+        this.setBorderCoordinates();
+        let thisX = this.borderX;
+        let fromX = fromObj.borderX;
+        if((thisX + xBuffer > fromX + fromObj.borderWidth)) return;
+        if((thisX + this.borderWidth < fromX + xBuffer)) return;
         return true;
     }
 
 
+    /**
+     * Check if is hit from a above from a counter object
+     * @param {object} fromObj - counter object to check
+     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @returns {boolean}
+     */
     isHitFromAbove(fromObj, xBuffer = 0) {
-        if(fromObj instanceof Character) {
-            fromObj.consoleObjectCoordinates('(isHitFromAbove ?) '+ fromObj.otherDirection);
-        }
+        this.setBorderCoordinates();
+        // if(fromObj instanceof Character) {
+        //     fromObj.consoleObjectCoordinates('(otherDirection '+ fromObj.otherDirection);
+        // }
         if(!fromObj.isAboveGround()) return;
         if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
         if(!this.isHitFromSide(fromObj, xBuffer)) return;
         return true;
     }
 
+
+    /**
+     * Handling if hit from above
+     * @param {object} fromObj - counter object
+     */
+    handlingHitFromAbove(obj) {
+        obj.strength = 100;
+        if(this instanceof Endboss) {
+            obj.strength = 15;
+        }
+        console.log(this.objectName, '(handlingHitFromAbove');
+        this.handlingHit(obj);
+    }
+
+
+    /**
+     * Handling if hit from bottle
+     * @param {object} fromObj - bottle object
+     */
+    handlingHitFromBottle(obj) {
+        obj.strength = 100;
+        if(this instanceof Endboss) {
+            obj.strength = 10;
+        }
+        console.log(this.objectName, '(handlingHitFromBottle)');
+        this.handlingHit(obj);
+    }
+
   
+    /**
+     * General handling if hit
+     * @param {object} fromObj - counter object
+     */
     handlingHit(obj) {
         this.hits++;
-        if(this instanceof Endboss || this instanceof Coin) {
-            lastWinRelevantHit = new Date().getTime();
-        }
+        // if(this instanceof Endboss || this instanceof Coin) {
+        //     lastWinRelevantHit = new Date().getTime();
+        // }
         this.healthStatus -= obj.strength;
         if(this.healthStatus <= 0) {
             this.healthStatus = 0;
@@ -146,64 +247,68 @@ class MovableObject extends DrawableObject {
     }
 
 
-    handlingHitFromAbove(obj) {
-        obj.strength = 100;
-        if(this instanceof Endboss) {
-            obj.strength = 10;
-        }
-        // console.log(this.objectName, '(handlingHitFromAbove');
-        this.handlingHit(obj);
-    }
-
-
-    handlingHitFromBottle(obj) {
-        obj.strength = 100;
-        if(this instanceof Endboss) {
-            obj.strength = 25;
-        }
-        console.log(this.objectName, '(handlingHitFromBottle)');
-        this.handlingHit(obj);
-    }
-
-
+    /**
+     * Check if hurt
+     * @returns {boolean}
+     */
     isHurt() {
-        let timePassed = new Date().getTime() - this.lastHit;
-        return timePassed <= 500;
+        return trueDuring(this.lastHit, 500);
+        // let timePassed = new Date().getTime() - this.lastHit;
+        // return timePassed <= 500;
     }
 
 
+    /**
+     * Handling if hurt
+     */
     handlingHurt() {
        this.hurtAnimation();
     }
 
 
+    /**
+     * Handling if dead
+     */
     isDead() {
         return this.healthStatus <= 0;
     }
 
 
-    handlingDead(clearTimeout = 3000) {
+    /**
+     * Handling death
+     */
+    handlingDeath(clearTimeout = 3000) {
         if(this.isEnemy && !(this instanceof Endboss)) {
             livingEnemies--;
         }
         this.countDeadHandling++;
-        this.deadAnimation();
+        this.deathAnimation();
         this.clearIntervals(clearTimeout);
         this.destroyed = true;
     }
 
 
+    /**
+     * Save intervals globaly
+     */
     saveIntervalsGlobally() {
        stoppableIntervals.push(...this.intervals);
     //    console.log(stoppableIntervals);
     }
 
 
+    /**
+     * Clear intervals
+     */
     clearIntervals(timeout = 10000) {
        setTimeout(() => this.intervals.forEach(clearInterval), timeout);
     }
 
 
+    /**
+     * Destroy Object
+     * @param {number} intervalTimeout 
+     */
     destroyObject(intervalTimeout = 10000) {
         this.destroyed = true;
         this.y = heightCanvas + 1;

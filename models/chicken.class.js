@@ -1,6 +1,10 @@
 let chickenId = 0;
 
+/**
+ * Class for the chickens 
+ */
 class Chicken extends MovableObject {
+
     isEnemy = true;
     height = this.width / 1.02;
     strength = 3;
@@ -11,7 +15,7 @@ class Chicken extends MovableObject {
         imgPathBase + '3_enemies_chicken/chicken_normal/1_walk/3_w.png',
     ];
 
-    IMAGES_DEAD = [
+    IMAGES_DEATH = [
         imgPathBase + '3_enemies_chicken/chicken_normal/2_dead/dead.png',
     ];
 
@@ -33,7 +37,7 @@ class Chicken extends MovableObject {
 
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
-        this.setImageCache(this.IMAGES_DEAD);
+        this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
 
         this.animate();
@@ -41,12 +45,15 @@ class Chicken extends MovableObject {
     }
 
 
+    /**
+     * Animation intervals
+     */
     animate() {
 
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
             if(this.isDead()) {
-                this.handlingDead();
+                this.handlingDeath();
             }
         }, 50);  
         this.intervals.push(intervalId);
@@ -72,11 +79,14 @@ class Chicken extends MovableObject {
     }
 
 
-    handlingDead() {
+    /**
+     * Handling death
+     */
+    handlingDeath() {
         if(this.countDeadHandling === 0) {
             stopAudio(this.audioCache.walk);
             startAudio(this.audioCache.dead);
-            super.handlingDead();
+            super.handlingDeath();
         }
     }
 

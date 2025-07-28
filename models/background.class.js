@@ -1,3 +1,6 @@
+/**
+ * Canvas backgrounds class
+ */
 class Background extends MovableObject {
 
     width = widthCanvas;
@@ -5,11 +8,8 @@ class Background extends MovableObject {
 
 
     constructor(imgPath, screenSlide = 0) {
-
         super().loadImage(imgPath);
-
         this.setScreenSlidePos(screenSlide);
-
     }
 
 }

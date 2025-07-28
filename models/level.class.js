@@ -1,3 +1,6 @@
+/**
+ * Class for level 1 
+ */
 class Level {
 
     backgrounds;
@@ -8,6 +11,7 @@ class Level {
     coins;
     statusBars;
 
+    
     constructor(backgrounds, clouds, enemies, bottles, coins, statusBars) {
         this.backgrounds = backgrounds;
         this.clouds = clouds;

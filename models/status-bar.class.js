@@ -1,4 +1,6 @@
-
+/**
+ * Class for status bars
+ */
 class StatusBar extends DrawableObject {
 
     height = this.width / 3.77;
@@ -17,7 +19,6 @@ class StatusBar extends DrawableObject {
         imgPathBase + '7_statusbars/1_statusbar/2_statusbar_health/' + this.color + '/0.png',
     ]
 
-    // color = 'orange';
     IMAGES_COINS = [
         imgPathBase + '7_statusbars/1_statusbar/1_statusbar_coin/' + this.color + '/0.png',
         imgPathBase + '7_statusbars/1_statusbar/1_statusbar_coin/' + this.color + '/20.png',
@@ -27,7 +28,6 @@ class StatusBar extends DrawableObject {
         imgPathBase + '7_statusbars/1_statusbar/1_statusbar_coin/' + this.color + '/100.png',
     ]
 
-    // color = 'orange';
     IMAGES_BOTTLES = [
         imgPathBase + '7_statusbars/1_statusbar/3_statusbar_bottle/' + this.color + '/0.png',
         imgPathBase + '7_statusbars/1_statusbar/3_statusbar_bottle/' + this.color + '/20.png',
@@ -37,7 +37,6 @@ class StatusBar extends DrawableObject {
         imgPathBase + '7_statusbars/1_statusbar/3_statusbar_bottle/' + this.color + '/100.png',
     ]
 
-    // color = 'green';
     IMAGES_ENDBOSS = [
         imgPathBase + '7_statusbars/2_statusbar_endboss/' + this.color + '/' + this.color + '100.png',
         imgPathBase + '7_statusbars/2_statusbar_endboss/' + this.color + '/' + this.color + '80.png',
@@ -65,6 +64,10 @@ class StatusBar extends DrawableObject {
     }
 
 
+    /**
+     * Update the statusbar value
+     * @param {number} statusValue 
+     */
     updateStatusBar(statusValue) {
         this.statusValue = statusValue;
         let index = this.resolveImgIndex(this.statusValue);
@@ -72,6 +75,10 @@ class StatusBar extends DrawableObject {
     }
 
 
+    /**
+     * Resolve the image index for statusbar depending from value
+     * @param {number} statusValue 
+     */
     resolveImgIndex(statusValue) {
         if(this.statusReverse) {
             return this.resolveImgIndexReverse(statusValue);
@@ -92,6 +99,10 @@ class StatusBar extends DrawableObject {
     }
 
 
+    /**
+     * Resolve the reversed image index for statusbar depending from value
+     * @param {number} statusValue 
+     */
     resolveImgIndexReverse(statusValue) {
         if(statusValue > 80) {
             return 0;

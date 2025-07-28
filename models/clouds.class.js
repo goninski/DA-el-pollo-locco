@@ -1,5 +1,8 @@
 let cloudsId = 0;
 
+/**
+ * Canvas clouds class
+ */
 class Clouds extends MovableObject {
 
     width = widthCanvas;
@@ -7,7 +10,6 @@ class Clouds extends MovableObject {
 
 
     constructor(imgPath, screenSlide = 0) {
-
         super();
         cloudsId++;
         this.objectName += cloudsId;
@@ -20,6 +22,9 @@ class Clouds extends MovableObject {
     }
 
 
+    /**
+     * Animate clouds to left
+     */
     animate() {
         intervalId = setInterval(() => {
              this.moveLeft(0.15, null, false);

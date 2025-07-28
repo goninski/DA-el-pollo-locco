@@ -1,11 +1,16 @@
 let endbossId = 0;
 
+/**
+ * Class for the endboss
+ */
 class Endboss extends MovableObject {
+
     isEnemy = true;
     width = this.width * 2;
     height = this.width / 0.86;
     strength = 10;
     active = false;
+    lastApproach = null;
 
     IMAGES_WALKING = [
         imgPathBase + '4_enemie_boss_chicken/1_walk/G1.png',
@@ -42,7 +47,7 @@ class Endboss extends MovableObject {
         imgPathBase + '4_enemie_boss_chicken/4_hurt/G23.png',
     ];
 
-    IMAGES_DEAD = [
+    IMAGES_DEATH = [
         imgPathBase + '4_enemie_boss_chicken/5_dead/G24.png',
         imgPathBase + '4_enemie_boss_chicken/5_dead/G25.png',
         imgPathBase + '4_enemie_boss_chicken/5_dead/G26.png',
@@ -59,7 +64,6 @@ class Endboss extends MovableObject {
 
 
     constructor() {
-
         super();
         endbossId++;
         this.objectName += endbossId;
@@ -74,16 +78,18 @@ class Endboss extends MovableObject {
         this.setImageCache(this.IMAGES_ALERT);
         this.setImageCache(this.IMAGES_ATTACK);
         this.setImageCache(this.IMAGES_HURT);
-        this.setImageCache(this.IMAGES_DEAD);
+        this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
         this.loadImage(this.IMAGES_WALKING[0]);
 
         this.animate();
         this.saveIntervalsGlobally();
-
     }
 
 
+    /**
+     * Animation intervals
+     */
     animate() {
 
         intervalId = setInterval(() => {
@@ -99,7 +105,7 @@ class Endboss extends MovableObject {
         intervalId = setInterval(() => {
             if(gameIsPaused || !this.active) return;
             if(this.isDead()) {
-                this.handlingDead();
+                this.handlingDeath();
             } else if(this.isHurt()) {
                 this.handlingHurt();
             }
@@ -136,6 +142,9 @@ class Endboss extends MovableObject {
     }
 
 
+    /**
+     * Stop the walking audios
+     */
     stopWalkAudios() {
         stopAudio(this.audioCache.walk);
         stopAudio(this.audioCache.alert);
@@ -143,23 +152,56 @@ class Endboss extends MovableObject {
     }
 
 
+    /**
+     * Check if close to character
+     * @returns {boolean}
+     */
     isCloseToCharacter() {
         let characterCenterX = this.world.character.x + (this.world.character.width  / 2);
-        return (this.borderX -characterCenterX < (widthCanvas / 2));
+        return (this.borderX -characterCenterX < (widthCanvas / 2.5));
     }
 
 
+    /**
+     * Check if very close to character
+     * @returns {boolean}
+     */
     isVeryCloseToCharacter() {
         let characterCenterX = this.world.character.x + (this.world.character.width  / 2);
         return (this.borderX -characterCenterX < (widthCanvas / 3));
     }
 
 
-    isAlert() {
-        return this.isCloseToCharacter() && !this.isAttacking();
+    /**
+     * Set last approach time (=if close to character)
+     */
+    setLastCharacterApproachTime() {
+        if(this.isCloseToCharacter()) {
+            if(this.lastApproach === null) {
+                this.lastApproach = new Date().getTime();
+            }
+        } else {
+            this.lastApproach = null;
+        }
+        console.log('lastApproach', this.lastApproach);
     }
 
 
+    /**
+     * Check if is on alert
+     * @returns {boolean}
+     */
+    isAlert() {
+        this.setLastCharacterApproachTime();
+        if(this.isAttacking()) return;
+        if(!this.isCloseToCharacter()) return;
+        return trueDuring(this.lastApproach, 3000);
+    }
+
+
+    /**
+     * Handling if on alert
+     */
     handlingAlert() {
         let imagePaths = 'IMAGES_ALERT';
         this.img = this.imageCache[this[imagePaths][0]];
@@ -167,12 +209,18 @@ class Endboss extends MovableObject {
     }
 
 
+    /**
+     * Check if is attacking
+     */
     isAttacking() {
         // return this.isVeryCloseToCharacter() && (this.healthStatus > 0 && this.healthStatus < 70);
         return this.isVeryCloseToCharacter();
     }
 
 
+    /**
+     * Handling the attack (attack animation)
+     */
     handlingAttack() {
         let imagePaths = 'IMAGES_ATTACK';
         this.img = this.imageCache[this[imagePaths][0]];
@@ -180,24 +228,31 @@ class Endboss extends MovableObject {
     }
 
 
+    /**
+     * Handling if hurt
+     */
     handlingHurt() {
-        stopAudio(this.audioCache.walk);
-        stopAudio(this.audioCache.walkSteps);
+        this.stopWalkAudios()
+        // stopAudio(this.audioCache.walk);
+        // stopAudio(this.audioCache.walkSteps);
         startAudio(this.audioCache.hurt, 0.6);
         super.handlingHurt();
     }
 
 
-    handlingDead() {
+    /**
+     * Handling if dead
+     */
+    handlingDeath() {
         // console.log(this.countDeadHandling);
         // if(this.countDeadHandling === 0) {
-            stopAudio(this.audioCache.walk);
-            stopAudio(this.audioCache.walkSteps);
+            this.stopWalkAudios()
+            // stopAudio(this.audioCache.walk);
+            // stopAudio(this.audioCache.walkSteps);
             startAudio(this.audioCache.dead);
-            super.handlingDead();
+            super.handlingDeath();
         // }
     }
-
 
 }
 

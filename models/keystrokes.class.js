@@ -4,25 +4,30 @@ class Keystrokes {
     KEY_RIGHT = false;
     KEY_SPACE = false;
     KEY_B = false;
+
     
     constructor() {
-
         this.bindKeyPressEvents();
         if(isTouchEnabled()) {
             this.bindBtnTouchEventsToKeyPress();
         }
-
     }
 
 
+    /**
+     * Bind key press events
+     */
     bindKeyPressEvents() {
         document.addEventListener("keydown", this.updateKeystrokesObj);
         document.addEventListener("keyup", this.resetKeystrokesObj);
     }
 
 
+    /**
+     * Update the keystrokes object for keydown
+     * @param {event} event - keypress
+     */
     updateKeystrokesObj(event) {
-
         switch(event.key) {
             case 'ArrowLeft':
                 keystrokes.KEY_LEFT = true
@@ -49,6 +54,10 @@ class Keystrokes {
     }
 
 
+    /**
+     * Reset the keystrokes object on keyup
+     * @param {event} event - release of keypress
+     */
     resetKeystrokesObj(event) {
         switch(event.key) {
             case 'ArrowLeft':
@@ -67,6 +76,9 @@ class Keystrokes {
     }
 
 
+    /**
+     * Bind touch buttons to keys 
+     */
     bindBtnTouchEventsToKeyPress() {
         document.getElementById('btnMoveLeft').addEventListener('touchstart', (event) => {
             event.preventDefault();

@@ -1,6 +1,10 @@
 let bottleId = 0;
 
+/**
+ * Class for collectable and throwable bottles
+ */
 class Bottle extends CollectableObject {
+    
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.1, 0.2, 0.1, 0.2];
@@ -37,7 +41,6 @@ class Bottle extends CollectableObject {
 
     
     constructor() {
-
         super();
         bottleId++;
         this.objectName += bottleId;
@@ -52,12 +55,13 @@ class Bottle extends CollectableObject {
         this.setAudioCache(this.audioFiles);
 
         this.animate();
-
     }
 
 
+    /**
+     * Animation interval
+     */
     animate() {
-
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
             if(this.throwing) {
@@ -65,12 +69,32 @@ class Bottle extends CollectableObject {
             }
         }, 100);  
         this.intervals.push(intervalId);
+    }
 
+  
+    /**
+     * Handling of thrown bottle
+     * @param {object} fromObj - object of the bottle thrower (i.g. the character) 
+     * @param {number} speed - throw y-speed (i.g. coming from thrower)
+     * @param {number} moveX - x-position move per interval
+     */
+    handleThrow(fromObj, speed = 10, moveX = 15) {
+        this.speedY = speed;
+        this.applyGravity()
+        this.throwing = true;
+        this.throwingInterval = setInterval(() => {
+            this.x += moveX;
+            // fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
+        }, 25);
+        // console.log(getPassedTime(lastKeystroke_THROW, '(bottle.handleThrow)'));
+        // this.consoleObjectCoordinates('(bottle.handleThrow)');
     }
 
 
+    /**
+     * Handling of a flying bottle
+     */
     handleFlying() {
-
         if(this.isSplashing() && !this.splashed) {
             clearInterval(this.throwingInterval);
             this.y = this.groundY + (this.height / 2);
@@ -83,19 +107,10 @@ class Bottle extends CollectableObject {
         }
     }
 
-   
-    handleThrow(fromObj, speed = 10, moveX = 15) {
-        this.speedY = speed;
-        this.applyGravity()
-        this.throwing = true;
-        this.throwingInterval = setInterval(() => {
-            fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
-        }, 25);
-        // console.log(getPassedTime(lastKeystroke_THROW, '(bottle.handleThrow)'));
-        // this.consoleObjectCoordinates('(bottle.handleThrow)');
-    }
 
-
+    /**
+     * Flying animation
+     */
     flyingAnimation() {
         startAudioResumed(this.audioCache.flying);
         let imagePaths = 'IMAGES_THROW';
@@ -104,6 +119,10 @@ class Bottle extends CollectableObject {
     }
 
 
+    /**
+     * Check if bottle is splashing
+     * @returns {boolean}
+     */
     isSplashing() {
         if(!this.collected || this.isAboveGround()) return;
         // if(!this.collected || this.destroyed || this.isAboveGround()) return;
@@ -112,6 +131,9 @@ class Bottle extends CollectableObject {
     }
 
    
+    /**
+     * Splashing animation
+     */
     splashingAnimation() {
         startAudio(this.audioCache.splash);
         let imagePaths = 'IMAGES_SPLASH';
@@ -120,6 +142,9 @@ class Bottle extends CollectableObject {
     }
 
 
+    /**
+     * Handle splashed bottle
+     */
     handleSplashed() {
         this.throwing = false;
         this.destroyed = true;

@@ -1,5 +1,8 @@
 let level1;
 
+/**
+ * Init level class for level 1
+ */
 function initLevel1() {
     level1 = new Level(
         [

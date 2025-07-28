@@ -1,4 +1,8 @@
+/**
+ * Class for Main Character (Pepe)
+ */
 class Character extends MovableObject {
+
     world;
     width = this.width * 1.5;
     height = this.width / 0.508333;
@@ -12,6 +16,7 @@ class Character extends MovableObject {
     bottles = [];
     isIdle = false;
     isIdleLong = false;
+    throwing = false;
 
     IMAGES_IDLE = [
         imgPathBase + '2_character_pepe/1_idle/idle/I-1.png',
@@ -66,7 +71,7 @@ class Character extends MovableObject {
         imgPathBase + '2_character_pepe/4_hurt/H-43.png',
     ];
 
-    IMAGES_DEAD = [
+    IMAGES_DEATH = [
         imgPathBase + '2_character_pepe/5_dead/D-51.png',
         imgPathBase + '2_character_pepe/5_dead/D-52.png',
         imgPathBase + '2_character_pepe/5_dead/D-53.png',
@@ -85,9 +90,7 @@ class Character extends MovableObject {
     }
 
 
-
     constructor() {
-
         super();
         this.roundDimensions();
         this.x = 0;
@@ -100,7 +103,7 @@ class Character extends MovableObject {
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_JUMPING);
         this.setImageCache(this.IMAGES_HURT);
-        this.setImageCache(this.IMAGES_DEAD);
+        this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
         this.applyGravity();
 
@@ -109,6 +112,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Animation intervals
+     */
     animate() {
 
         // interval for fast key observer
@@ -151,6 +157,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Fast key observers
+     */
     keyObserverFast() {
         if(this.world.keystrokes.KEY_RIGHT) {
             this.otherDirection = false;
@@ -188,6 +197,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Slow key observers
+     */
     keyObserverSlow() {
         if(this.world.keystrokes.KEY_B) {
             this.throwBottle();
@@ -196,10 +208,13 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Resolve animations on the ground
+     */
     animationsOnGround() {
         if(!this.isAboveGround()) {
             if(this.isDead()) {
-                this.handlingDead();
+                this.handlingDeath();
                 startAudioDebounced(this.audioCache.dead, this.lastHit, 125, 0.7);
             } else if(this.isHurt()) {
                 this.handlingHurt();
@@ -211,6 +226,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Walking animation
+     */
     walkingAnimation() {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
@@ -222,6 +240,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Idle and long idle animation
+     */
     idleAnimation() {
         let imagePaths;
         if(this.isIdle) {
@@ -237,6 +258,10 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Move left
+     * @param {number} speed 
+     */
     moveLeft(speed) {
         if(this.x > (widthCanvas * -1) + 8) {
             this.x -= speed;
@@ -244,12 +269,21 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Move right
+     * @param {number} speed 
+     */
     moveRight(speed) {
         if(this.x < (widthCanvas * 2) - this.width) {
             this.x += speed;
         }
     }
 
+
+    /**
+     * Collect object
+     * @param {object} obj - collectable object (bottle, coin)
+     */
     collectObject(obj) {
         if(!obj.collectableObj || obj.collected) return;
         let objName = obj.constructor.name.toLowerCase();
@@ -262,12 +296,16 @@ class Character extends MovableObject {
     }
     
     
+    /**
+     * Throw bottle
+     */
     throwBottle() {
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
         bottle.x = Math.round(this.borderX);
         bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
         bottle.handleThrow(this);
+        // this.throwing = true;
         setTimeout(() => {
             // console.log('bottle.used?', bottle.used);
             this.bottles.shift();
@@ -276,6 +314,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Jump animation on game win - ?? not working properly ??
+     */
     winJump() {
         this.jump(30);
         this.loadImage(this.IMAGES_JUMPING[3]);
