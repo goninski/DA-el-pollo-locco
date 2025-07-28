@@ -94,15 +94,15 @@ class DrawableObject {
     }
     
 
-    consoleObjectCoordinates(borderPos = true) {
+    consoleObjectCoordinates(sourceInfo = '', borderPos = true) {
         let x = borderPos ? this.borderX : this.x;
         let xr = borderPos ? this.borderX + this.borderWidth : this.x + this.width;
         let y = borderPos ? this.borderY : this.y;
         let yb = borderPos ? this.borderY + this.borderHeight : this.y + this.height;
-        let borderIndicator = borderPos ? ' (B)' : '';
-        // console.log(label, this.objectName + ') ', 'x/xr: ' + x + '-' + xr + ' / ', 'y/yb: ' + y + '-' + yb);
-        console.log('Coordinates', this.objectName + ': ', 'x/xr ' + x + '-' + xr + borderIndicator);
-        console.log('Coordinates', this.objectName + ': ', 'y/yb ' + y + '-' + yb + borderIndicator);
+        let borderSuffix = borderPos ? 'B-' : '';
+        let msgTitle = '\n' + borderSuffix + 'Coordinates ' + this.objectName + '  ' + sourceInfo;
+        let msgContent = '\nx/xr ' + x + '-' + xr + ' | y/yb ' + y + '-' + yb;
+        console.log(msgTitle, msgContent)
     }
 
     

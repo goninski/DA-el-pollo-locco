@@ -2,7 +2,7 @@ let imgPathBase = '/assets/img/';
 let audioPathBase = '/assets/audio/';
 let audioIsMuted = false;
 let audioMutedByUser = false;
-let showObjectBorders = false;
+let showObjectBorders = true;
 let canvas;
 let widthCanvas = 1000;
 let heightCanvas = Math.round(widthCanvas / 1.777);
@@ -91,21 +91,9 @@ function hideAllScreens() {
 }
 
 
-function handlingGameOver(event = null) {
-    event ? event.stopPropagation() : null;
-    resumeGame();
-    stopAudios();
-    stoppableIntervals.forEach(clearInterval);
-    hideAllScreens();
-    body.classList.add('game-over-screen');
-    document.getElementById('playTimer').innerHTML = timer;
-    startAudio(audioCache.gameOver);
-    // setTimeout(() => restartGame(null), 12000);
-}    
-
-
 function handlingGameWon(event = null) {
     event ? event.stopPropagation() : null;
+    console.log('handlingGameWon');
     stopAudios();
     hideAllScreens();
     body.classList.add('win-screen');
@@ -114,7 +102,21 @@ function handlingGameWon(event = null) {
     // world.character.jump(30);
     // world.character.loadImage(world.character.IMAGES_JUMPING[3]);
     stoppableIntervals.forEach(clearInterval);
-    setTimeout(() => restartGame(null), 12000);
+    // setTimeout(() => restartGame(null), 12000);
+}    
+
+
+function handlingGameOver(event = null) {
+    event ? event.stopPropagation() : null;
+    console.log('handlingGameOver');
+    resumeGame();
+    stopAudios();
+    stoppableIntervals.forEach(clearInterval);
+    hideAllScreens();
+    body.classList.add('game-over-screen');
+    document.getElementById('playTimer').innerHTML = timer;
+    startAudio(audioCache.gameOver);
+    // setTimeout(() => restartGame(null), 12000);
 }    
 
 
@@ -336,10 +338,9 @@ function unmuteAudio(event = null) {
  * 
  * @param {Date} startTime - will be compared to now
  */
-function getPassedTime(startTime, suffix = null) {
+function getPassedTime(startTime, sourceInfo = '') {
     let passedTime = new Date().getTime() - startTime;
-    suffix = suffix ? '\n' + suffix + ': ' : '';
-    return suffix + 'passedTime ' + passedTime;
+    return '\npassedTime ' + passedTime + ' ' + sourceInfo;
 }
 
 

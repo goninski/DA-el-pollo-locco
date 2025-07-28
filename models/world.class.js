@@ -22,7 +22,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
-        livingEnemies = this.enemies.length - 1;
+        // livingEnemies = this.enemies.length - 1;
     }
 
 
@@ -155,9 +155,12 @@ class World {
               return;  
             }
             if(this.character.bottles.length > 0) {
-                if(enemy.isHitFromBottle(this.character.bottles[0])) {
-                    enemy.handlingHitFromBottle(this.character.bottles[0]);                    
+                if(enemy.isHitFromAbove(this.character.bottles[0])) {
+                    enemy.handlingHitFromAbove(this.character.bottles[0]);                    
                 }
+                // if(enemy.isHitFromBottle(this.character.bottles[0])) {
+                //     enemy.handlingHitFromBottle(this.character.bottles[0]);                    
+                // }
             }
             if(enemy.isHitFromAbove(this.character, this.character.width * -0.25)) {
                 enemy.handlingHitFromAbove(this.character);

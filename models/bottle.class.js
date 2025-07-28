@@ -60,31 +60,42 @@ class Bottle extends CollectableObject {
     animate() {
 
         intervalId = setInterval(() => {
+            if(gameIsPaused) return;
             if(this.throwing) {
                 this.handleFlying();
             }
+            // this.consoleObjectCoordinates();
         }, 100);  
         this.intervals.push(intervalId);
 
     }
 
-   
+
     handleFlying() {
-        console.log(getPassedTime(lastKeystroke_THROW, 'handleFlying'));
-        this.consoleObjectCoordinates();
 
         if(this.isSplashing() && !this.splashed) {
             clearInterval(this.throwingInterval);
             this.y = this.groundY + (this.height / 2);
             this.splashingAnimation();
             setTimeout(() => this.splashed = true, 750);
-            console.log(getPassedTime(lastKeystroke_THROW, 'splashed'));
-            this.consoleObjectCoordinates();
+            this.consoleObjectCoordinates('(bottle.splashed)');
         } else if(this.splashed) {
             this.handleSplashed();
         } else {
             this.flyingAnimation();
         }
+    }
+
+   
+    handleThrow(fromObj, speed = 10, moveX = 15) {
+        this.speedY = speed;
+        this.applyGravity()
+        this.throwing = true;
+        this.throwingInterval = setInterval(() => {
+            fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
+        }, 25);
+        console.log(getPassedTime(lastKeystroke_THROW, '(bottle.handleThrow)'));
+        this.consoleObjectCoordinates('(bottle.handleThrow)');
     }
 
 
@@ -96,11 +107,18 @@ class Bottle extends CollectableObject {
     }
 
 
-
     isSplashing() {
         if(!this.collected || this.used || this.isAboveGround()) return;
         // console.log(this.objectName, 'isSplashing');
         return true;
+    }
+
+   
+    splashingAnimation() {
+        startAudio(this.audioCache.splash);
+        let imagePaths = 'IMAGES_SPLASH';
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);
     }
 
 
@@ -109,15 +127,7 @@ class Bottle extends CollectableObject {
         this.used = true;
         this.loadImage(this.IMAGES_SPLASH[5]);
         this.clearIntervals(0);
-        // pauseGame();
-    }
-
-    
-    splashingAnimation() {
-        startAudio(this.audioCache.splash);
-        let imagePaths = 'IMAGES_SPLASH';
-        this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);
+        pauseGame();
     }
 
 }

@@ -89,18 +89,6 @@ class MovableObject extends DrawableObject {
     }
 
 
-    collectObject(obj) {
-        if(!obj.collectableObj || obj.collected) return;
-        let objName = obj.constructor.name.toLowerCase();
-        this[objName + 's'].push(obj);
-        this[objName + 'Status'] += obj.value;
-        // console.log(objName + 'Status', this[objName + 'Status']);
-        obj.collected = true;
-        obj.hideObject();
-        startAudioResumed(obj.audioCache.collect);
-    }
-    
-
     touchesObject(counterPartObj, xBuffer = 0) {
         this.setBorderCoordinates();
         // console.log(this.objectName, this.borderX, this.borderY);
@@ -117,9 +105,7 @@ class MovableObject extends DrawableObject {
 
 
     isHitFromAbove(fromObj, xBuffer = 0) {
-        console.log(xBuffer);
         this.setBorderCoordinates();
-        // buffer = buffer === 0 ? 0 : (widthCanvas / buffer) * -1;
         if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight < this.borderY) || fromObj.borderX + fromObj.borderWidth + xBuffer < this.borderX || fromObj.borderX + xBuffer > this.borderX + this.borderWidth) {
             return false;
         };
@@ -127,18 +113,15 @@ class MovableObject extends DrawableObject {
     }
 
 
-    isHitFromBottle(fromObj, buffer = 0) {
+    isHitFromBottle(fromObj, xBuffer = 0) {
         this.setBorderCoordinates();
-        // console.log('isThrowing:', fromObj.isThrowing);
-        // if(!fromObj.isThrowing) return;
+        this.consoleObjectCoordinates('(isHitFromBottle ?)');
+        fromObj.consoleObjectCoordinates('(isHitFromBottle ?)');
 
-        // console.log('Border', this.objectName, '(x-left, x-right, y-top):', this.borderX, this.borderX + this.borderWidth, this.borderY);
-        // console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.borderX, fromObj.borderX + fromObj.borderWidth, fromObj.borderY + fromObj.borderHeight);
-        // console.log('Border from', fromObj.objectName, '(x-left, x-right, y-bottom):',fromObj.x, fromObj.x + fromObj.width, fromObj.y + fromObj.height);
-
-        if((fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
+        if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight < this.borderY) || fromObj.borderX + fromObj.borderWidth + xBuffer < this.borderX || fromObj.borderX + xBuffer > this.borderX + this.borderWidth) {
             return false;
         };
+        this.consoleObjectCoordinates('isHitFromBottle = true');
         return true;
     }
 
@@ -161,7 +144,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 10;
         }
-        // console.log(this.objectName, 'is hit from above');
+        // console.log(this.objectName, '(handlingHitFromAbove');
         this.handlingHit(obj);
     }
 
@@ -171,7 +154,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 25;
         }
-        console.log(this.objectName, 'is hit from throwable');
+        console.log(this.objectName, '(handlingHitFromBottle)');
         this.handlingHit(obj);
     }
 

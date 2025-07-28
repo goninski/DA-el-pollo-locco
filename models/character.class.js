@@ -250,23 +250,26 @@ class Character extends MovableObject {
         }
     }
 
-
+    collectObject(obj) {
+        if(!obj.collectableObj || obj.collected) return;
+        let objName = obj.constructor.name.toLowerCase();
+        this[objName + 's'].push(obj);
+        this[objName + 'Status'] += obj.value;
+        obj.collected = true;
+        obj.hideObject();
+        startAudioResumed(obj.audioCache.collect);
+        // console.log('collectedObject!', objName + 'Status', this[objName + 'Status']);
+    }
+    
+    
     throwBottle() {
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
-        // console.log('characterX:', this.x);
-        this.bottleStatus -= bottle.value;
-        bottle.x = this.x;
-        bottle.y = this.y;
-        bottle.throwing = true;
-        bottle.speedY = 5;
-        bottle.applyGravity()
-        bottle.throwingInterval = setInterval(() => {
-            this.otherDirection ? bottle.x -= 15 : bottle.x += 15;
-        }, 25);
+        bottle.x = Math.round(this.borderX);
+        bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
+        bottle.handleThrow(this);
         this.bottles.shift();
-        // console.log(bottle);
-        // bottle.consoleObjectPosition();
+        this.bottleStatus -= bottle.value;
     }
 
 

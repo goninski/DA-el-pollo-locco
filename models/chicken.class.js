@@ -27,7 +27,8 @@ class Chicken extends MovableObject {
         chickenId++;
         this.objectName += chickenId;
         this.roundDimensions();
-        this.setRandomPosX(0.5, 3);
+        // this.setRandomPosX(0.5, 3);
+        this.setRandomPosX(0.5, 1.2);
         this.setWalkGroundY();
 
         this.loadImage(this.IMAGES_WALKING[0]);
@@ -56,6 +57,8 @@ class Chicken extends MovableObject {
                 this.walkingAnimation();
                 startAudio(this.audioCache.walk, 0.25, true);
             }
+            // this.consoleObjectCoordinates('(chicken.interval200)');
+
         }, 200);  
         this.intervals.push(intervalId);
 
