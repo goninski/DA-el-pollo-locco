@@ -44,7 +44,6 @@ class Bottle extends CollectableObject {
         this.roundDimensions();
         this.setRandomPosX();
         this.setWalkGroundY();
-        // this.setBorderCoordinates();
 
         this.setImageCache(this.IMAGES_THROW);
         this.setImageCache(this.IMAGES_SPLASH);
@@ -64,7 +63,6 @@ class Bottle extends CollectableObject {
             if(this.throwing) {
                 this.handleFlying();
             }
-            // this.consoleObjectCoordinates();
         }, 100);  
         this.intervals.push(intervalId);
 
@@ -78,7 +76,6 @@ class Bottle extends CollectableObject {
             this.y = this.groundY + (this.height / 2);
             this.splashingAnimation();
             setTimeout(() => this.splashed = true, 750);
-            this.consoleObjectCoordinates('(bottle.splashed)');
         } else if(this.splashed) {
             this.handleSplashed();
         } else {
@@ -94,8 +91,8 @@ class Bottle extends CollectableObject {
         this.throwingInterval = setInterval(() => {
             fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
         }, 25);
-        console.log(getPassedTime(lastKeystroke_THROW, '(bottle.handleThrow)'));
-        this.consoleObjectCoordinates('(bottle.handleThrow)');
+        // console.log(getPassedTime(lastKeystroke_THROW, '(bottle.handleThrow)'));
+        // this.consoleObjectCoordinates('(bottle.handleThrow)');
     }
 
 
@@ -108,7 +105,8 @@ class Bottle extends CollectableObject {
 
 
     isSplashing() {
-        if(!this.collected || this.used || this.isAboveGround()) return;
+        if(!this.collected || this.isAboveGround()) return;
+        // if(!this.collected || this.destroyed || this.isAboveGround()) return;
         // console.log(this.objectName, 'isSplashing');
         return true;
     }
@@ -124,10 +122,9 @@ class Bottle extends CollectableObject {
 
     handleSplashed() {
         this.throwing = false;
-        this.used = true;
-        this.loadImage(this.IMAGES_SPLASH[5]);
+        this.destroyed = true;
         this.clearIntervals(0);
-        pauseGame();
+        this.loadImage(this.IMAGES_SPLASH[5]);
     }
 
 }

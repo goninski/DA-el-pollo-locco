@@ -13,6 +13,8 @@ class DrawableObject {
     imageCache = {};
     currentImage = 0;
     objectName;
+    destroyed = false;
+
     
     constructor() {
         this.objectName = this.constructor.name;

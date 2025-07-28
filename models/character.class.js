@@ -191,7 +191,7 @@ class Character extends MovableObject {
     keyObserverSlow() {
         if(this.world.keystrokes.KEY_B) {
             this.throwBottle();
-            // debounced(lastKeystroke_THROW) ? this.throwBottle() : null;
+            // debounced(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
         } 
     }
 
@@ -268,8 +268,11 @@ class Character extends MovableObject {
         bottle.x = Math.round(this.borderX);
         bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
         bottle.handleThrow(this);
-        this.bottles.shift();
-        this.bottleStatus -= bottle.value;
+        setTimeout(() => {
+            // console.log('bottle.used?', bottle.used);
+            this.bottles.shift();
+            this.bottleStatus -= bottle.value;
+        }, 750);
     }
 
 

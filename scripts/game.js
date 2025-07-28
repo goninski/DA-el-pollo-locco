@@ -28,6 +28,7 @@ let audioCache = {
     gameOver : new Audio(audioPathBase + 'game-over.mp3'),
     gameWin : new Audio(audioPathBase + 'game-win.wav'),
 };
+let lastWinRelevantHit;
 
 
 function initGame(startPlay = false) {
@@ -61,6 +62,7 @@ function loadLevel1() {
 function startGame(event = null) {
     event ? event.stopPropagation() : null;
     stopAudio(audioCache.start);
+    currentAudios = [];
     resumeGame()
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();

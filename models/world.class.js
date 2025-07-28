@@ -22,7 +22,7 @@ class World {
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
-        // livingEnemies = this.enemies.length - 1;
+        livingEnemies = this.enemies.length - 1;
     }
 
 
@@ -107,7 +107,7 @@ class World {
 
 
     updateGameStatus() {
-        // console.log('livingEnemies', livingEnemies);
+        this.debugLogs();
         this.statusBars[0].updateStatusBar(this.character.healthStatus);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
@@ -124,12 +124,17 @@ class World {
     }
 
 
+    debugLogs() {
+        // console.log('livingEnemies', livingEnemies);
+        // console.log('this.character.bottles #', this.character.bottles.length);
+    }
+
 
     isGamePaused(){
         if(this.isGameOver() || this.isGameWon()) {
             return false;
         } else {
-            return gameIsPaused = true
+            return gameIsPaused === true;
         }
     }
 
@@ -142,9 +147,9 @@ class World {
 
 
     isGameWon() {
-        return livingEnemies <= 0;
-        if(this.endboss.isDead()) {
-            return during(this.endboss.lastHit, 1500);
+        // return livingEnemies <= 0;
+        if(this.character.coinStatus >= 100 && this.endboss.isDead()) {
+            return during(lastWinRelevantHit, 1500);
         }
     }
     
@@ -155,14 +160,15 @@ class World {
               return;  
             }
             if(this.character.bottles.length > 0) {
-                if(enemy.isHitFromAbove(this.character.bottles[0])) {
-                    enemy.handlingHitFromAbove(this.character.bottles[0]);                    
+                let bottle = this.character.bottles[0];
+                if(enemy.isHitFromAbove(bottle, bottle.borderWidth * 0.5)) {
+                    enemy.handlingHitFromAbove(bottle);                    
                 }
                 // if(enemy.isHitFromBottle(this.character.bottles[0])) {
                 //     enemy.handlingHitFromBottle(this.character.bottles[0]);                    
                 // }
             }
-            if(enemy.isHitFromAbove(this.character, this.character.width * -0.25)) {
+            if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
                 enemy.handlingHitFromAbove(this.character);
             } else if(this.character.isHit(enemy)) {
                 this.character.handlingHit(enemy);

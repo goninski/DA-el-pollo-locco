@@ -14,6 +14,7 @@ class MovableObject extends DrawableObject {
     audioCache = {};
     countDeadHandling = 0;
 
+
     constructor() {
         super();
     }
@@ -89,13 +90,18 @@ class MovableObject extends DrawableObject {
     }
 
 
-    touchesObject(counterPartObj, xBuffer = 0) {
-        this.setBorderCoordinates();
-        // console.log(this.objectName, this.borderX, this.borderY);
-        // // console.log(counterPartObj.objectName, 'x:' + counterPartObj.x, 'y-bottom:', + counterPartObj.y + counterPartObj.height);
-        // console.log(counterPartObj.objectName, 'x:' + counterPartObj.borderX, 'y-bottom:', + counterPartObj.borderY + counterPartObj.borderHeight);
-        // console.log(counterPartObj);
-        return ( (this.borderX + xBuffer < counterPartObj.borderX) && (this.borderX + this.borderWidth + xBuffer > counterPartObj.borderX) && (this.borderY < counterPartObj.borderY + counterPartObj.borderHeight) && (this.borderY + this.borderHeight > counterPartObj.borderY) );
+    // touchesObject(counterPartObj, xBuffer = 0) {
+    //     this.setBorderCoordinates();
+    //     return ( (this.borderX + xBuffer < counterPartObj.borderX) && (this.borderX + this.borderWidth + xBuffer > counterPartObj.borderX) && (this.borderY < counterPartObj.borderY + counterPartObj.borderHeight) && (this.borderY + this.borderHeight > counterPartObj.borderY) );
+    // }
+
+
+    touchesObject(fromObj, xBuffer = 0) {
+        // this.consoleObjectCoordinates('(isHitFromAbove ?)');
+        if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
+        if((this.borderY + this.borderHeight < fromObj.borderY)) return;
+        if(!this.isHitFromSide(fromObj, xBuffer)) return;
+        return true;
     }
 
 
@@ -104,38 +110,39 @@ class MovableObject extends DrawableObject {
     }
 
 
+    isHitFromSide(fromObj, xBuffer = 0) {
+        // xBuffer = 0;
+        let fromX = fromObj.otherDirection ? (fromObj.borderX * -1) : fromObj.borderX;
+        if((this.borderX + xBuffer > fromX + fromObj.borderWidth)) return;
+        if((this.borderX + this.borderWidth < fromX + xBuffer)) return;
+        return true;
+    }
+
+
     isHitFromAbove(fromObj, xBuffer = 0) {
-        this.setBorderCoordinates();
-        if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight < this.borderY) || fromObj.borderX + fromObj.borderWidth + xBuffer < this.borderX || fromObj.borderX + xBuffer > this.borderX + this.borderWidth) {
-            return false;
-        };
+        if(fromObj instanceof Character) {
+            fromObj.consoleObjectCoordinates('(isHitFromAbove ?) '+ fromObj.otherDirection);
+        }
+        if(!fromObj.isAboveGround()) return;
+        if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
+        if(!this.isHitFromSide(fromObj, xBuffer)) return;
         return true;
     }
 
-
-    isHitFromBottle(fromObj, xBuffer = 0) {
-        this.setBorderCoordinates();
-        this.consoleObjectCoordinates('(isHitFromBottle ?)');
-        fromObj.consoleObjectCoordinates('(isHitFromBottle ?)');
-
-        if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight < this.borderY) || fromObj.borderX + fromObj.borderWidth + xBuffer < this.borderX || fromObj.borderX + xBuffer > this.borderX + this.borderWidth) {
-            return false;
-        };
-        this.consoleObjectCoordinates('isHitFromBottle = true');
-        return true;
-    }
-
-    
+  
     handlingHit(obj) {
         this.hits++;
+        if(this instanceof Endboss || this instanceof Coin) {
+            lastWinRelevantHit = new Date().getTime();
+        }
         this.healthStatus -= obj.strength;
         if(this.healthStatus <= 0) {
             this.healthStatus = 0;
         } else {
             this.lastHit = new Date().getTime();
         }
-        console.log(this.objectName, 'is hit from', obj.objectName);
-        console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hits:', this.hits);
+        // console.log(this.objectName, 'is hit from', obj.objectName);
+        // console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hits:', this.hits);
     }
 
 
@@ -182,6 +189,7 @@ class MovableObject extends DrawableObject {
         this.countDeadHandling++;
         this.deadAnimation();
         this.clearIntervals(clearTimeout);
+        this.destroyed = true;
     }
 
 
@@ -193,6 +201,15 @@ class MovableObject extends DrawableObject {
 
     clearIntervals(timeout = 10000) {
        setTimeout(() => this.intervals.forEach(clearInterval), timeout);
+    }
+
+
+    destroyObject(intervalTimeout = 10000) {
+        this.destroyed = true;
+        this.y = heightCanvas + 1;
+        this.x = widthCanvas + 1;
+        this.roundCoordinates()
+        this.clearIntervals(intervalTimeout);
     }
 
 
