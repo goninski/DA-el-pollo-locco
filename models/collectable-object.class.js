@@ -1,10 +1,10 @@
 class CollectableObject extends MovableObject {
 
     value = 0;
-    collectable = true;
+    collectableObj = true;
     collected = false;
     used = false;
-    throwable = false;
+    throwableObj = false;
     throwing = false;
     splashed = false;
     throwingInterval;

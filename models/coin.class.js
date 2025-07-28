@@ -23,12 +23,13 @@ class Coin extends CollectableObject {
         super();
         coinId++;
         this.objectName += coinId;
+        this.roundDimensions();
 
         this.setRandomPosX();
         this.setWalkGroundY();
         this.y = this.groundY - (Math.floor(Math.random() * (heightCanvas * 0.66)));
+        this.roundCoordinates();
         this.setBorderCoordinates();
-        // console.log(this.objectName, this.x, this.y);
 
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);

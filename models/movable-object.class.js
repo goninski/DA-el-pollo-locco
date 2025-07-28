@@ -90,41 +90,37 @@ class MovableObject extends DrawableObject {
 
 
     collectObject(obj) {
-        if(!obj.collectable || obj.collected) return;
-        if(obj instanceof Bottle) {
-            this.bottles.push(obj);
-            this.bottleStatus += obj.value;
-            console.log(this.bottleStatus);
-        } else {
-            this.coins.push(obj);
-            this.coinStatus += obj.value;
-            console.log(this.coinStatus);
-        }
+        if(!obj.collectableObj || obj.collected) return;
+        let objName = obj.constructor.name.toLowerCase();
+        this[objName + 's'].push(obj);
+        this[objName + 'Status'] += obj.value;
+        // console.log(objName + 'Status', this[objName + 'Status']);
         obj.collected = true;
         obj.hideObject();
         startAudioResumed(obj.audioCache.collect);
     }
     
 
-    touchesObject(counterPartObj) {
+    touchesObject(counterPartObj, xBuffer = 0) {
         this.setBorderCoordinates();
         // console.log(this.objectName, this.borderX, this.borderY);
         // // console.log(counterPartObj.objectName, 'x:' + counterPartObj.x, 'y-bottom:', + counterPartObj.y + counterPartObj.height);
         // console.log(counterPartObj.objectName, 'x:' + counterPartObj.borderX, 'y-bottom:', + counterPartObj.borderY + counterPartObj.borderHeight);
         // console.log(counterPartObj);
-        return (this.borderX + this.borderWidth > counterPartObj.borderX) && (this.borderX < counterPartObj.borderX) && (this.borderY + this.borderHeight > counterPartObj.borderY) && (this.borderY < counterPartObj.borderY + counterPartObj.borderHeight);
+        return ( (this.borderX + xBuffer < counterPartObj.borderX) && (this.borderX + this.borderWidth + xBuffer > counterPartObj.borderX) && (this.borderY < counterPartObj.borderY + counterPartObj.borderHeight) && (this.borderY + this.borderHeight > counterPartObj.borderY) );
     }
 
 
-    isHit(fromObj) {
-        return this.touchesObject(fromObj);
+    isHit(fromObj, xBuffer = 0) {
+        return this.touchesObject(fromObj, xBuffer);
     }
 
 
-    isHitFromAbove(fromObj, buffer = 0) {
+    isHitFromAbove(fromObj, xBuffer = 0) {
+        console.log(xBuffer);
         this.setBorderCoordinates();
         // buffer = buffer === 0 ? 0 : (widthCanvas / buffer) * -1;
-        if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight + buffer < this.borderY) || fromObj.borderX + fromObj.borderWidth + buffer < this.borderX || fromObj.borderX + buffer > this.borderX + this.borderWidth) {
+        if(!fromObj.isAboveGround() || (fromObj.borderY + fromObj.borderHeight < this.borderY) || fromObj.borderX + fromObj.borderWidth + xBuffer < this.borderX || fromObj.borderX + xBuffer > this.borderX + this.borderWidth) {
             return false;
         };
         return true;

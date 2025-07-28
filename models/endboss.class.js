@@ -68,6 +68,9 @@ class Endboss extends MovableObject {
         // this.setRandomPosX(1);
         // this.setWalkGroundY();
         this.y = heightCanvas;
+        this.roundCoordinates();
+        this.roundDimensions();
+
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_ALERT);
         this.setImageCache(this.IMAGES_ATTACK);

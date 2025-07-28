@@ -98,13 +98,12 @@ class World {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
             this.checkEnemyHits();
-            this.checkBottleCollection();
-            this.checkCoinCollection();
+            this.checkObjectCollection('bottle');
+            this.checkObjectCollection('coin');
         }, 50);
         this.intervals.push(intervalId);
 
     }
-
 
 
     updateGameStatus() {
@@ -142,7 +141,8 @@ class World {
     }
 
 
-    isGameWon(){
+    isGameWon() {
+        return livingEnemies <= 0;
         if(this.endboss.isDead()) {
             return during(this.endboss.lastHit, 1500);
         }
@@ -159,7 +159,7 @@ class World {
                     enemy.handlingHitFromBottle(this.character.bottles[0]);                    
                 }
             }
-            if(enemy.isHitFromAbove(this.character)) {
+            if(enemy.isHitFromAbove(this.character, this.character.width * -0.25)) {
                 enemy.handlingHitFromAbove(this.character);
             } else if(this.character.isHit(enemy)) {
                 this.character.handlingHit(enemy);
@@ -168,25 +168,14 @@ class World {
     }
 
 
-    checkBottleCollection() {
-        if(this.character.bottleStatus >= 100) return;
-        this.level.bottles.forEach((bottle) => {
-            if(this.character.touchesObject(bottle)) {
-                this.character.collectObject(bottle);
+    checkObjectCollection(objectName) {
+        if(this.character[objectName + 'Status'] >= 100) return;
+        this.level[objectName + 's'].forEach((item) => {
+            if(this.character.touchesObject(item, this.character.width * -0.25)) {
+                this.character.collectObject(item, this.character.width * -0.25);
             };
         });
     }
 
-    
-    checkCoinCollection() {
-        if(this.character.coinStatus >= 100) return;
-        this.level.coins.forEach((coin) => {
-            if(this.character.touchesObject(coin)) {
-                this.character.collectObject(coin);
-            };
-        });
-    }
-
-    
 
 }

@@ -6,7 +6,7 @@ class Bottle extends CollectableObject {
     objectPadding = [0.1, 0.2, 0.1, 0.2];
     value = 10;
     strength = 10;
-    throwable = true;
+    throwableObj = true;
 
     IMAGES_GROUND = [
         imgPathBase + '6_salsa_bottle/1_salsa_bottle_on_ground.png',
@@ -41,7 +41,7 @@ class Bottle extends CollectableObject {
         super();
         bottleId++;
         this.objectName += bottleId;
-
+        this.roundDimensions();
         this.setRandomPosX();
         this.setWalkGroundY();
         // this.setBorderCoordinates();
@@ -70,20 +70,18 @@ class Bottle extends CollectableObject {
 
    
     handleFlying() {
-        console.log('\n\nisThrowing', this.objectName);
-        console.log('Border from', this.objectName, '(x-right, y-bottom):', this.borderX + this.borderWidth, this.borderY + this.borderHeight);
+        console.log(getPassedTime(lastKeystroke_THROW, 'handleFlying'));
+        this.consoleObjectCoordinates();
 
         if(this.isSplashing() && !this.splashed) {
             clearInterval(this.throwingInterval);
             this.y = this.groundY + (this.height / 2);
             this.splashingAnimation();
             setTimeout(() => this.splashed = true, 750);
+            console.log(getPassedTime(lastKeystroke_THROW, 'splashed'));
+            this.consoleObjectCoordinates();
         } else if(this.splashed) {
-            this.throwing = false;
-            this.used = true;
-            this.loadImage(this.IMAGES_SPLASH[5]);
-            this.clearIntervals(0);
-            // this.handleSplash();
+            this.handleSplashed();
         } else {
             this.flyingAnimation();
         }
@@ -106,7 +104,7 @@ class Bottle extends CollectableObject {
     }
 
 
-    handleSplash() {
+    handleSplashed() {
         this.throwing = false;
         this.used = true;
         this.loadImage(this.IMAGES_SPLASH[5]);

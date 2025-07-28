@@ -89,8 +89,11 @@ class Character extends MovableObject {
     constructor() {
 
         super();
+        this.roundDimensions();
         this.x = 0;
         this.setWalkGroundY();
+        this.roundCoordinates();
+
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_IDLE);
         this.setImageCache(this.IMAGES_IDLE_LONG);
@@ -187,8 +190,8 @@ class Character extends MovableObject {
 
     keyObserverSlow() {
         if(this.world.keystrokes.KEY_B) {
-            // this.throwBottle();
-            debounced(lastKeystroke_THROW) ? this.throwBottle() : null;
+            this.throwBottle();
+            // debounced(lastKeystroke_THROW) ? this.throwBottle() : null;
         } 
     }
 

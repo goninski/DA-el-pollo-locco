@@ -5,7 +5,7 @@ let audioMutedByUser = false;
 let showObjectBorders = false;
 let canvas;
 let widthCanvas = 1000;
-let heightCanvas = widthCanvas / 1.777;
+let heightCanvas = Math.round(widthCanvas / 1.777);
 let walkOffset = 48;
 let body;
 let world;
@@ -316,21 +316,56 @@ function muteAudio() {
 
 
 function unmuteAudio(event = null) {
-    event ? event.stopPropagation() : null;
-    if(audioMutedByUser) return;
-    if(body.classList.contains('audio-auto-muted') && event === null) return;
-    currentAudios.forEach(item => item.muted = false);
+    if(event) {
+        event.stopPropagation();
+        currentAudios.forEach(item => {
+            item.muted = false;
+            body.classList.contains('audio-auto-muted') ? item.play() : null;
+        });
+    } else {
+        if(audioMutedByUser) return;
+        currentAudios.forEach(item => item.muted = false);
+    }
     audioIsMuted = false;
     body.classList.remove('audio-muted', 'audio-auto-muted');
 }
 
 
+/**
+ * Helper: returns passed time since a start time
+ * 
+ * @param {Date} startTime - will be compared to now
+ */
+function getPassedTime(startTime, suffix = null) {
+    let passedTime = new Date().getTime() - startTime;
+    suffix = suffix ? '\n' + suffix + ': ' : '';
+    return suffix + 'passedTime ' + passedTime;
+}
+
+
+/**
+ * Helper: returns true only for a certain duration since start time
+ * 
+ * @param {Date} startTime
+ * @param {number} delay - ms
+ * @returns {boolean}
+ */
 function debounced(startTime, delay = 150) {
     let currentTime = new Date().getTime();
     return (currentTime - startTime) <= delay;
 }
 
 
+/**
+ * Helper: returns true only after a certain duration since start time
+ * 
+ * @param {Date} startTime - will be compared to now
+ * @param {number} duration - ms
+ * @returns {boolean}
+ */
 function during(startTime, duration = 1000) {
-    return (new Date().getTime() - startTime) >= duration;
+    let currentTime = new Date().getTime();
+    return (currentTime - startTime) >= duration;
 }
+
+

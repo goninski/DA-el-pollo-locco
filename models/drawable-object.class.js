@@ -36,21 +36,8 @@ class DrawableObject {
     positionObject(x, y) {
         this.x = x;
         this.y = y;
+        this.roundCoordinates()
         this.setBorderCoordinates();
-    }
-
-
-    setBorderCoordinates() {
-        this.borderX = this.x;
-        this.borderY = this.y;
-        this.borderWidth = this.width;
-        this.borderHeight = this.height;
-        if(this.objectPadding) {
-            this.borderX = this.x + (this.width * this.objectPadding[1]);
-            this.borderY = this.y + (this.height * this.objectPadding[0]);
-            this.borderWidth = this.width * (1 - this.objectPadding[1] - this.objectPadding[3]);
-            this.borderHeight = this.height * (1 - this.objectPadding[2] - this.objectPadding[0]);
-        }
     }
 
 
@@ -63,22 +50,59 @@ class DrawableObject {
         let min = widthCanvas * screenStart;
         let max = (widthCanvas * screenEnd) - this.width;
         this.x = Math.floor(Math.random() * (max - min)) + min;        
+        this.roundCoordinates()
     }
 
 
     setWalkGroundY() {
         this.groundY = heightCanvas - this.height - walkOffset;
         this.y = this.groundY;
+        this.roundCoordinates()
     }
 
 
     hideObject() {
-        this.y = heightCanvas;
+        this.y = heightCanvas + 1;
+        this.roundCoordinates()
     }
 
 
-    consoleObjectPosition() {
-        console.log(this.objectName, 'x:' + this.x, 'y:' + this.y);
+    setBorderCoordinates() {
+        this.roundCoordinates();
+        this.borderX = this.x;
+        this.borderY = this.y;
+        this.borderWidth = this.width;
+        this.borderHeight = this.height;
+        if(this.objectPadding) {
+            this.borderX = Math.round(this.x + (this.width * this.objectPadding[1]));
+            this.borderY = Math.round(this.y + (this.height * this.objectPadding[0]));
+            this.borderWidth = Math.round(this.width * (1 - this.objectPadding[1] - this.objectPadding[3]));
+            this.borderHeight = Math.round(this.height * (1 - this.objectPadding[2] - this.objectPadding[0]));
+        }
+    }
+
+
+    roundDimensions() {
+        this.width = Math.round(this.width);
+        this.height = Math.round(this.height);
+    }
+
+
+    roundCoordinates() {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+    }
+    
+
+    consoleObjectCoordinates(borderPos = true) {
+        let x = borderPos ? this.borderX : this.x;
+        let xr = borderPos ? this.borderX + this.borderWidth : this.x + this.width;
+        let y = borderPos ? this.borderY : this.y;
+        let yb = borderPos ? this.borderY + this.borderHeight : this.y + this.height;
+        let borderIndicator = borderPos ? ' (B)' : '';
+        // console.log(label, this.objectName + ') ', 'x/xr: ' + x + '-' + xr + ' / ', 'y/yb: ' + y + '-' + yb);
+        console.log('Coordinates', this.objectName + ': ', 'x/xr ' + x + '-' + xr + borderIndicator);
+        console.log('Coordinates', this.objectName + ': ', 'y/yb ' + y + '-' + yb + borderIndicator);
     }
 
     
