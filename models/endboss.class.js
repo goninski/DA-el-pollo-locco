@@ -67,17 +67,24 @@ class Endboss extends MovableObject {
         super();
         this.setRandomPosX(2.2, 2.75);
         this.setWalkGroundY();
-        // this.setRandomPosX(1);
         this.roundCoordinates();
         this.roundDimensions();
+        this.setMediaCache();
+        this.loadImage(this.IMAGES_WALKING[0]);
+        this.animate();
+    }
+
+
+    /**
+     * set media cache
+     */
+    setMediaCache() {
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_ALERT);
         this.setImageCache(this.IMAGES_ATTACK);
         this.setImageCache(this.IMAGES_HURT);
         this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
-        this.loadImage(this.IMAGES_WALKING[0]);
-        this.animate();
     }
 
 
@@ -250,12 +257,9 @@ class Endboss extends MovableObject {
      * Handling if dead
      */
     handlingDeath() {
-        // console.log(this.countDeadHandling);
-        // if(this.deathDebouncer === 0) {
-            this.stopWalkAudios()
-            startAudio(this.audioCache.dead);
-            super.handlingDeath();
-        // }
+        this.stopWalkAudios()
+        startAudio(this.audioCache.dead);
+        super.handlingDeath();
     }
 
 }

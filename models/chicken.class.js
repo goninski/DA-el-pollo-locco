@@ -1,7 +1,6 @@
 /**Class representing a chicken  */
 class Chicken extends MovableObject {
 
-    static instanceId = 0;
     isEnemy = true;
     height = this.width / 1.02;
     strength = 15;
@@ -27,17 +26,25 @@ class Chicken extends MovableObject {
      */
     constructor() {
         super();
-        this.instanceId++;
-        this.objectName += this.instanceId;
+        // this.instanceId++;
+        // this.objectName += this.instanceId;
         this.roundDimensions();
         this.setRandomPosX(0.5, 3);
         // this.setRandomPosX(0.5, 1.2);
         this.setWalkGroundY();
+        this.setMediaCache();
         this.loadImage(this.IMAGES_WALKING[0]);
+        this.animate();
+    }
+
+
+    /**
+     * set media cache
+     */
+    setMediaCache() {
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
-        this.animate();
     }
 
 

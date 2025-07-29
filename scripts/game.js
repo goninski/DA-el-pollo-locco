@@ -128,9 +128,9 @@ function setBodyClassIfTouchDevice() {
  * Handling game won
  * @param {event} event - game over button (temporary)
  */
-function handlingGameWon(event = null) {
+function handlingGameWin(event = null) {
     event ? event.stopPropagation() : null;
-    console.log('handlingGameWon');
+    console.log('handlingGameWin');
     stopAudios();
     hideAllScreens();
     body.classList.add('win-screen');
@@ -334,9 +334,6 @@ function debounceLeading(startTime, duration = 1000) {
     let currentTime = new Date().getTime();
     return (currentTime - startTime) <= duration;
 }
-// function trueDuring(startTime, duration = 1000) {
-//     return debounceLeading(startTime, duration);
-// }
 
 
 /**
@@ -350,10 +347,3 @@ function debounceDelayed(startTime, delay = 150) {
     let currentTime = new Date().getTime();
     return (currentTime - startTime) >= delay;
 }
-// function trueDebounced(startTime, delay = 150) {
-//     return debounceDelayed(startTime, delay);
-// }
-// function debounced(startTime, delay = 150) {
-//     let currentTime = new Date().getTime();
-//     return (currentTime - startTime) <= delay;
-// }

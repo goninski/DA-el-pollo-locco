@@ -48,13 +48,21 @@ class Bottle extends CollectableObject {
         this.roundDimensions();
         this.setRandomPosX();
         this.setWalkGroundY();
-        this.setImageCache(this.IMAGES_THROW);
-        this.setImageCache(this.IMAGES_SPLASH);
+        this.setMediaCache();
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);
-        this.setAudioCache(this.audioFiles);
         this.animate();
 }
+
+
+    /**
+     * set media cache
+     */
+    setMediaCache() {
+        this.setImageCache(this.IMAGES_THROW);
+        this.setImageCache(this.IMAGES_SPLASH);
+        this.setAudioCache(this.audioFiles);
+    }
 
 
     /**

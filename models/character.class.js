@@ -97,8 +97,17 @@ class Character extends MovableObject {
         this.x = 0;
         this.setWalkGroundY();
         this.roundCoordinates();
-
+        this.setMediaCache();
         this.loadImage(this.IMAGES_WALKING[0]);
+        this.applyGravity();
+        this.animate();
+    }
+
+
+    /**
+     * set media cache
+     */
+    setMediaCache() {
         this.setImageCache(this.IMAGES_IDLE);
         this.setImageCache(this.IMAGES_IDLE_LONG);
         this.setImageCache(this.IMAGES_WALKING);
@@ -106,33 +115,113 @@ class Character extends MovableObject {
         this.setImageCache(this.IMAGES_HURT);
         this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
-        this.applyGravity();
+    }
 
-        this.animate();
+
+    /**
+     * Animate calls
+     */
+    animate() {
+        this.mainKeystrokesHandler();
+        this.throwBottleKeystrokeHandler();
+        this.animateWalkingHurtDeath();
+        this.animateJumping();
+        this.animateIdle();
         this.saveIntervalsGlobally();
     }
 
 
     /**
-     * Animation intervals
+     * Main keystrokes handler (fast interval)
      */
-    animate() {
-
-        // interval for fast key observer
+    mainKeystrokesHandler() {
         intervalId = setInterval(() => {
             if(gameIsPaused || this.isDead()) return;
-            this.keyObserverFast();
+            this.isIdle = false;
+            this.isIdleLong = false;
+            if(this.world.keystrokes.KEY_LEFT) {
+                this.otherDirection = true;
+                this.moveLeft(this.speed);
+            } else if(this.world.keystrokes.KEY_RIGHT) {
+                this.otherDirection = false;
+                this.moveRight(this.speed);
+            } else if(this.world.keystrokes.KEY_SPACE) {
+                this.handleKeystrokeSpace();
+            } else {
+                this.checkAndSetIdle();
+            }
+            this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
         }, 1000 / 60);
         this.intervals.push(intervalId);
+    }
 
-        // interval for walking/hurt/dead animation
+
+    /**
+     * Throw bottle keystroke handler (slower interval)
+     */
+    throwBottleKeystrokeHandler() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
-            this.animationsOnGround();
+            if(this.world.keystrokes.KEY_B) {
+                // this.throwBottle();
+                debounceLeading(lastKeystroke_THROW, 150) ? this.throwBottle() : null;
+            } 
+        }, 100);
+        this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * Handle keystroke SPACE (jump)
+     */
+    handleKeystrokeSpace() {
+        if(this.isAboveGround()) return;
+        this.jump(30);
+        startAudioDebouncedLeading(this.audioCache.jump, lastKeystroke_JUMP, 125);
+    }
+
+
+    /**
+     * Check and handle idle
+     */
+    checkAndSetIdle() {
+        let timePassed = new Date().getTime() - lastKeystroke;
+        if(timePassed >= 3000 && timePassed < 6000) {
+            this.isIdle = true;
+        } else if(timePassed >= 6000) {
+            this.isIdleLong = true;
+        }
+    }
+
+
+    /**
+     * Interval to animate walking, hurt, death
+     */
+    animateWalkingHurtDeath() {
+        intervalId = setInterval(() => {
+            if(gameIsPaused) return;
+            if(!this.isAboveGround()) {
+                if(this.isDead()) {
+                    this.handlingDeath();
+                    stopAudio(this.audioCache.idle);
+                    startAudioDebouncedLeading(this.audioCache.dead, this.lastHit, 125, 0.7);
+                } else if(this.isHurt()) {
+                    this.handlingHurt();
+                    stopAudio(this.audioCache.idle);
+                    startAudioDebouncedLeading(this.audioCache.hurt, this.lastHit, 125);
+                } else if(!this.isIdle && !this.isIdleLong) {
+                    this.walkingAnimation();
+                }
+            }
         }, 50); 
         this.intervals.push(intervalId);
+    }
 
-        // interval for jumping animation (slower)
+
+    /**
+     * Interval to animate jumping
+     */
+    animateJumping() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
             if(this.isAboveGround()) {
@@ -140,92 +229,18 @@ class Character extends MovableObject {
              }
         }, 100); 
         this.intervals.push(intervalId);
+    }
 
-        // interval for idle animation (slower)
+
+    /**
+     * Interval to animate idle
+     */
+    animateIdle() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
             this.idleAnimation();
         }, 300); 
         this.intervals.push(intervalId);
-
-        // interval for slow key observer
-        intervalId = setInterval(() => {
-            if(gameIsPaused) return;
-            this.keyObserverSlow();
-        }, 100);
-        this.intervals.push(intervalId);
-
-    }
-
-
-    /**
-     * Fast key observers
-     */
-    keyObserverFast() {
-        if(this.world.keystrokes.KEY_RIGHT) {
-            this.otherDirection = false;
-            this.moveRight(this.speed);
-                this.isIdle = false;
-                this.isIdleLong = false;
-        }
-        else if(this.world.keystrokes.KEY_LEFT) {
-            this.otherDirection = true;
-            this.moveLeft(this.speed);
-            this.isIdle = false;
-            this.isIdleLong = false;
-        }
-        else if(this.world.keystrokes.KEY_SPACE  && !this.isAboveGround()) {
-            this.jump(30);
-            startAudioDebouncedLeading(this.audioCache.jump, lastKeystroke_JUMP, 125);
-            this.isIdle = false;
-            this.isIdleLong = false;
-        }
-        else {
-            let timePassed = new Date().getTime() - lastKeystroke;
-            if(timePassed >= 3000 && timePassed < 6000) {
-                this.isIdle = true;
-                this.isIdleLong = false;
-            } else if(timePassed >= 6000) {
-                this.isIdleLong = true;
-                this.isIdle = false;
-            } else {
-                this.isIdle = false;
-                this.isIdleLong = false;
-            }
-        }
-        this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
-        // this.consoleObjectPosition()
-    }
-
-
-    /**
-     * Slow key observers
-     */
-    keyObserverSlow() {
-        if(this.world.keystrokes.KEY_B) {
-            // this.throwBottle();
-            debounceLeading(lastKeystroke_THROW, 150) ? this.throwBottle() : null;
-        } 
-    }
-
-
-    /**
-     * Resolve animations on the ground
-     */
-    animationsOnGround() {
-        if(!this.isAboveGround()) {
-            if(this.isDead()) {
-                this.handlingDeath();
-                stopAudio(this.audioCache.idle);
-                startAudioDebouncedLeading(this.audioCache.dead, this.lastHit, 125, 0.7);
-            } else if(this.isHurt()) {
-                this.handlingHurt();
-                stopAudio(this.audioCache.idle);
-                startAudioDebouncedLeading(this.audioCache.hurt, this.lastHit, 125);
-            } else if(!this.isIdle && !this.isIdleLong) {
-                this.walkingAnimation();
-            }
-        }
     }
 
 
@@ -320,10 +335,14 @@ class Character extends MovableObject {
 
 
     /**
-     * Jump animation on game win - ?? not working properly ??
+     * Jump animation on game win
      */
     winJump() {
-        this.jump(30);
+        // this.acceleration = 10;
+        this.otherDirection ? this.otherDirection = false : null;
+        this.x = 0;
+        this.setWalkGroundY();
+        this.jump(80);
         this.loadImage(this.IMAGES_JUMPING[3]);
     }
 

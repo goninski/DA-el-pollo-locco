@@ -150,7 +150,7 @@ class World {
         if(this.isGameOver()) {
             return handlingGameOver();
         } else if(this.isGameWon()) {
-            return handlingGameWon();
+            return handlingGameWin();
         } else if(livingEnemies <= 0 && !this.endboss.active) {
             this.endboss.active = true;
             this.endboss.setWalkGroundY();
