@@ -1,6 +1,7 @@
 /** Class representing a drawable object */
 class DrawableObject {
     
+    objectName;
     skipDrawing = false;
     x = 0;
     y = 0;
@@ -14,7 +15,6 @@ class DrawableObject {
     img;
     imageCache = {};
     currentImage = 0;
-    objectName;
     destroyed = false;
 
     

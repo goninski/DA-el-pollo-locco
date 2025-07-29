@@ -1,9 +1,7 @@
-let chickenId = 0;
-
-
 /**Class representing a chicken  */
 class Chicken extends MovableObject {
 
+    static instanceId = 0;
     isEnemy = true;
     height = this.width / 1.02;
     strength = 15;
@@ -28,30 +26,36 @@ class Chicken extends MovableObject {
      * Create a chicken - and place it randomly on ground level
      */
     constructor() {
-
         super();
-        chickenId++;
-        this.objectName += chickenId;
+        this.instanceId++;
+        this.objectName += this.instanceId;
         this.roundDimensions();
         this.setRandomPosX(0.5, 3);
         // this.setRandomPosX(0.5, 1.2);
         this.setWalkGroundY();
-
         this.loadImage(this.IMAGES_WALKING[0]);
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
-
         this.animate();
+    }
+
+
+    /**
+     * Animate calls
+     */
+    animate() {
+        this.animateDeath();
+        this.animateWalking();
+        this.animateMoving();
         this.saveIntervalsGlobally();
     }
 
 
     /**
-     * Animation intervals
+     * AnimateDeath
      */
-    animate() {
-
+    animateDeath() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
             if(this.isDead()) {
@@ -59,23 +63,31 @@ class Chicken extends MovableObject {
             }
         }, 50);  
         this.intervals.push(intervalId);
+    }
 
+
+    /**
+     * AnimateWalking
+     */
+    animateWalking() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
-            if(!this.isDead()) {
-                this.walkingAnimation();
-                startAudio(this.audioCache.walk, 0.25, true);
-            }
-            // this.consoleObjectCoordinates('(chicken.interval200)');
-
+            if(this.isDead()) return;
+            this.walkingAnimation();
+            startAudio(this.audioCache.walk, 0.25, true);
         }, 200);  
         this.intervals.push(intervalId);
+    }
 
+
+    /**
+     * AnimateMoving
+     */
+    animateMoving() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
-            if(!this.isDead()) {
-                this.moveLeft(0.15, 0.45, false);
-            }
+            if(this.isDead()) return;
+            this.moveLeft(0.15, 0.45, false);
         }, 1000 / 60); 
         this.intervals.push(intervalId);
     }
@@ -91,7 +103,6 @@ class Chicken extends MovableObject {
             super.handlingDeath();
         }
     }
-
 
 }
 

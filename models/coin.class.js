@@ -1,10 +1,9 @@
-let coinId = 0;
-
-
 /**
  * Class representing collectable coins
  */
 class Coin extends CollectableObject {
+
+    static instanceId = 0;
 
     width = this.width * 0.7
     height = this.width * 1;
@@ -27,16 +26,14 @@ class Coin extends CollectableObject {
      */
     constructor() {
         super();
-        coinId++;
-        this.objectName += coinId;
+        this.instanceId++;
+        this.objectName += this.instanceId;
         this.roundDimensions();
-
         this.setRandomPosX();
         this.setWalkGroundY();
         this.y = this.groundY - (Math.floor(Math.random() * (heightCanvas * 0.66)));
         this.roundCoordinates();
         this.setBorderCoordinates();
-
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);
         this.setAudioCache(this.audioFiles);

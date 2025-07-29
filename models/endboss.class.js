@@ -1,9 +1,7 @@
-let endbossId = 0;
-
-
 /** Class representing a endboss */
 class Endboss extends MovableObject {
 
+    world;
     isEnemy = true;
     width = this.width * 2;
     height = this.width / 0.86;
@@ -67,15 +65,11 @@ class Endboss extends MovableObject {
      */
     constructor() {
         super();
-        endbossId++;
-        this.objectName += endbossId;
-
         this.setRandomPosX(2.2, 2.75);
         this.setWalkGroundY();
         // this.setRandomPosX(1);
         this.roundCoordinates();
         this.roundDimensions();
-
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_ALERT);
         this.setImageCache(this.IMAGES_ATTACK);
@@ -83,17 +77,43 @@ class Endboss extends MovableObject {
         this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
         this.loadImage(this.IMAGES_WALKING[0]);
-
         this.animate();
+    }
+
+
+    /**
+     * Animate calls
+     */
+    animate() {
+        this.animateMoving();
+        this.animateAlertAttack();
+        this.animateHurtDeath();
+        this.animateAudios();
         this.saveIntervalsGlobally();
     }
 
 
     /**
-     * Animation intervals
+     * Animate moving
      */
-    animate() {
+    animateMoving() {
+        intervalId = setInterval(() => {
+            if(gameIsPaused || !this.active) return;
+            if(this.isDead() || this.isHurt() || this.isAlert()) return;
+            if(this.isAttacking()) {
+                this.moveLeft(1, 1.5, false);
+            } else {
+                this.moveLeft(0.15, 0.66, false);
+            }
+        }, 1000 / 60); 
+        this.intervals.push(intervalId);
+    }
 
+
+    /**
+     * Animate alert and attack
+     */
+    animateAlertAttack() {
         intervalId = setInterval(() => {
             if(gameIsPaused || !this.active) return;
             if(this.isDead() || this.isHurt()) return;
@@ -104,7 +124,13 @@ class Endboss extends MovableObject {
             }
         }, 50);  
         this.intervals.push(intervalId);
+    }
 
+
+    /**
+     * Animate hurt and death
+     */
+    animateHurtDeath() {
         intervalId = setInterval(() => {
             if(gameIsPaused || !this.active) return;
             if(this.isDead()) {
@@ -114,7 +140,13 @@ class Endboss extends MovableObject {
             }
         }, 100);  
         this.intervals.push(intervalId);
+    }
 
+
+    /**
+     * Animate audios for walking, alert, attack
+     */
+    animateAudios() {
         intervalId = setInterval(() => {
             if(gameIsPaused || !this.active) return;
             if(this.isDead() || this.isHurt()) return;
@@ -130,20 +162,8 @@ class Endboss extends MovableObject {
             }
         }, 150);  
         this.intervals.push(intervalId);
-
-        intervalId = setInterval(() => {
-            if(gameIsPaused || !this.active) return;
-            if(this.isDead() || this.isHurt() || this.isAlert()) return;
-            if(this.isAttacking()) {
-                this.moveLeft(1, 1.5, false);
-            } else {
-                this.moveLeft(0.15, 0.66, false);
-            }
-        }, 1000 / 60); 
-        this.intervals.push(intervalId);
-
     }
-
+    
 
     /**
      * Stop the walking audios

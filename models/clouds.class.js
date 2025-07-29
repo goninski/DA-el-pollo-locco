@@ -1,8 +1,7 @@
-let cloudsId = 0;
-
-
 /** Class representing clouds for the canvas */
 class Clouds extends MovableObject {
+
+    static instanceId = 0;
 
     width = widthCanvas;
     height = heightCanvas;
@@ -15,14 +14,11 @@ class Clouds extends MovableObject {
      */
     constructor(imgPath, screenSlide = 0) {
         super();
-        cloudsId++;
-        this.objectName += cloudsId;
+        this.instanceId++;
+        this.objectName += this.instanceId;
         this.setScreenSlidePos(screenSlide);
         this.loadImage(imgPath);
-        
-        // this.moveLeftAuto(0.15, null, false);
         this.animate();
-        this.saveIntervalsGlobally();
     }
 
 
@@ -34,6 +30,7 @@ class Clouds extends MovableObject {
              this.moveLeft(0.15, null, false);
         }, 1000 / 60); 
         this.intervals.push(intervalId);
+        this.saveIntervalsGlobally();
     }
 
 }

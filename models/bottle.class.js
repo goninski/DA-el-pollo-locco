@@ -1,7 +1,7 @@
-let bottleId = 0;
-
 /** Class representing a bottle */
 class Bottle extends CollectableObject {
+
+    static instanceId = 0;
     
     width = this.width * 0.7
     height = this.width * 1;
@@ -43,20 +43,18 @@ class Bottle extends CollectableObject {
      */
     constructor() {
         super();
-        bottleId++;
-        this.objectName += bottleId;
+        this.instanceId++;
+        this.objectName += this.instanceId;
         this.roundDimensions();
         this.setRandomPosX();
         this.setWalkGroundY();
-
         this.setImageCache(this.IMAGES_THROW);
         this.setImageCache(this.IMAGES_SPLASH);
         let index = Math.floor(Math.random() * 2);
         this.loadImage(this.IMAGES_GROUND[index]);
         this.setAudioCache(this.audioFiles);
-
         this.animate();
-    }
+}
 
 
     /**
@@ -70,6 +68,8 @@ class Bottle extends CollectableObject {
             }
         }, 100);  
         this.intervals.push(intervalId);
+
+        this.saveIntervalsGlobally();
     }
 
   
@@ -86,8 +86,6 @@ class Bottle extends CollectableObject {
         this.throwingInterval = setInterval(() => {
             fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
         }, 25);
-        // console.log(getPassedTime(lastKeystroke_THROW, '(bottle.handleThrow)'));
-        // this.consoleObjectCoordinates('(bottle.handleThrow)');
     }
 
 
@@ -125,7 +123,6 @@ class Bottle extends CollectableObject {
      */
     isSplashing() {
         if(!this.collected || this.isAboveGround()) return;
-        // if(!this.collected || this.destroyed || this.isAboveGround()) return;
         // console.log(this.objectName, 'isSplashing');
         return true;
     }

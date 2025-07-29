@@ -101,7 +101,6 @@ class World {
         this.ctx.translate(obj.width, 0);
         this.ctx.scale(-1, 1);
         obj.x = obj.x * -1;
-        // obj.setBorderCoordinates();
     }
 
 
@@ -111,7 +110,6 @@ class World {
      */    
     flipImageBack(obj) {
         obj.x = obj.x * -1;
-        // obj.setBorderCoordinates();
         this.ctx.restore();
     }
 
@@ -174,10 +172,10 @@ class World {
      * Update the status bars
      */
     updateStatusBars() {
-        this.statusBars[0].updateStatusBar(this.character.healthStatus);
+        this.statusBars[0].updateStatusBar(this.character.energy);
         this.statusBars[1].updateStatusBar(this.character.coinStatus);
         this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-        this.statusBars[3].updateStatusBar(this.endboss.healthStatus);
+        this.statusBars[3].updateStatusBar(this.endboss.energy);
     }
 
 

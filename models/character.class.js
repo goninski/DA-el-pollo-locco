@@ -296,7 +296,7 @@ class Character extends MovableObject {
         obj.collected = true;
         obj.hideObject();
         startAudioResumed(obj.audioCache.collect);
-        // console.log('collected', objName, '#', this[objName + 's'].length, 'Status', this[objName + 'Status']);
+        console.log('collected', objName, '#', this[objName + 's'].length, 'Status', this[objName + 'Status']);
     }
     
     

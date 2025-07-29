@@ -6,13 +6,13 @@ class MovableObject extends DrawableObject {
     speedY = 0;
     acceleration = 2.5;
     strength = 0;
-    healthStatus = 100;
-    hitDebouncer = 0;
-    lastHit = 0;
+    energy = 100;
     intervals = [];
     audio;
     audioFiles = {};
     audioCache = {};
+    lastHit = 0;
+    hitDebouncer = 0;
     deathDebouncer = 0;
 
 
@@ -263,16 +263,16 @@ class MovableObject extends DrawableObject {
         if(this.hitDebouncer === 0) {
             this.lastHit = new Date().getTime();
             this.hitDebouncer++;
-            this.healthStatus -= obj.strength;
-            this.healthStatus <= 0 ? this.healthStatus = 0 : null;
+            this.energy -= obj.strength;
+            this.energy <= 0 ? this.energy = 0 : null;
         } else {
             if(debounceDelayed(this.lastHit, 1000)) {
                 this.hitDebouncer = 0;
             }
         }
         console.log('\n' +  this.objectName, 'is hit from', obj.objectName);
-        console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hitDebouncer:', this.hitDebouncer);
-        console.log(obj.objectName, 'healthStatus:', obj.healthStatus, 'hitDebouncer:', obj.hitDebouncer);
+        console.log(this.objectName, 'energy:', this.energy, 'hitDebouncer:', this.hitDebouncer);
+        console.log(obj.objectName, 'energy:', obj.energy, 'hitDebouncer:', obj.hitDebouncer);
     }
 
 
@@ -297,7 +297,7 @@ class MovableObject extends DrawableObject {
      * Handling if dead
      */
     isDead() {
-        return this.healthStatus <= 0;
+        return this.energy <= 0;
     }
 
 
