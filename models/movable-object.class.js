@@ -139,8 +139,6 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     touchesObject(fromObj, xBuffer = 0) {
-        this.setBorderCoordinates();
-        // this.consoleObjectCoordinates('(isHitFromAbove ?)');
         if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
         if((this.borderY + this.borderHeight < fromObj.borderY)) return;
         if(!this.isHitFromSide(fromObj, xBuffer)) return;
@@ -167,8 +165,6 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHitFromSide(fromObj, xBuffer = 0) {
-        // xBuffer = 0;
-        this.setBorderCoordinates();
         let thisX = this.borderX;
         let fromX = fromObj.borderX;
         if((thisX + xBuffer > fromX + fromObj.borderWidth)) return;
@@ -184,10 +180,6 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHitFromAbove(fromObj, xBuffer = 0) {
-        this.setBorderCoordinates();
-        // if(fromObj instanceof Character) {
-        //     fromObj.consoleObjectCoordinates('(otherDirection '+ fromObj.otherDirection);
-        // }
         if(!fromObj.isAboveGround()) return;
         if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
         if(!this.isHitFromSide(fromObj, xBuffer)) return;
@@ -202,12 +194,7 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHitFromSideJump(fromObj, xBuffer = 0) {
-        this.setBorderCoordinates();
-        // if(fromObj instanceof Character) {
-        //     fromObj.consoleObjectCoordinates('(otherDirection '+ fromObj.otherDirection);
-        // }
         if(!fromObj.isAboveGround()) return;
-        // if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
         if(!this.isHitFromSide(fromObj, xBuffer)) return;
         return true;
     }

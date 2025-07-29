@@ -96,6 +96,7 @@ class Endboss extends MovableObject {
 
         intervalId = setInterval(() => {
             if(gameIsPaused || !this.active) return;
+            if(this.isDead() || this.isHurt()) return;
             if(this.isAttacking()) {
                 this.handlingAttack();
             } else if(this.isAlert()) {

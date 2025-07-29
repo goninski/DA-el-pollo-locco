@@ -84,8 +84,7 @@ class Bottle extends CollectableObject {
         this.applyGravity()
         this.throwing = true;
         this.throwingInterval = setInterval(() => {
-            this.x += moveX;
-            // fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
+            fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
         }, 25);
         // console.log(getPassedTime(lastKeystroke_THROW, '(bottle.handleThrow)'));
         // this.consoleObjectCoordinates('(bottle.handleThrow)');

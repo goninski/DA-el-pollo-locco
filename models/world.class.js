@@ -84,9 +84,11 @@ class World {
      */
     drawObject(obj) {
         obj.otherDirection ? this.flipImage(obj) : null;
+        obj.setBorderCoordinates();
         this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
         obj.drawRectangle(this.ctx);
         obj.otherDirection ? this.flipImageBack(obj) : null;
+        obj.setBorderCoordinates();
     }
 
 
@@ -99,6 +101,7 @@ class World {
         this.ctx.translate(obj.width, 0);
         this.ctx.scale(-1, 1);
         obj.x = obj.x * -1;
+        // obj.setBorderCoordinates();
     }
 
 
@@ -108,6 +111,7 @@ class World {
      */    
     flipImageBack(obj) {
         obj.x = obj.x * -1;
+        // obj.setBorderCoordinates();
         this.ctx.restore();
     }
 

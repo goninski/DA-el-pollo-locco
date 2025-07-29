@@ -204,7 +204,7 @@ class Character extends MovableObject {
     keyObserverSlow() {
         if(this.world.keystrokes.KEY_B) {
             // this.throwBottle();
-            debounceLeading(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
+            debounceLeading(lastKeystroke_THROW, 150) ? this.throwBottle() : null;
         } 
     }
 
@@ -216,9 +216,11 @@ class Character extends MovableObject {
         if(!this.isAboveGround()) {
             if(this.isDead()) {
                 this.handlingDeath();
+                stopAudio(this.audioCache.idle);
                 startAudioDebouncedLeading(this.audioCache.dead, this.lastHit, 125, 0.7);
             } else if(this.isHurt()) {
                 this.handlingHurt();
+                stopAudio(this.audioCache.idle);
                 startAudioDebouncedLeading(this.audioCache.hurt, this.lastHit, 125);
             } else if(!this.isIdle && !this.isIdleLong) {
                 this.walkingAnimation();
@@ -234,6 +236,7 @@ class Character extends MovableObject {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
             super.walkingAnimation();
+            stopAudio(this.audioCache.idle);
             startAudio(this.audioCache.walk);
         } else {
             stopAudio(this.audioCache.walk);
