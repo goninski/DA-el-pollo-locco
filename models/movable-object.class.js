@@ -209,7 +209,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 10;
         }
-        console.log(this.objectName, '(handlingHitFromBottle)');
+        // console.log(this.objectName, '(handlingHitFromBottle)');
         this.handlingHit(obj);
     }
 
@@ -223,7 +223,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 15;
         }
-        console.log(this.objectName, '(handlingHitFromAbove)');
+        // console.log(this.objectName, '(handlingHitFromAbove)');
         this.handlingHit(obj);
     }
 
@@ -236,7 +236,7 @@ class MovableObject extends DrawableObject {
         if(!(this instanceof Endboss)) return;
         this.strength = 4;
         obj.strength = 20;
-        console.log(this.objectName, '(handlingHitSideJump)');
+        // console.log(this.objectName, '(handlingHitSideJump)');
         this.handlingHit(obj);
     }
 
@@ -250,7 +250,7 @@ class MovableObject extends DrawableObject {
         if(obj instanceof Endboss) {
             obj.strength = 30;
         }
-        console.log(this.objectName, '(handlingHitFromGround)');
+        // console.log(this.objectName, '(handlingHitFromGround)');
         this.handlingHit(obj);
     }
 
@@ -270,9 +270,21 @@ class MovableObject extends DrawableObject {
                 this.hitDebouncer = 0;
             }
         }
-        console.log('\n' +  this.objectName, 'is hit from', obj.objectName);
-        console.log(this.objectName, 'energy:', this.energy, 'hitDebouncer:', this.hitDebouncer);
-        console.log(obj.objectName, 'energy:', obj.energy, 'hitDebouncer:', obj.hitDebouncer);
+        this.ConsoleLogHitDetails(obj, true);
+    }
+
+
+    /**
+     * Log hit details in console (for debug)
+     * @param {object} obj - counter object
+     * @param {boolean} show - show log 
+     */
+    ConsoleLogHitDetails(obj, show) {
+        if(show) {
+            console.log('\n' +  this.objectName, 'is hit from', obj.objectName);
+            console.log(this.objectName, 'energy:', this.energy, 'hitDebouncer:', this.hitDebouncer);
+            console.log(obj.objectName, 'energy:', obj.energy, 'hitDebouncer:', obj.hitDebouncer);
+        }
     }
 
 

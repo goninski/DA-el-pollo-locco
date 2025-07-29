@@ -1,3 +1,5 @@
+let chickenId = 0;
+
 /**Class representing a chicken  */
 class Chicken extends MovableObject {
 
@@ -26,8 +28,8 @@ class Chicken extends MovableObject {
      */
     constructor() {
         super();
-        // this.instanceId++;
-        // this.objectName += this.instanceId;
+        chickenId++;
+        this.objectName += chickenId;
         this.roundDimensions();
         this.setRandomPosX(0.5, 3);
         // this.setRandomPosX(0.5, 1.2);

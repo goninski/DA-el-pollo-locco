@@ -108,7 +108,7 @@ class Endboss extends MovableObject {
             if(gameIsPaused || !this.active) return;
             if(this.isDead() || this.isHurt() || this.isAlert()) return;
             if(this.isAttacking()) {
-                this.moveLeft(1, 1.5, false);
+                this.moveLeft(1, 2, false);
             } else {
                 this.moveLeft(0.15, 0.66, false);
             }

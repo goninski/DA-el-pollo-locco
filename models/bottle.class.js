@@ -1,14 +1,15 @@
+let bottleId = 0;
+
 /** Class representing a bottle */
 class Bottle extends CollectableObject {
 
-    static instanceId = 0;
-    
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.1, 0.2, 0.1, 0.2];
     value = 10;
     strength = 10;
     throwableObj = true;
+    flyingBottles = [];
 
     IMAGES_GROUND = [
         imgPathBase + '6_salsa_bottle/1_salsa_bottle_on_ground.png',
@@ -43,8 +44,8 @@ class Bottle extends CollectableObject {
      */
     constructor() {
         super();
-        this.instanceId++;
-        this.objectName += this.instanceId;
+        bottleId++;
+        this.objectName += bottleId;
         this.roundDimensions();
         this.setRandomPosX();
         this.setWalkGroundY();
@@ -88,6 +89,7 @@ class Bottle extends CollectableObject {
      * @param {number} moveX - x-position move per interval
      */
     handleThrow(fromObj, speed = 10, moveX = 15) {
+        flyingBottles.push(this);
         this.speedY = speed;
         this.applyGravity()
         this.throwing = true;
@@ -101,11 +103,14 @@ class Bottle extends CollectableObject {
      * Handling of a flying bottle
      */
     handleFlying() {
-        if(this.isSplashing() && !this.splashed) {
+        if(this.isSplashing()) {
             clearInterval(this.throwingInterval);
             this.y = this.groundY + (this.height / 2);
             this.splashingAnimation();
-            setTimeout(() => this.splashed = true, 750);
+            setTimeout(() => {
+                this.splashed = true;
+                flyingBottles.shift();
+            }, 750);
         } else if(this.splashed) {
             this.handleSplashed();
         } else {
@@ -130,7 +135,7 @@ class Bottle extends CollectableObject {
      * @returns {boolean}
      */
     isSplashing() {
-        if(!this.collected || this.isAboveGround()) return;
+        if(!this.collected || this.isAboveGround() || this.splashed) return;
         // console.log(this.objectName, 'isSplashing');
         return true;
     }
@@ -151,6 +156,7 @@ class Bottle extends CollectableObject {
      * Handle splashed bottle
      */
     handleSplashed() {
+        // this.flyingBottles.shift();
         this.throwing = false;
         this.destroyed = true;
         this.clearIntervals(0);

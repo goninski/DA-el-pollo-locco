@@ -91,8 +91,11 @@ function startAudioResumed(audioObj, volume = 1) {
  */
 function stopAudios() {
     currentAudio.pause();
-    loopedAudios.forEach(item => item.pause());
-    // loopedAudios = [];
+    // loopedAudios.forEach(item => item.pause());
+    loopedAudios.forEach(item => {
+        item.pause();
+        console.log(item.paused);
+    });
 }
 
 

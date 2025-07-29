@@ -7,7 +7,6 @@ let canvas;
 let widthCanvas = 1000;
 let heightCanvas = Math.round(widthCanvas / 1.777);
 let walkOffset = 48;
-let livingEnemies;
 let keystrokes;
 let lastKeystroke;
 let lastKeystroke_LEFT;
@@ -19,6 +18,8 @@ let timer;
 let secondsPlay = 0;
 let intervalId = 0;
 let stoppableIntervals = [];
+let livingEnemies;
+let flyingBottles = [];
 let gameIsPaused = false;
 
 

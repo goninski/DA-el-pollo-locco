@@ -26,7 +26,7 @@ class World {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.draw();
-        this.setGlobalIntervals();
+        this.globalIntervals();
         this.keystrokes = keystrokes;
         this.applyWorldToObjects();
         saveIntervalsGlobally(this.intervals);
@@ -115,56 +115,53 @@ class World {
 
 
     /**
-     * Set global intervals
+     * Global intervals
      */
-    setGlobalIntervals() {
-        intervalId = setInterval(() => {
-            if(gameIsPaused) return;
-            timer = runPlayTimeCounter();
-            document.getElementById('playTimer').innerHTML =  timer;
-        }, 1000);
-        this.intervals.push(intervalId);
-
-        intervalId = setInterval(() => {
-            this.updateGameStatus();
-        }, 300);
-        this.intervals.push(intervalId);
+    globalIntervals() {
+        this.playTimeInterval(); //1s
+        this.updateGameStatus(); //300ms
 
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
             this.checkEnemyHits();
             this.checkObjectCollection('bottle');
             this.checkObjectCollection('coin');
-        }, 50);
+        }, 100);
         this.intervals.push(intervalId);
-
     }
 
 
     /**
-     * Update the game status
+     * Playtime interval
+     */
+    playTimeInterval() {
+        intervalId = setInterval(() => {
+            if(gameIsPaused) return;
+            timer = runPlayTimeCounter();
+            document.getElementById('playTimer').innerHTML =  timer;
+        }, 1000);
+        this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * Update game status
      */
     updateGameStatus() {
-        // this.debugLogs();
-        this.updateStatusBars();
-        if(this.isGameOver()) {
-            return handlingGameOver();
-        } else if(this.isGameWon()) {
-            return handlingGameWin();
-        } else if(livingEnemies <= 0 && !this.endboss.active) {
-            this.endboss.active = true;
-            this.endboss.setWalkGroundY();
-            this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
-        }
-    }
-
-
-    /**
-     * Debug logs within game status update interval
-     */
-    debugLogs() {
-        console.log('livingEnemies', livingEnemies);
-        console.log('this.character.bottles #', this.character.bottles.length);
+        intervalId = setInterval(() => {
+            this.debugLogs(false);
+            this.updateStatusBars();
+            if(this.isGameOver()) {
+                return handlingGameOver();
+            } else if(this.isGameWon()) {
+                return handlingGameWin();
+            } else if(livingEnemies <= 0 && !this.endboss.active) {
+                this.endboss.active = true;
+                this.endboss.setWalkGroundY();
+                this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
+            }
+        }, 300);
+        this.intervals.push(intervalId);
     }
 
 
@@ -179,6 +176,56 @@ class World {
     }
 
 
+    /**
+     * Debug logs within game status update interval
+     * @param {boolean} show
+     */
+    debugLogs(show) {
+        if(show){
+            console.log('livingEnemies', livingEnemies);
+            console.log('this.character.bottles #', this.character.bottles.length);
+        }
+    }
+
+
+    /**
+     * Check enemy hits (in both directions)
+     */
+    checkEnemyHits() {
+        this.level.enemies.forEach((enemy) => {
+            if(enemy.isDead() || this.character.isDead()) return;  
+            this.checkEnemyHitFromBottle(enemy);
+            if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
+                enemy.handlingHitFromAbove(this.character);
+            } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
+                enemy.handlingHitFromSideJump(this.character);
+            } else if(this.character.isHitOnGround(enemy)) {
+                this.character.handlingHitOnGround(enemy);
+            }
+        });
+    }
+    
+
+    /**
+     * Check if ememy is hit from bottle (part of enemies loop)
+     * @param {object} enemy - enemy object
+     */
+    checkEnemyHitFromBottle(enemy) {
+        // if(this.character.bottles.length > 0) {
+        //     let bottle = this.character.bottles[0];
+        //     if(enemy.isHitFromAbove(bottle, bottle.borderWidth * 0.5)) {
+        //         enemy.handlingHitFromBottle(bottle);                    
+        //     }
+        // }
+        if(flyingBottles.length > 0) {
+            let bottle = flyingBottles[0];
+            if(enemy.isHitFromAbove(bottle, bottle.borderWidth * 0.5)) {
+                enemy.handlingHitFromBottle(bottle);                    
+            }
+        }
+    }
+
+    
     /**
      * Check if game is paused
      * @returns {boolean}
@@ -215,32 +262,6 @@ class World {
     }
   
     
-    /**
-     * Check enemy hits (in both directions)
-     */
-    checkEnemyHits() {
-        this.level.enemies.forEach((enemy) => {
-            if(enemy.isDead() || this.character.isDead()) {
-              return;  
-            }
-            if(this.character.bottles.length > 0) {
-                let bottle = this.character.bottles[0];
-                if(enemy.isHitFromAbove(bottle, bottle.borderWidth * 0.5)) {
-                    enemy.handlingHitFromBottle(bottle);                    
-                }
-            }
-            if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
-                enemy.handlingHitFromAbove(this.character);
-            } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
-                enemy.handlingHitFromSideJump(this.character);
-                // this.character.handlingHitFromSideJump(enemy);
-            } else if(this.character.isHitOnGround(enemy)) {
-                this.character.handlingHitOnGround(enemy);
-            }
-        });
-    }
-
-
     /**
      * Check object collection (coin/bottle collection)
      * @param {string} objectName - class name of the collectable object (lower case)

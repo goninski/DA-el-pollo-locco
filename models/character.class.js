@@ -122,11 +122,11 @@ class Character extends MovableObject {
      * Animate calls
      */
     animate() {
-        this.mainKeystrokesHandler();
-        this.throwBottleKeystrokeHandler();
-        this.animateWalkingHurtDeath();
-        this.animateJumping();
-        this.animateIdle();
+        this.mainKeystrokesHandler(); //60x
+        this.throwBottleKeystrokeHandler(); //70ms
+        this.animateWalkingHurtDeath(); //50ms
+        this.animateJumping(); //100ms
+        this.animateIdle(); //300ms
         this.saveIntervalsGlobally();
     }
 
@@ -164,9 +164,10 @@ class Character extends MovableObject {
             if(gameIsPaused) return;
             if(this.world.keystrokes.KEY_B) {
                 // this.throwBottle();
-                debounceLeading(lastKeystroke_THROW, 150) ? this.throwBottle() : null;
+                debounceLeading(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
+                // debounceDelayed(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
             } 
-        }, 100);
+        }, 150);
         this.intervals.push(intervalId);
     }
 
@@ -311,7 +312,7 @@ class Character extends MovableObject {
         obj.collected = true;
         obj.hideObject();
         startAudioResumed(obj.audioCache.collect);
-        console.log('collected', objName, '#', this[objName + 's'].length, 'Status', this[objName + 'Status']);
+        console.log('collected', obj.objectName, '#' + this[objName + 's'].length, 'Status', this[objName + 'Status']);
     }
     
     
@@ -319,18 +320,24 @@ class Character extends MovableObject {
      * Throw bottle
      */
     throwBottle() {
+        console.log('#bottles before throw', this.bottles.length)
         if(this.bottles.length <= 0) return;
         let bottle = this.bottles[0];
         bottle.x = Math.round(this.borderX);
         bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
         bottle.handleThrow(this);
+        console.log('Thrown bottle', bottle.objectName);
         this.throwing = true;
-        setTimeout(() => {
-            // console.log('bottle.used?', bottle.used);
             this.bottles.shift();
             this.bottleStatus -= bottle.value;
             this.throwing = false;
-        }, 750);
+            console.log('#bottles after throw', this.bottles.length)
+        // setTimeout(() => {
+        //     this.bottles.shift();
+        //     this.bottleStatus -= bottle.value;
+        //     this.throwing = false;
+        //     console.log('#bottles after throw', this.bottles.length)
+        // }, 50);
     }
 
 
@@ -338,7 +345,6 @@ class Character extends MovableObject {
      * Jump animation on game win
      */
     winJump() {
-        // this.acceleration = 10;
         this.otherDirection ? this.otherDirection = false : null;
         this.x = 0;
         this.setWalkGroundY();

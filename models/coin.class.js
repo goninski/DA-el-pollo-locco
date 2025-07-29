@@ -1,9 +1,9 @@
+let coinId = 0;
+
 /**
  * Class representing collectable coins
  */
 class Coin extends CollectableObject {
-
-    static instanceId = 0;
 
     width = this.width * 0.7
     height = this.width * 1;
@@ -26,8 +26,8 @@ class Coin extends CollectableObject {
      */
     constructor() {
         super();
-        this.instanceId++;
-        this.objectName += this.instanceId;
+        coinId++;
+        this.objectName += coinId;
         this.roundDimensions();
         this.setRandomPosX();
         this.setWalkGroundY();
