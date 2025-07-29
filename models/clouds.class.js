@@ -1,14 +1,18 @@
 let cloudsId = 0;
 
-/**
- * Canvas clouds class
- */
+
+/** Class representing clouds for the canvas */
 class Clouds extends MovableObject {
 
     width = widthCanvas;
     height = heightCanvas;
 
 
+    /**
+     * Create clouds
+     * @param {string} imgPath - file path for the image
+     * @param {number} screenSlide - canvas screen slide
+     */
     constructor(imgPath, screenSlide = 0) {
         super();
         cloudsId++;

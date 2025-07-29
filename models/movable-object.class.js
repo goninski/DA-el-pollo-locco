@@ -1,6 +1,4 @@
-/**
- * Class for moveable objects
- */
+/** Class representing a moveable object  */
 class MovableObject extends DrawableObject {
 
     isEnemy = false;
@@ -9,15 +7,18 @@ class MovableObject extends DrawableObject {
     acceleration = 2.5;
     strength = 0;
     healthStatus = 100;
-    hits = 0;
+    hitDebouncer = 0;
     lastHit = 0;
     intervals = [];
     audio;
     audioFiles = {};
     audioCache = {};
-    countDeadHandling = 0;
+    deathDebouncer = 0;
 
 
+    /**
+     * Create a movable object
+     */
     constructor() {
         super();
     }
@@ -147,19 +148,14 @@ class MovableObject extends DrawableObject {
     }
 
 
-    // touchesObject(fromObj, xBuffer = 0) {
-    //     this.setBorderCoordinates();
-    //     return ( (this.borderX < fromObj.borderX) && (this.borderX + this.borderWidth > fromObj.borderX) && (this.borderY < fromObj.borderY + fromObj.borderHeight) && (this.borderY + this.borderHeight > fromObj.borderY) );
-    // }
-
-
     /**
      * Check if is hit from a counter object
      * @param {object} fromObj - counter object to check
      * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
      * @returns {boolean}
      */
-    isHit(fromObj, xBuffer = 0) {
+    isHitOnGround(fromObj, xBuffer = 0) {
+        if(this.isAboveGround()) return;
         return this.touchesObject(fromObj, xBuffer);
     }
 
@@ -200,16 +196,20 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Handling if hit from above
-     * @param {object} fromObj - counter object
+     * Check if is hit from side jump
+     * @param {object} fromObj - counter object to check
+     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @returns {boolean}
      */
-    handlingHitFromAbove(obj) {
-        obj.strength = 100;
-        if(this instanceof Endboss) {
-            obj.strength = 15;
-        }
-        console.log(this.objectName, '(handlingHitFromAbove');
-        this.handlingHit(obj);
+    isHitFromSideJump(fromObj, xBuffer = 0) {
+        this.setBorderCoordinates();
+        // if(fromObj instanceof Character) {
+        //     fromObj.consoleObjectCoordinates('(otherDirection '+ fromObj.otherDirection);
+        // }
+        if(!fromObj.isAboveGround()) return;
+        // if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
+        if(!this.isHitFromSide(fromObj, xBuffer)) return;
+        return true;
     }
 
 
@@ -226,24 +226,66 @@ class MovableObject extends DrawableObject {
         this.handlingHit(obj);
     }
 
+
+    /**
+     * Handling if hit from above
+     * @param {object} fromObj - counter object
+     */
+    handlingHitFromAbove(obj) {
+        obj.strength = 100;
+        if(this instanceof Endboss) {
+            obj.strength = 15;
+        }
+        console.log(this.objectName, '(handlingHitFromAbove)');
+        this.handlingHit(obj);
+    }
+
+
+    /**
+     * Handling if hit from side jump
+     * @param {object} fromObj - counter object
+     */
+    handlingHitFromSideJump(obj) {
+        if(!(this instanceof Endboss)) return;
+        this.strength = 4;
+        obj.strength = 20;
+        console.log(this.objectName, '(handlingHitSideJump)');
+        this.handlingHit(obj);
+    }
+
   
+    /**
+     * Handling if hit from touch
+     * @param {object} fromObj - counter object
+     */
+    handlingHitOnGround(obj) {
+        obj.strength = 15;
+        if(obj instanceof Endboss) {
+            obj.strength = 30;
+        }
+        console.log(this.objectName, '(handlingHitFromGround)');
+        this.handlingHit(obj);
+    }
+
+
     /**
      * General handling if hit
      * @param {object} fromObj - counter object
      */
     handlingHit(obj) {
-        this.hits++;
-        // if(this instanceof Endboss || this instanceof Coin) {
-        //     lastWinRelevantHit = new Date().getTime();
-        // }
-        this.healthStatus -= obj.strength;
-        if(this.healthStatus <= 0) {
-            this.healthStatus = 0;
-        } else {
+        if(this.hitDebouncer === 0) {
             this.lastHit = new Date().getTime();
+            this.hitDebouncer++;
+            this.healthStatus -= obj.strength;
+            this.healthStatus <= 0 ? this.healthStatus = 0 : null;
+        } else {
+            if(debounceDelayed(this.lastHit, 1000)) {
+                this.hitDebouncer = 0;
+            }
         }
-        // console.log(this.objectName, 'is hit from', obj.objectName);
-        // console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hits:', this.hits);
+        console.log('\n' +  this.objectName, 'is hit from', obj.objectName);
+        console.log(this.objectName, 'healthStatus:', this.healthStatus, 'hitDebouncer:', this.hitDebouncer);
+        console.log(obj.objectName, 'healthStatus:', obj.healthStatus, 'hitDebouncer:', obj.hitDebouncer);
     }
 
 
@@ -252,9 +294,7 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHurt() {
-        return trueDuring(this.lastHit, 500);
-        // let timePassed = new Date().getTime() - this.lastHit;
-        // return timePassed <= 500;
+        return debounceLeading(this.lastHit, 500);
     }
 
 
@@ -281,7 +321,7 @@ class MovableObject extends DrawableObject {
         if(this.isEnemy && !(this instanceof Endboss)) {
             livingEnemies--;
         }
-        this.countDeadHandling++;
+        this.deathDebouncer++;
         this.deathAnimation();
         this.clearIntervals(clearTimeout);
         this.destroyed = true;

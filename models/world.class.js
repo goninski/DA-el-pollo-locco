@@ -1,6 +1,4 @@
-/**
- * Class for the game world
- */
+/** Class represeting a game world */
 class World {
 
     keystrokes;
@@ -19,6 +17,11 @@ class World {
     statusBars = level1.statusBars;
 
 
+    /**
+     * Create a world
+     * @param {element} canvas - canvas dom element
+     * @param {object} keystrokes - keystroke class object
+     */
     constructor(canvas, keystrokes) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -115,7 +118,7 @@ class World {
     setGlobalIntervals() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
-            timer = playTimeCounter();
+            timer = runPlayTimeCounter();
             document.getElementById('playTimer').innerHTML =  timer;
         }, 1000);
         this.intervals.push(intervalId);
@@ -189,13 +192,12 @@ class World {
 
     /**
      * Check if game is won
-     * @returns {boolean} - during ??
+     * @returns {boolean}
      */
     isGameWon() {
         // return livingEnemies <= 0;
         if(this.endboss.isDead()) {
-            return trueDuring(this.endboss.lastHit, 1500);
-            // return during(this.endboss.lastHit, 1500);
+            return debounceDelayed(this.endboss.lastHit, 1500);
         }
     }
     
@@ -206,8 +208,7 @@ class World {
      */
     isGameOver(){
         if(this.character.isDead()) {
-            return trueDuring(this.character.lastHit, 2500);
-            // return during(this.character.lastHit, 2500);
+            return debounceDelayed(this.character.lastHit, 2000);
         }
     }
   
@@ -228,8 +229,11 @@ class World {
             }
             if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
                 enemy.handlingHitFromAbove(this.character);
-            } else if(this.character.isHit(enemy)) {
-                this.character.handlingHit(enemy);
+            } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
+                enemy.handlingHitFromSideJump(this.character);
+                // this.character.handlingHitFromSideJump(enemy);
+            } else if(this.character.isHitOnGround(enemy)) {
+                this.character.handlingHitOnGround(enemy);
             }
         });
     }

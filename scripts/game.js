@@ -1,28 +1,29 @@
-let imgPathBase = '/assets/img/';
+let fullscreenAvailable = document.fullscreenEnabled;
 let showObjectBorders = false;
+let imgPathBase = '/assets/img/';
+let body;
+let world;
 let canvas;
 let widthCanvas = 1000;
 let heightCanvas = Math.round(widthCanvas / 1.777);
 let walkOffset = 48;
-let body;
-let world;
+let livingEnemies;
 let keystrokes;
 let lastKeystroke;
 let lastKeystroke_LEFT;
 let lastKeystroke_RIGHT;
 let lastKeystroke_JUMP;
 let lastKeystroke_THROW;
-let gameIsPaused = false;
+let time = {};
 let timer;
 let secondsPlay = 0;
-let livingEnemies;
 let intervalId = 0;
 let stoppableIntervals = [];
-let fullscreenAvailable = document.fullscreenEnabled;
+let gameIsPaused = false;
 
 
 /**
- * Initial on load - and restart
+ * Initial - on page load and restart
  * @param {boolean} skipStartScreen
  */
 function initGame(skipStartScreen = false) {
@@ -135,8 +136,6 @@ function handlingGameWon(event = null) {
     body.classList.add('win-screen');
     startAudio(audioCache.gameWin);
     world.character.winJump();
-    // world.character.jump(30);
-    // world.character.loadImage(world.character.IMAGES_JUMPING[3]);
     stoppableIntervals.forEach(clearInterval);
     // setTimeout(() => restartGame(null), 12000);
 }    
@@ -263,11 +262,25 @@ function resumeGame() {
 /**
  * Returns a playtime counter
  */
-function playTimeCounter() {
+function runPlayTimeCounter() {
     let timeDiff = 60 * 60 * 1000
     let dateObj = new Date(secondsPlay * 1000 - timeDiff);
     secondsPlay++;
-    let time = {
+    setTimeObject(dateObj);
+    if(time.hours >= 1){
+        return timer = time.hours + ':' + time.minutes + ':' + time.seconds + '';
+    } else {
+        return timer = time.minutes + ':' + time.seconds + '';
+    }
+}
+
+
+/**
+ * Set time object
+ * @param {date} dateObj - date object
+ */
+function setTimeObject(dateObj) {
+    time = {
         hours:dateObj.getHours(),
         minutes:dateObj.getMinutes(),
         seconds:dateObj.getSeconds(),
@@ -277,13 +290,6 @@ function playTimeCounter() {
         let val = i[1];
         time[key] = (val < 10 ? '0' + val : val);
     });
-    if(time.hours >= 1){
-        timer = time.hours + ':' + time.minutes + ':' + time.seconds + '';
-    } else {
-        timer = time.minutes + ':' + time.seconds + '';
-    }
-    // console.log(timer);
-    return timer;
 }
 
 
@@ -307,7 +313,7 @@ function clearIntervalAfterTimeout(intervalId, timeout = 5000) {
 
 
 /**
- * Helper: returns passed time since a start time
+ * Helper: return passed time since a start time
  * 
  * @param {Date} startTime - will be compared to now
  */
@@ -318,30 +324,36 @@ function getPassedTime(startTime, sourceInfo = '') {
 
 
 /**
- * Helper: returns true only for a certain duration since start time
- * 
- * @param {Date} startTime - will be compared to now
- * @param {number} duration - ms
+ * Helper: debounce leading signal (return true during a certain duration since start time)
+ *  
+ * @param {Date} startTime - start time to compare with now
+ * @param {number} duration - duration ms for the leading signal
  * @returns {boolean}
  */
-function trueDuring(startTime, duration = 1000) {
+function debounceLeading(startTime, duration = 1000) {
     let currentTime = new Date().getTime();
     return (currentTime - startTime) <= duration;
 }
+// function trueDuring(startTime, duration = 1000) {
+//     return debounceLeading(startTime, duration);
+// }
 
 
 /**
- * Helper: returns true only after a certain duration since start time
+ * Helper: debounce signal delayed (return true after a certain duration since start time)
  * 
- * @param {Date} startTime
- * @param {number} delay - ms
+ * @param {Date} startTime - start time to compare with now
+ * @param {number} delay - ms to delay the signal
  * @returns {boolean}
  */
-function trueDebounced(startTime, delay = 150) {
+function debounceDelayed(startTime, delay = 150) {
     let currentTime = new Date().getTime();
     return (currentTime - startTime) >= delay;
 }
-function debounced(startTime, delay = 150) {
-    let currentTime = new Date().getTime();
-    return (currentTime - startTime) <= delay;
-}
+// function trueDebounced(startTime, delay = 150) {
+//     return debounceDelayed(startTime, delay);
+// }
+// function debounced(startTime, delay = 150) {
+//     let currentTime = new Date().getTime();
+//     return (currentTime - startTime) <= delay;
+// }

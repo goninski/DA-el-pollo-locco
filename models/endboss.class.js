@@ -1,14 +1,13 @@
 let endbossId = 0;
 
-/**
- * Class for the endboss
- */
+
+/** Class representing a endboss */
 class Endboss extends MovableObject {
 
     isEnemy = true;
     width = this.width * 2;
     height = this.width / 0.86;
-    strength = 10;
+    strength = 25;
     active = false;
     lastApproach = null;
 
@@ -63,6 +62,9 @@ class Endboss extends MovableObject {
     }
 
 
+    /**
+     * Create a endboss
+     */
     constructor() {
         super();
         endbossId++;
@@ -154,48 +156,42 @@ class Endboss extends MovableObject {
 
     /**
      * Check if close to character
+     * @param {number} distance - distance in % of the canvas width
      * @returns {boolean}
      */
-    isCloseToCharacter() {
-        let characterCenterX = this.world.character.x + (this.world.character.width  / 2);
-        return (this.borderX -characterCenterX < (widthCanvas / 2.5));
+    isCloseToCharacter(distance) {
+        let characterPos = this.world.character.borderX + this.world.character.borderWidth;
+        return (this.borderX - characterPos < (widthCanvas * distance / 100));
+    }
+
+
+
+    /**
+     * Check if character is acting (jumping/throwing)
+     * @returns {boolean}
+     */
+    isCharacterActing() {
+        return (this.world.character.isAboveGround() || this.world.character.throwing);   
     }
 
 
     /**
-     * Check if very close to character
-     * @returns {boolean}
-     */
-    isVeryCloseToCharacter() {
-        let characterCenterX = this.world.character.x + (this.world.character.width  / 2);
-        return (this.borderX -characterCenterX < (widthCanvas / 3));
-    }
-
-
-    /**
-     * Set last approach time (=if close to character)
-     */
-    setLastCharacterApproachTime() {
-        if(this.isCloseToCharacter()) {
-            if(this.lastApproach === null) {
-                this.lastApproach = new Date().getTime();
-            }
-        } else {
-            this.lastApproach = null;
-        }
-        console.log('lastApproach', this.lastApproach);
-    }
-
-
-    /**
-     * Check if is on alert
-     * @returns {boolean}
+     * Return true if alert is needed
      */
     isAlert() {
-        this.setLastCharacterApproachTime();
+        // console.log(this.isCharacterActing());
         if(this.isAttacking()) return;
-        if(!this.isCloseToCharacter()) return;
-        return trueDuring(this.lastApproach, 3000);
+        if(this.world.character.isIdle || this.world.character.isIdleLong) return;
+        return (this.isCloseToCharacter(45) || this.isCharacterActing());
+    }
+
+
+    /**
+     * Return true if attack is needed
+     */
+    isAttacking() {
+        if(this.world.character.isIdle || this.world.character.isIdleLong) return;
+        return (this.isCloseToCharacter(33) || this.isCharacterActing());
     }
 
 
@@ -210,16 +206,7 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Check if is attacking
-     */
-    isAttacking() {
-        // return this.isVeryCloseToCharacter() && (this.healthStatus > 0 && this.healthStatus < 70);
-        return this.isVeryCloseToCharacter();
-    }
-
-
-    /**
-     * Handling the attack (attack animation)
+     * Handling if on attack
      */
     handlingAttack() {
         let imagePaths = 'IMAGES_ATTACK';
@@ -233,8 +220,6 @@ class Endboss extends MovableObject {
      */
     handlingHurt() {
         this.stopWalkAudios()
-        // stopAudio(this.audioCache.walk);
-        // stopAudio(this.audioCache.walkSteps);
         startAudio(this.audioCache.hurt, 0.6);
         super.handlingHurt();
     }
@@ -245,10 +230,8 @@ class Endboss extends MovableObject {
      */
     handlingDeath() {
         // console.log(this.countDeadHandling);
-        // if(this.countDeadHandling === 0) {
+        // if(this.deathDebouncer === 0) {
             this.stopWalkAudios()
-            // stopAudio(this.audioCache.walk);
-            // stopAudio(this.audioCache.walkSteps);
             startAudio(this.audioCache.dead);
             super.handlingDeath();
         // }

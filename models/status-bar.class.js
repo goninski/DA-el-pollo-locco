@@ -1,6 +1,4 @@
-/**
- * Class for status bars
- */
+/** Class representing a status bar */
 class StatusBar extends DrawableObject {
 
     height = this.width / 3.77;
@@ -47,6 +45,12 @@ class StatusBar extends DrawableObject {
     ]
 
 
+    /**
+     * Create a status bar
+     * @param {string} statusType - 'HEALTH', 'ENDBOSS'
+     * @param {number} x - x position 
+     * @param {number} y - y position
+     */
     constructor(statusType, x, y) {
         super();
         this.positionObject(x, y);

@@ -1,3 +1,4 @@
+/** Class representing keystrokes */
 class Keystrokes {
 
     KEY_LEFT = false;
@@ -6,6 +7,9 @@ class Keystrokes {
     KEY_B = false;
 
     
+    /**
+     * Create keystrokes
+     */
     constructor() {
         this.bindKeyPressEvents();
         if(isTouchEnabled()) {

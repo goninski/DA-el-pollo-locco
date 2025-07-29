@@ -1,7 +1,8 @@
 let coinId = 0;
 
+
 /**
- * Class for collectable coins
+ * Class representing collectable coins
  */
 class Coin extends CollectableObject {
 
@@ -21,6 +22,9 @@ class Coin extends CollectableObject {
     }
 
     
+    /**
+     * Create a coin - and place it randomly
+     */
     constructor() {
         super();
         coinId++;

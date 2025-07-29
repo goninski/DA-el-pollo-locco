@@ -1,6 +1,4 @@
-/**
- * Class for collectable objects
- */
+/** Class representing a collectable object  */
 class CollectableObject extends MovableObject {
 
     value = 0;
@@ -12,6 +10,9 @@ class CollectableObject extends MovableObject {
     throwingInterval;
 
     
+    /**
+     * Create a collectable object
+     */
     constructor() {
         super();
     }

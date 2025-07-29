@@ -1,6 +1,4 @@
-/**
- * Class for drawables objects
- */
+/** Class representing a drawable object */
 class DrawableObject {
     
     skipDrawing = false;
@@ -20,6 +18,9 @@ class DrawableObject {
     destroyed = false;
 
     
+    /**
+     * Create a drawable object
+     */
     constructor() {
         this.objectName = this.constructor.name;
     }

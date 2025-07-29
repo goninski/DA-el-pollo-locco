@@ -20,53 +20,35 @@ function startAudio(audioObj, volume = 1, loop = false) {
     currentAudio = audioObj;
     audioObj.volume = volume;
     audioObj.loop = loop;
-    if(loop) {
-        if(!loopedAudios.includes(audioObj)) {
-            loopedAudios.push(audioObj);        
-        };
-    }
-    checkNSetAudioMuting(audioObj);
+    setLoopedAudioArray(audioObj);
+    setAudioMuting(audioObj);
     audioObj.play().catch(error => {
         audioObj.muted = true;
         audioIsMuted = true;
         body.classList.add('audio-muted', 'audio-auto-muted');
-        console.log('audioplay error:', error);
+        console.log('Audio auto muted ! >>', error);
     });
-    // !audioObj.loop ? loopedAudios.pop() : null;
 }
 
 
 /**
- * Start audio debounced - still in use ??
+ * Set array for looped audio
  * @param {object} audioObj - audio object
- * @param {date} startTime
- * @param {number} delay - ms
- * @param {number} volume - 0 to 1
- * @param {boolean} loop 
  */
-function startAudioDebounced(audioObj, startTime, delay = 150, volume = 1, loop = false) {
-    if(debounced(startTime, delay)) {
-        startAudio(audioObj, volume, loop);
+function setLoopedAudioArray(audioObj) {
+    if(audioObj.loop) {
+        if(!(loopedAudios.includes(audioObj))) {
+            loopedAudios.push(audioObj);        
+        };
     }
 }
 
 
 /**
- * Start audio resumed - still in use ??
- * @param {object} audioObj - audio object
- * @param {number} volume - 0 to 1
- */
-function startAudioResumed(audioObj, volume = 1) {
-    audioObj.currentTime = 0;
-    startAudio(audioObj, volume, false)
-}
-
-
-/**
- * Check and set audio muting state
+ * Set audio muting depending on state
  * @param {object} audioObj - audio object
  */
-function checkNSetAudioMuting(audioObj) {
+function setAudioMuting(audioObj) {
     // console.log('audioIsMuted ?', audioIsMuted);
     if(audioIsMuted) {
         audioObj.muted = true;
@@ -79,12 +61,38 @@ function checkNSetAudioMuting(audioObj) {
 
 
 /**
- * Stop audios (loop)
+ * Start audio debounced leading
+ * @param {object} audioObj - audio object
+ * @param {date} startTime - start time for compare to now
+ * @param {number} duration - valid leading signal duration
+ * @param {number} volume - 0 to 1
+ * @param {boolean} loop 
+ */
+function startAudioDebouncedLeading(audioObj, startTime, duration = 150, volume = 1, loop = false) {
+    if(debounceLeading(startTime, duration)) {
+        startAudio(audioObj, volume, loop);
+    }
+}
+
+
+/**
+ * Start audio resumed (from beginning) - still in use ??
+ * @param {object} audioObj - audio object
+ * @param {number} volume - 0 to 1
+ */
+function startAudioResumed(audioObj, volume = 1) {
+    audioObj.currentTime = 0;
+    startAudio(audioObj, volume, false)
+}
+
+
+/**
+ * Stop audios
  */
 function stopAudios() {
     currentAudio.pause();
     loopedAudios.forEach(item => item.pause());
-    loopedAudios = [];
+    // loopedAudios = [];
 }
 
 

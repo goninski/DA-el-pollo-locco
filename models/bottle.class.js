@@ -1,8 +1,6 @@
 let bottleId = 0;
 
-/**
- * Class for collectable and throwable bottles
- */
+/** Class representing a bottle */
 class Bottle extends CollectableObject {
     
     width = this.width * 0.7
@@ -40,6 +38,9 @@ class Bottle extends CollectableObject {
     }
 
     
+    /**
+     * Create a bottle - and place it randomly on ground level
+     */
     constructor() {
         super();
         bottleId++;

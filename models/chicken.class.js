@@ -1,13 +1,12 @@
 let chickenId = 0;
 
-/**
- * Class for the chickens 
- */
+
+/**Class representing a chicken  */
 class Chicken extends MovableObject {
 
     isEnemy = true;
     height = this.width / 1.02;
-    strength = 3;
+    strength = 15;
 
     IMAGES_WALKING = [
         imgPathBase + '3_enemies_chicken/chicken_normal/1_walk/1_w.png',
@@ -25,6 +24,9 @@ class Chicken extends MovableObject {
     }
 
 
+    /**
+     * Create a chicken - and place it randomly on ground level
+     */
     constructor() {
 
         super();
@@ -83,7 +85,7 @@ class Chicken extends MovableObject {
      * Handling death
      */
     handlingDeath() {
-        if(this.countDeadHandling === 0) {
+        if(this.deathDebouncer === 0) {
             stopAudio(this.audioCache.walk);
             startAudio(this.audioCache.dead);
             super.handlingDeath();

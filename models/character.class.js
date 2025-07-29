@@ -1,6 +1,4 @@
-/**
- * Class for Main Character (Pepe)
- */
+/**Class representing the main character (Pepe) */
 class Character extends MovableObject {
 
     world;
@@ -90,6 +88,9 @@ class Character extends MovableObject {
     }
 
 
+    /**
+     * Create character and place it on ground level
+     */
     constructor() {
         super();
         this.roundDimensions();
@@ -175,7 +176,7 @@ class Character extends MovableObject {
         }
         else if(this.world.keystrokes.KEY_SPACE  && !this.isAboveGround()) {
             this.jump(30);
-            startAudioDebounced(this.audioCache.jump, lastKeystroke_JUMP, 125);
+            startAudioDebouncedLeading(this.audioCache.jump, lastKeystroke_JUMP, 125);
             this.isIdle = false;
             this.isIdleLong = false;
         }
@@ -202,8 +203,8 @@ class Character extends MovableObject {
      */
     keyObserverSlow() {
         if(this.world.keystrokes.KEY_B) {
-            this.throwBottle();
-            // debounced(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
+            // this.throwBottle();
+            debounceLeading(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
         } 
     }
 
@@ -215,10 +216,10 @@ class Character extends MovableObject {
         if(!this.isAboveGround()) {
             if(this.isDead()) {
                 this.handlingDeath();
-                startAudioDebounced(this.audioCache.dead, this.lastHit, 125, 0.7);
+                startAudioDebouncedLeading(this.audioCache.dead, this.lastHit, 125, 0.7);
             } else if(this.isHurt()) {
                 this.handlingHurt();
-                startAudioDebounced(this.audioCache.hurt, this.lastHit, 125);
+                startAudioDebouncedLeading(this.audioCache.hurt, this.lastHit, 125);
             } else if(!this.isIdle && !this.isIdleLong) {
                 this.walkingAnimation();
             }
@@ -292,7 +293,7 @@ class Character extends MovableObject {
         obj.collected = true;
         obj.hideObject();
         startAudioResumed(obj.audioCache.collect);
-        // console.log('collectedObject!', objName + 'Status', this[objName + 'Status']);
+        // console.log('collected', objName, '#', this[objName + 's'].length, 'Status', this[objName + 'Status']);
     }
     
     
@@ -305,11 +306,12 @@ class Character extends MovableObject {
         bottle.x = Math.round(this.borderX);
         bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
         bottle.handleThrow(this);
-        // this.throwing = true;
+        this.throwing = true;
         setTimeout(() => {
             // console.log('bottle.used?', bottle.used);
             this.bottles.shift();
             this.bottleStatus -= bottle.value;
+            this.throwing = false;
         }, 750);
     }
 
