@@ -112,12 +112,12 @@ class Keystrokes {
             keystrokes.KEY_SPACE = false;
         });
         document.getElementById('btnThrowBottle').addEventListener('touchstart', (event) => {
-            event.preventDefault();
+            // event.preventDefault();
             keystrokes.KEY_B = true;
             lastKeystroke = new Date().getTime();
         });
         document.getElementById('btnThrowBottle').addEventListener('touchend', (event) => {
-            event.preventDefault();
+            // event.preventDefault();
             keystrokes.KEY_B = false;
         });
     }
