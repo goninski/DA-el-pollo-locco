@@ -12,9 +12,10 @@ class Keystrokes {
      */
     constructor() {
         this.bindKeyPressEvents();
-        if(isTouchEnabled()) {
-            this.bindBtnTouchEventsToKeyPress();
-        }
+        this.bindBtnTouchEventsToKeyPress();
+        // if(isTouchEnabled()) {
+        //     this.bindBtnTouchEventsToKeyPress();
+        // }
     }
 
 
