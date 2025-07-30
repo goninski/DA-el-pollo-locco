@@ -123,7 +123,7 @@ class Character extends MovableObject {
      */
     animate() {
         this.mainKeystrokesHandler(); //60x
-        this.throwBottleKeystrokeHandler(); //70ms
+        // this.throwBottleKeystrokeHandler(); //70ms
         this.animateWalkingHurtDeath(); //50ms
         this.animateJumping(); //100ms
         this.animateIdle(); //300ms
@@ -147,6 +147,8 @@ class Character extends MovableObject {
                 this.moveRight(this.speed);
             } else if(this.world.keystrokes.KEY_SPACE) {
                 this.handleKeystrokeSpace();
+            } else if(this.world.keystrokes.KEY_B) {
+                this.throwBottle();
             } else {
                 this.checkAndSetIdle();
             }
