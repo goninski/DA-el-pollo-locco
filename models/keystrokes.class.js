@@ -32,23 +32,23 @@ class Keystrokes {
      * @param {event} event - keypress
      */
     updateKeystrokesObj(event) {
-        switch(event.key) {
-            case 'ArrowLeft':
+        switch(event.keyCode) {
+            case 37:
                 keystrokes.KEY_LEFT = true
                 lastKeystroke = new Date().getTime();
                 lastKeystroke_LEFT = lastKeystroke;
                 break
-            case 'ArrowRight':
+            case 39:
                 keystrokes.KEY_RIGHT = true;
                 lastKeystroke = new Date().getTime();
                 lastKeystroke_RIGHT = lastKeystroke;
                 break
-            case 'b':
+            case 66:
                 keystrokes.KEY_B = true;
                 lastKeystroke = new Date().getTime();
                 lastKeystroke_THROW = lastKeystroke;
                 break;
-            case ' ':
+            case 32:
                 event.preventDefault();
                 keystrokes.KEY_SPACE = true;
                 lastKeystroke = new Date().getTime();
@@ -63,17 +63,17 @@ class Keystrokes {
      * @param {event} event - release of keypress
      */
     resetKeystrokesObj(event) {
-        switch(event.key) {
-            case 'ArrowLeft':
+        switch(event.keyCode) {
+            case 37:
                 keystrokes.KEY_LEFT = false
                 break
-            case 'ArrowRight':
+            case 39:
                 keystrokes.KEY_RIGHT = false;
                 break
-            case 'b':
+            case 66:
                 keystrokes.KEY_B = false;
             break
-            case ' ':
+            case 32:
                 keystrokes.KEY_SPACE = false;
         }
         // console.log(keystrokes);
@@ -121,5 +121,58 @@ class Keystrokes {
             keystrokes.KEY_B = false;
         });
     }
+
+
+    /**
+     * Update the keystrokes object for keydown >> OLD KEY INSTEAD KEY CODE
+     * @param {event} event - keypress
+     */
+    // updateKeystrokesObj(event) {
+    //     switch(event.key) {
+    //         case 'ArrowLeft':
+    //             keystrokes.KEY_LEFT = true
+    //             lastKeystroke = new Date().getTime();
+    //             lastKeystroke_LEFT = lastKeystroke;
+    //             break
+    //         case 'ArrowRight':
+    //             keystrokes.KEY_RIGHT = true;
+    //             lastKeystroke = new Date().getTime();
+    //             lastKeystroke_RIGHT = lastKeystroke;
+    //             break
+    //         case 'b':
+    //             keystrokes.KEY_B = true;
+    //             lastKeystroke = new Date().getTime();
+    //             lastKeystroke_THROW = lastKeystroke;
+    //             break;
+    //         case ' ':
+    //             event.preventDefault();
+    //             keystrokes.KEY_SPACE = true;
+    //             lastKeystroke = new Date().getTime();
+    //             lastKeystroke_JUMP = lastKeystroke;
+    //     }
+    //     // console.log(keystrokes);
+    // }
+
+
+    /**
+     * Reset the keystrokes object on keyup >> OLD KEY INSTEAD KEY CODE
+     * @param {event} event - release of keypress
+     */
+    // resetKeystrokesObj(event) {
+    //     switch(event.key) {
+    //         case 'ArrowLeft':
+    //             keystrokes.KEY_LEFT = false
+    //             break
+    //         case 'ArrowRight':
+    //             keystrokes.KEY_RIGHT = false;
+    //             break
+    //         case 'b':
+    //             keystrokes.KEY_B = false;
+    //         break
+    //         case ' ':
+    //             keystrokes.KEY_SPACE = false;
+    //     }
+    //     // console.log(keystrokes);
+    // }
 
 };
