@@ -351,6 +351,8 @@ body.is-touch-device.play-screen .nav-panel {
         img.label-img {
             position: absolute;
             height: 24px;
+            cursor: none;
+            display: none;
         }
     }
     button.close {
