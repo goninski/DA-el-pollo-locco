@@ -19,6 +19,7 @@ let secondsPlay = 0;
 let intervalId = 0;
 let stoppableIntervals = [];
 let livingEnemies;
+// let flyingBottle = {};
 let flyingBottles = [];
 let gameIsPaused = false;
 

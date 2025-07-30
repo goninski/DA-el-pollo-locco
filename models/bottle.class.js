@@ -6,7 +6,7 @@ class Bottle extends CollectableObject {
     width = this.width * 0.7
     height = this.width * 1;
     objectPadding = [0.1, 0.2, 0.1, 0.2];
-    value = 10;
+    value = 20;
     strength = 10;
     throwableObj = true;
     flyingBottles = [];

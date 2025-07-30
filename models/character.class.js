@@ -15,6 +15,7 @@ class Character extends MovableObject {
     isIdle = false;
     isIdleLong = false;
     throwing = false;
+    throwDebouncer = 0;
 
     IMAGES_IDLE = [
         imgPathBase + '2_character_pepe/1_idle/idle/I-1.png',
@@ -122,7 +123,7 @@ class Character extends MovableObject {
      * Animate calls
      */
     animate() {
-        this.mainKeystrokesHandler(); //60x
+        this.keystrokesHandler(); //60x
         // this.throwBottleKeystrokeHandler(); //70ms
         this.animateWalkingHurtDeath(); //50ms
         this.animateJumping(); //100ms
@@ -132,9 +133,9 @@ class Character extends MovableObject {
 
 
     /**
-     * Main keystrokes handler (fast interval)
+     * Keystrokes handler 
      */
-    mainKeystrokesHandler() {
+    keystrokesHandler() {
         intervalId = setInterval(() => {
             if(gameIsPaused || this.isDead()) return;
             this.isIdle = false;
@@ -158,20 +159,20 @@ class Character extends MovableObject {
     }
 
 
-    /**
-     * Throw bottle keystroke handler (slower interval)
-     */
-    throwBottleKeystrokeHandler() {
-        intervalId = setInterval(() => {
-            if(gameIsPaused) return;
-            if(this.world.keystrokes.KEY_B) {
-                // this.throwBottle();
-                debounceLeading(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
-                // debounceDelayed(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
-            } 
-        }, 150);
-        this.intervals.push(intervalId);
-    }
+    // /**
+    //  * Throw bottle keystroke handler (slower interval)
+    //  */
+    // throwBottleKeystrokeHandler() {
+    //     intervalId = setInterval(() => {
+    //         if(gameIsPaused) return;
+    //         if(this.world.keystrokes.KEY_B) {
+    //             // this.throwBottle();
+    //             debounceLeading(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
+    //             // debounceDelayed(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
+    //         } 
+    //     }, 150);
+    //     this.intervals.push(intervalId);
+    // }
 
 
     /**
@@ -322,24 +323,32 @@ class Character extends MovableObject {
      * Throw bottle
      */
     throwBottle() {
+        // debounceLeading(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
+        // debounceDelayed(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
         console.log('#bottles before throw', this.bottles.length)
         if(this.bottles.length <= 0) return;
-        let bottle = this.bottles[0];
-        bottle.x = Math.round(this.borderX);
-        bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
-        bottle.handleThrow(this);
-        console.log('Thrown bottle', bottle.objectName);
-        this.throwing = true;
+        if(this.throwDebouncer === 0) {
+            this.throwDebouncer++;
+            let bottle = this.bottles[0];
+            bottle.x = Math.round(this.borderX);
+            bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
+            bottle.handleThrow(this);
+            console.log('Thrown bottle', bottle.objectName);
             this.bottles.shift();
             this.bottleStatus -= bottle.value;
-            this.throwing = false;
             console.log('#bottles after throw', this.bottles.length)
-        // setTimeout(() => {
-        //     this.bottles.shift();
-        //     this.bottleStatus -= bottle.value;
-        //     this.throwing = false;
-        //     console.log('#bottles after throw', this.bottles.length)
-        // }, 50);
+            // setTimeout(() => {
+            //     this.bottles.shift();
+            //     this.bottleStatus -= bottle.value;
+            //     this.throwing = false;
+            //     console.log('#bottles after throw', this.bottles.length)
+            // }, 50);
+        } else {
+            // if(debounceLeading(lastKeystroke_THROW, 100)) {
+            // if(debounceDelayed(lastKeystroke_THROW, 50)) {
+                this.throwDebouncer = 0;
+            }
+
     }
 
 

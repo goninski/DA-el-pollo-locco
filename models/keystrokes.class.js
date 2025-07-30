@@ -13,9 +13,6 @@ class Keystrokes {
     constructor() {
         this.bindKeyPressEvents();
         this.bindBtnTouchEventsToKeyPress();
-        // if(isTouchEnabled()) {
-        //     this.bindBtnTouchEventsToKeyPress();
-        // }
     }
 
 
@@ -123,57 +120,5 @@ class Keystrokes {
         });
     }
 
-
-    /**
-     * Update the keystrokes object for keydown >> OLD KEY INSTEAD KEY CODE
-     * @param {event} event - keypress
-     */
-    // updateKeystrokesObj(event) {
-    //     switch(event.key) {
-    //         case 'ArrowLeft':
-    //             keystrokes.KEY_LEFT = true
-    //             lastKeystroke = new Date().getTime();
-    //             lastKeystroke_LEFT = lastKeystroke;
-    //             break
-    //         case 'ArrowRight':
-    //             keystrokes.KEY_RIGHT = true;
-    //             lastKeystroke = new Date().getTime();
-    //             lastKeystroke_RIGHT = lastKeystroke;
-    //             break
-    //         case 'b':
-    //             keystrokes.KEY_B = true;
-    //             lastKeystroke = new Date().getTime();
-    //             lastKeystroke_THROW = lastKeystroke;
-    //             break;
-    //         case ' ':
-    //             event.preventDefault();
-    //             keystrokes.KEY_SPACE = true;
-    //             lastKeystroke = new Date().getTime();
-    //             lastKeystroke_JUMP = lastKeystroke;
-    //     }
-    //     // console.log(keystrokes);
-    // }
-
-
-    /**
-     * Reset the keystrokes object on keyup >> OLD KEY INSTEAD KEY CODE
-     * @param {event} event - release of keypress
-     */
-    // resetKeystrokesObj(event) {
-    //     switch(event.key) {
-    //         case 'ArrowLeft':
-    //             keystrokes.KEY_LEFT = false
-    //             break
-    //         case 'ArrowRight':
-    //             keystrokes.KEY_RIGHT = false;
-    //             break
-    //         case 'b':
-    //             keystrokes.KEY_B = false;
-    //         break
-    //         case ' ':
-    //             keystrokes.KEY_SPACE = false;
-    //     }
-    //     // console.log(keystrokes);
-    // }
 
 };
