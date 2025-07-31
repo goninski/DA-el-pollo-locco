@@ -18,8 +18,8 @@ class LittleChicken extends Chicken {
     ];
 
     audioFiles = {
-        walk : audioPathBase + 'walk-chicken.mp3',
-        dead : audioPathBase + 'dead-chicken.wav',
+        walk : audioPathBase + 'chicken-walk.mp3',
+        dead : audioPathBase + 'chicken-death.mp3',
     }
 
 

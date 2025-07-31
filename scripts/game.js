@@ -98,6 +98,7 @@ function restartGame(event = null) {
  * Hide all screens
  */
 function hideAllScreens() {
+    body.classList.remove('legal-notice-screen');
     body.classList.remove('start-screen', 'slide-out');
     body.classList.remove('win-screen');
     body.classList.remove('game-over-screen');
@@ -178,6 +179,20 @@ function toggleHelp(event) {
         if(body.classList.contains('play-screen')) {
             pauseGame();
         }
+    }
+}   
+
+
+/**
+ * Toggle legal notice screen
+ * @param {event} event - legal notice button
+ */
+function toggleLegalNotice(event) {
+    event.stopPropagation();
+    if(body.classList.contains('legal-notice-screen')) {
+        body.classList.remove('legal-notice-screen');
+    } else {
+        body.classList.add('legal-notice-screen');
     }
 }   
 

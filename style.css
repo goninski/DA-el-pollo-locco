@@ -90,6 +90,10 @@ body:is(.win-screen, .xgame-over-screen) #screenOverlay {
     background-position: center;
     background-size: 66%;
 }
+#legalNoticeScreen {
+    display: none;
+}
+body.legal-notice-screen #legalNoticeScreen,
 body.start-screen #startScreen,
 body.win-screen :is(#winScreen, #screenOverlay),
 body.game-over-screen :is(#gameOverScreen, #screenOverlay) {
@@ -99,7 +103,7 @@ body.start-screen.slide-out #startScreen {
     transform: translateY(-100%);
 }
 
-body.help-screen #screenOverlay {
+body:is(.help-screen, .legal-notice-screen) #screenOverlay {
     display: block;
     backdrop-filter: blur(3px);
 }

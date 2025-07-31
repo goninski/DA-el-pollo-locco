@@ -323,8 +323,26 @@ class Character extends MovableObject {
      * Throw bottle
      */
     throwBottle() {
-        // debounceLeading(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
-        // debounceDelayed(lastKeystroke_THROW, 50) ? this.throwBottle() : null;
+        if(this.bottles.length <= 0) return;
+        // if(debounceLeading(lastKeystroke_THROW, 100)) {
+        if(debounceDelayed(lastKeystroke_THROW, 100)) {
+            console.log('#bottles before throw', this.bottles.length)
+            let bottle = this.bottles[0];
+            bottle.x = Math.round(this.borderX);
+            bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
+            bottle.handleThrow(this);
+            console.log('Thrown bottle', bottle.objectName);
+            this.bottles.shift();
+            this.bottleStatus -= bottle.value;
+            console.log('#bottles after throw', this.bottles.length)
+        }
+    }
+
+
+    /**
+     * Throw bottle old
+     */
+    xthrowBottle() {
         console.log('#bottles before throw', this.bottles.length)
         if(this.bottles.length <= 0) return;
         if(this.throwDebouncer === 0) {
@@ -344,11 +362,8 @@ class Character extends MovableObject {
             //     console.log('#bottles after throw', this.bottles.length)
             // }, 50);
         } else {
-            // if(debounceLeading(lastKeystroke_THROW, 100)) {
-            // if(debounceDelayed(lastKeystroke_THROW, 50)) {
-                this.throwDebouncer = 0;
-            }
-
+            this.throwDebouncer = 0;
+        }
     }
 
 
