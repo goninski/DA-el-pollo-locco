@@ -1,6 +1,6 @@
 let audioPathBase = '/assets/audio/';
-let audioIsMuted = false;
-let audioMutedByUser = false;
+let audioMuted = false;
+// let audioMutedByUser = false;
 let currentAudio;
 let loopedAudios = [];
 let audioCache = {
@@ -24,9 +24,10 @@ function startAudio(audioObj, volume = 1, loop = false) {
     setAudioMuting(audioObj);
     audioObj.play().catch(error => {
         audioObj.muted = true;
-        audioIsMuted = true;
+        audioMuted = true;
+        localStorage.setItem("audioMutedByUser", "auto");
         body.classList.add('audio-muted', 'audio-auto-muted');
-        console.log('Audio auto muted ! >>', error);
+        // console.log('Audio auto muted ! >>', error);
     });
 }
 
@@ -49,12 +50,13 @@ function setLoopedAudioArray(audioObj) {
  * @param {object} audioObj - audio object
  */
 function setAudioMuting(audioObj) {
-    // console.log('audioIsMuted ?', audioIsMuted);
-    if(audioIsMuted) {
+    // console.log('audioMuted ?', audioMuted);
+    if(audioMuted) {
         audioObj.muted = true;
         body.classList.add('audio-muted');
     } else {
         audioObj.muted = false;
+        localStorage.setItem("audioMutedByUser", "false");
         body.classList.remove('audio-muted', 'audio-auto-muted');
     }
 }
@@ -116,11 +118,13 @@ function stopAudio(audioObj) {
  */
 function toggleAudioMute(event = null) {
     event ? event.stopPropagation() : null;
-    if(audioIsMuted) {
-        audioMutedByUser = false;
+    if(audioMuted) {
+        // audioMutedByUser = false;
+        localStorage.setItem("audioMutedByUser", "false");
         unmuteAudio(event);
     } else {
-        audioMutedByUser = true;
+        // audioMutedByUser = true;
+        localStorage.setItem("audioMutedByUser", "true");
         muteAudio();
     }
 }
@@ -132,7 +136,7 @@ function toggleAudioMute(event = null) {
 function muteAudio() {
     loopedAudios.forEach(item => item.muted = true);
     currentAudio? currentAudio.muted = true : null;
-    audioIsMuted = true;
+    audioMuted = true;
     body.classList.add('audio-muted');
 }
 
@@ -149,11 +153,12 @@ function unmuteAudio(event = null) {
             body.classList.contains('audio-auto-muted') ? item.play() : null;
         });
     } else {
-        if(audioMutedByUser) return;
+        // if(audioMutedByUser) return;
+        if(localStorage.getItem("audioMutedByUser") === 'true') return;
         loopedAudios.forEach(item => item.muted = false);
         currentAudio? currentAudio.muted = false : null;
     }
-    audioIsMuted = false;
+    audioMuted = false;
     body.classList.remove('audio-muted', 'audio-auto-muted');
 }
 

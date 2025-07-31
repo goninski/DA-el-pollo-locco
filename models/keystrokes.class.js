@@ -11,8 +11,19 @@ class Keystrokes {
      * Create keystrokes
      */
     constructor() {
+        this.disableContextMenuForTouchDevice;
         this.bindKeyPressEvents();
         this.bindBtnTouchEventsToKeyPress();
+    }
+
+
+    /**
+     * Disable context menu on touch devices
+     */
+    disableContextMenuForTouchDevice() {
+        if(isTouchEnabled()) {
+            document.addEventListener("contextmenu", event => event.preventDefault());
+        }
     }
 
 
@@ -110,12 +121,12 @@ class Keystrokes {
             keystrokes.KEY_SPACE = false;
         });
         document.getElementById('btnThrowBottle').addEventListener('touchstart', (event) => {
-            // event.preventDefault();
+            event.preventDefault();
             keystrokes.KEY_B = true;
             lastKeystroke = new Date().getTime();
         });
         document.getElementById('btnThrowBottle').addEventListener('touchend', (event) => {
-            // event.preventDefault();
+            event.preventDefault();
             keystrokes.KEY_B = false;
         });
     }

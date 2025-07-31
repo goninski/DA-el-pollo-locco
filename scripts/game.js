@@ -34,7 +34,7 @@ function initGame(skipStartScreen = false) {
     keystrokes = new Keystrokes();
     setFullscreenToggle();
     setBodyClassIfTouchDevice();
-    audioIsMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
+    audioMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
     skipStartScreen ? startGame() : showStartScreen();
 }
 
