@@ -105,8 +105,8 @@ class Endboss extends MovableObject {
      */
     animateMoving() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || !this.active) return;
-            if(this.isDead() || this.isHurt() || this.isAlert()) return;
+            if(gameIsPaused || this.dead || !this.active) return;
+            if(this.isDying() || this.isHurt() || this.isAlert()) return;
             if(this.isAttacking()) {
                 this.moveLeft(1, 2, false);
             } else {
@@ -122,8 +122,8 @@ class Endboss extends MovableObject {
      */
     animateAlertAttack() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || !this.active) return;
-            if(this.isDead() || this.isHurt()) return;
+            if(gameIsPaused || this.dead || !this.active) return;
+            if(this.isDying() || this.isHurt()) return;
             if(this.isAttacking()) {
                 this.handlingAttack();
             } else if(this.isAlert()) {
@@ -139,8 +139,8 @@ class Endboss extends MovableObject {
      */
     animateHurtDeath() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || !this.active) return;
-            if(this.isDead()) {
+            if(gameIsPaused || this.dead || !this.active) return;
+            if(this.isDying()) {
                 this.handlingDeath();
             } else if(this.isHurt()) {
                 this.handlingHurt();
@@ -155,8 +155,8 @@ class Endboss extends MovableObject {
      */
     animateAudios() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || !this.active) return;
-            if(this.isDead() || this.isHurt()) return;
+            if(gameIsPaused || this.dead || !this.active) return;
+            if(this.isDying() || this.isHurt()) return;
             startAudio(this.audioCache.walkSteps, 1);
             this.stopWalkAudios();
             if(this.isAttacking()) {
@@ -224,6 +224,14 @@ class Endboss extends MovableObject {
 
 
     /**
+     * check if dying
+     */
+    isDying() {
+        return super.isDying(1500);
+    }
+
+
+    /**
      * Handling if on alert
      */
     handlingAlert() {
@@ -259,7 +267,7 @@ class Endboss extends MovableObject {
     handlingDeath() {
         if(this.deathDebounceCounter === 0) {
             startAudio(this.audioCache.dead);
-            super.handlingDeath(true);
+            super.handlingDeath();
         }
     }
 

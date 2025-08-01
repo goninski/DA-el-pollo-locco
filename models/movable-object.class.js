@@ -154,7 +154,7 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHitOnGround(fromObj, xBuffer = 0) {
-        if(this.isAboveGround()) return;
+        // if(this.isAboveGround()) return;
         return this.touchesObject(fromObj, xBuffer);
     }
     // isHitOnGround(fromObj, xBuffer = 0) {
@@ -252,7 +252,7 @@ class MovableObject extends DrawableObject {
     handlingHitOnGround(obj) {
         obj.strength = 15;
         if(obj instanceof Endboss) {
-            obj.strength = 30;
+            obj.strength = 5;
         }
         // console.log(this.objectName, '(handlingHitFromGround)');
         this.handlingHit(obj);
@@ -278,10 +278,10 @@ class MovableObject extends DrawableObject {
     /**
      * Log hit details in console (for debug)
      * @param {object} obj - counter object
-     * @param {boolean} show - show log 
+     * @param {boolean} showLogs - show log 
      */
-    ConsoleLogHitDetails(obj, show) {
-        if(show) {
+    ConsoleLogHitDetails(obj, showLogs) {
+        if(showLogs) {
             console.log('\n' +  this.objectName, 'is hit from', obj.objectName);
             console.log(this.objectName, 'energy:', this.energy, 'hitDebounceCounter:', this.hitDebounceCounter);
             console.log(obj.objectName, 'energy:', obj.energy, 'hitDebounceCounter:', obj.hitDebounceCounter);
@@ -308,11 +308,14 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Check if dead
+     * Check if dying
+     * @param {number} animDuration - duration (ms) of the death animation
      * @returns {boolean}
      */
-    isDead() {
-        return this.energy <= 0;
+    isDying(animDuration = 2000) {
+        if(this.energy <= 0) {
+            return debounceLeading(this.lastHit, animDuration);
+        }
     }
 
 
@@ -323,6 +326,7 @@ class MovableObject extends DrawableObject {
     handlingDeath(clearTimeout = 3000) {
         if(this.deathDebounceCounter === 0) {
             this.deathDebounceCounter++;
+            this.dead = true;
             if(this.isEnemy && !(this instanceof Endboss)) {
                 livingEnemies--;
             }

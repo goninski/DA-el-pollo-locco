@@ -66,8 +66,8 @@ class Chicken extends MovableObject {
      */
     animateDeath() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
-            if(this.isDead()) {
+            if(gameIsPaused || this.dead) return;
+            if(this.isDying()) {
                 this.handlingDeath();
             }
         }, 50);  
@@ -80,8 +80,8 @@ class Chicken extends MovableObject {
      */
     animateWalking() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
-            if(this.isDead()) return;
+            if(gameIsPaused || this.dead) return;
+            if(this.isDying()) return;
             this.walkingAnimation();
             startAudio(this.audioCache.walk, 0.25, true);
         }, 200);  
@@ -94,8 +94,8 @@ class Chicken extends MovableObject {
      */
     animateMoving() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
-            if(this.isDead()) return;
+            if(gameIsPaused || this.dead) return;
+            if(this.isDying()) return;
             this.moveLeft(0.15, 0.45, false);
         }, 1000 / 60); 
         this.intervals.push(intervalId);

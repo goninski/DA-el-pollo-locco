@@ -193,7 +193,7 @@ class World {
      */
     checkEnemyHits() {
         this.level.enemies.forEach((enemy) => {
-            if(enemy.isDead() || this.character.isDead()) return;  
+            if(enemy.dead || this.character.dead) return;  
             this.checkAndHandleEnemyHitFromBottle(enemy);
             if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
                 enemy.handlingHitFromAbove(this.character);
@@ -249,8 +249,9 @@ class World {
      * @returns {boolean}
      */
     isGameWon() {
+        return this.endboss.dead === true;
         // return livingEnemies <= 0;
-        if(this.endboss.isDead()) {
+        if(this.endboss.dead) {
             return debounceDelayed(this.endboss.lastHit, 1500);
         }
     }
@@ -261,7 +262,8 @@ class World {
      * @returns {boolean}
      */
     isGameOver(){
-        if(this.character.isDead()) {
+        return this.character.dead === true;
+        if(this.character.dead) {
             return debounceDelayed(this.character.lastHit, 2000);
         }
     }

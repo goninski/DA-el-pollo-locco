@@ -96,7 +96,7 @@ function stopAudios() {
     // loopedAudios.forEach(item => item.pause());
     loopedAudios.forEach(item => {
         item.pause();
-        console.log(item.paused);
+        // console.log(item.paused);
     });
 }
 

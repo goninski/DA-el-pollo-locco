@@ -11,6 +11,8 @@ class Bottle extends CollectableObject {
     throwableObj = true;
     // flyingBottles = [];
     flying = false;
+    throwX = 0;
+    otherDirection = false;
 
     IMAGES_GROUND = [
         imgPathBase + '6_salsa_bottle/1_salsa_bottle_on_ground.png',
@@ -90,13 +92,12 @@ class Bottle extends CollectableObject {
      * @param {number} moveX - x-position move per interval
      */
     handleThrow(fromObj, speed = 10, moveX = 15) {
-        // flyingBottles.push(this);
-        // fromObj.thrownBottle = this.
         this.flying = true;
         this.speedY = speed;
         this.applyGravity();
+        this.otherDirection = fromObj.otherDirection;
         this.throwingInterval = setInterval(() => {
-            fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
+            this.otherDirection ? this.x -= moveX : this.x += moveX;
         }, 25);
     }
 

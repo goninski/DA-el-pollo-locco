@@ -138,7 +138,7 @@ class Character extends MovableObject {
      */
     keystrokesHandler() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.isDead()) return;
+            if(gameIsPaused || this.dead || this.isDying()) return;
             this.isIdle = false;
             this.isIdleLong = false;
             if(this.world.keystrokes.KEY_LEFT) {
@@ -204,9 +204,9 @@ class Character extends MovableObject {
      */
     animateWalkingHurtDeath() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gameIsPaused || this.dead) return;
             if(!this.isAboveGround()) {
-                if(this.isDead()) {
+                if(this.isDying()) {
                     this.handlingDeath();
                     stopAudio(this.audioCache.idle);
                     startAudioDebouncedLeading(this.audioCache.dead, this.lastHit, 125, 0.7);
@@ -228,7 +228,7 @@ class Character extends MovableObject {
      */
     animateJumping() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gameIsPaused || this.dead || this.isDying()) return;
             if(this.isAboveGround()) {
                 this.jumpingAnimation();
              }
@@ -242,7 +242,7 @@ class Character extends MovableObject {
      */
     animateIdle() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gameIsPaused || this.dead || this.isDying()) return;
             this.idleAnimation();
         }, 300); 
         this.intervals.push(intervalId);
@@ -331,21 +331,25 @@ class Character extends MovableObject {
             this.lastThrow = new Date().getTime();
             let bottle = this.bottles[0];
             this.thrownBottle = bottle;
-            bottle.x = Math.round(this.borderX);
+            let charClone = {...this};
+            let posX = Math.round(charClone.borderX); 
+            bottle.x = posX;
             bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
             bottle.handleThrow(this);
             console.log('Thrown bottle', bottle.objectName);
             this.bottleStatus -= bottle.value;
             this.bottles.shift();
             console.log('#bottles after throw', this.bottles.length)
-            // setTimeout(() => {
-            //     this.bottles.shift();
-            //     this.bottleStatus -= bottle.value;
-            //     this.throwing = false;
-            //     console.log('#bottles after throw', this.bottles.length)
-            // }, 50);
         }
         debounceDelayed(this.lastThrow, 1000) ? this.throwDebounceCounter = 0 : null;
+    }
+
+
+    /**
+     * check if dying
+     */
+    isDying() {
+        return super.isDying(2500);
     }
 
 
