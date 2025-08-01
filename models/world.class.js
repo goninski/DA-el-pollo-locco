@@ -194,31 +194,36 @@ class World {
     checkEnemyHits() {
         this.level.enemies.forEach((enemy) => {
             if(enemy.isDead() || this.character.isDead()) return;  
-            this.checkEnemyHitFromBottle(enemy);
+            this.checkAndHandleEnemyHitFromBottle(enemy);
             if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
                 enemy.handlingHitFromAbove(this.character);
             } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
                 enemy.handlingHitFromSideJump(this.character);
-            } else if(this.character.isHitOnGround(enemy)) {
+            } else if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.125)) {
                 this.character.handlingHitOnGround(enemy);
             }
         });
     }
     
 
+    // /**
+    //  * Check if character is hit on the ground
+    //  * @param {object} enemy - enemy object
+    //  */
+    // checkAndHandleCharacterHitOnGround(enemy) {
+    //     if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.125)) {
+    //         this.character.handlingHitOnGround(enemy);
+    //     }
+    // }
+
+
     /**
      * Check if ememy is hit from bottle (part of enemies loop)
      * @param {object} enemy - enemy object
      */
-    checkEnemyHitFromBottle(enemy) {
-        // if(this.character.bottles.length > 0) {
-        //     let bottle = this.character.bottles[0];
-        //     if(enemy.isHitFromAbove(bottle, bottle.borderWidth * 0.5)) {
-        //         enemy.handlingHitFromBottle(bottle);                    
-        //     }
-        // }
-        if(flyingBottles.length > 0) {
-            let bottle = flyingBottles[0];
+    checkAndHandleEnemyHitFromBottle(enemy) {
+        if(Object.keys(this.character.thrownBottle).length > 0) {
+            let bottle = this.character.thrownBottle;
             if(enemy.isHitFromAbove(bottle, bottle.borderWidth * 0.5)) {
                 enemy.handlingHitFromBottle(bottle);                    
             }
@@ -253,7 +258,7 @@ class World {
     
     /**
      * Check if game is over
-     * @returns {boolean} - during ??
+     * @returns {boolean}
      */
     isGameOver(){
         if(this.character.isDead()) {

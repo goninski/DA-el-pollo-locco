@@ -254,13 +254,15 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Handling if dead
+     * Handling death
      */
     handlingDeath() {
-        this.stopWalkAudios()
-        startAudio(this.audioCache.dead);
-        super.handlingDeath();
+        if(this.deathDebounceCounter === 0) {
+            startAudio(this.audioCache.dead);
+            super.handlingDeath(true);
+        }
     }
+
 
 }
 

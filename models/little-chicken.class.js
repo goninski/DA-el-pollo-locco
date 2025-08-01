@@ -4,6 +4,7 @@ let littleChickenId = 0;
 class LittleChicken extends Chicken {
 
     isEnemy = true;
+    width = this.width * 0.66;
     height = this.width / 1.12;
     strength = 8;
 
@@ -100,17 +101,6 @@ class LittleChicken extends Chicken {
         this.intervals.push(intervalId);
     }
 
-
-    /**
-     * Handling death
-     */
-    handlingDeath() {
-        if(this.deathDebouncer === 0) {
-            stopAudio(this.audioCache.walk);
-            startAudio(this.audioCache.dead, 0.7);
-            super.handlingDeath();
-        }
-    }
 
 }
 

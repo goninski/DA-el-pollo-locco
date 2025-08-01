@@ -9,7 +9,8 @@ class Bottle extends CollectableObject {
     value = 20;
     strength = 10;
     throwableObj = true;
-    flyingBottles = [];
+    // flyingBottles = [];
+    flying = false;
 
     IMAGES_GROUND = [
         imgPathBase + '6_salsa_bottle/1_salsa_bottle_on_ground.png',
@@ -72,7 +73,7 @@ class Bottle extends CollectableObject {
     animate() {
         intervalId = setInterval(() => {
             if(gameIsPaused) return;
-            if(this.throwing) {
+            if(this.flying) {
                 this.handleFlying();
             }
         }, 100);  
@@ -89,10 +90,11 @@ class Bottle extends CollectableObject {
      * @param {number} moveX - x-position move per interval
      */
     handleThrow(fromObj, speed = 10, moveX = 15) {
-        flyingBottles.push(this);
+        // flyingBottles.push(this);
+        // fromObj.thrownBottle = this.
+        this.flying = true;
         this.speedY = speed;
-        this.applyGravity()
-        this.throwing = true;
+        this.applyGravity();
         this.throwingInterval = setInterval(() => {
             fromObj.otherDirection ? this.x -= moveX : this.x += moveX;
         }, 25);
@@ -109,7 +111,8 @@ class Bottle extends CollectableObject {
             this.splashingAnimation();
             setTimeout(() => {
                 this.splashed = true;
-                flyingBottles.shift();
+                // flyingBottles.shift();
+                this.flying = false;
             }, 750);
         } else if(this.splashed) {
             this.handleSplashed();
@@ -157,7 +160,7 @@ class Bottle extends CollectableObject {
      */
     handleSplashed() {
         // this.flyingBottles.shift();
-        this.throwing = false;
+        this.flying = false;
         this.destroyed = true;
         this.clearIntervals(0);
         this.loadImage(this.IMAGES_SPLASH[5]);

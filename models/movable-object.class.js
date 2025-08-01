@@ -5,15 +5,16 @@ class MovableObject extends DrawableObject {
     groundY;
     speedY = 0;
     acceleration = 2.5;
-    strength = 0;
     energy = 100;
+    strength = 0;
     intervals = [];
     audio;
     audioFiles = {};
     audioCache = {};
     lastHit = 0;
-    hitDebouncer = 0;
-    deathDebouncer = 0;
+    hitDebounceCounter = 0;
+    deathDebounceCounter = 0;
+    dead = false;
 
 
     /**
@@ -156,6 +157,9 @@ class MovableObject extends DrawableObject {
         if(this.isAboveGround()) return;
         return this.touchesObject(fromObj, xBuffer);
     }
+    // isHitOnGround(fromObj, xBuffer = 0) {
+    //     return this.isHitFromSide(fromObj, xBuffer);
+    // }
 
 
     /**
@@ -234,8 +238,8 @@ class MovableObject extends DrawableObject {
      */
     handlingHitFromSideJump(obj) {
         if(!(this instanceof Endboss)) return;
-        this.strength = 4;
-        obj.strength = 20;
+        this.strength = 10;
+        obj.strength = 10;
         // console.log(this.objectName, '(handlingHitSideJump)');
         this.handlingHit(obj);
     }
@@ -260,16 +264,13 @@ class MovableObject extends DrawableObject {
      * @param {object} fromObj - counter object
      */
     handlingHit(obj) {
-        if(this.hitDebouncer === 0) {
+        this.hitDebounceCounter++;
+        if(this.hitDebounceCounter === 1) {
             this.lastHit = new Date().getTime();
-            this.hitDebouncer++;
             this.energy -= obj.strength;
             this.energy <= 0 ? this.energy = 0 : null;
-        } else {
-            if(debounceDelayed(this.lastHit, 1000)) {
-                this.hitDebouncer = 0;
-            }
         }
+        debounceDelayed(this.lastHit, 1000) ? this.hitDebounceCounter = 0 : null;
         this.ConsoleLogHitDetails(obj, true);
     }
 
@@ -282,18 +283,19 @@ class MovableObject extends DrawableObject {
     ConsoleLogHitDetails(obj, show) {
         if(show) {
             console.log('\n' +  this.objectName, 'is hit from', obj.objectName);
-            console.log(this.objectName, 'energy:', this.energy, 'hitDebouncer:', this.hitDebouncer);
-            console.log(obj.objectName, 'energy:', obj.energy, 'hitDebouncer:', obj.hitDebouncer);
+            console.log(this.objectName, 'energy:', this.energy, 'hitDebounceCounter:', this.hitDebounceCounter);
+            console.log(obj.objectName, 'energy:', obj.energy, 'hitDebounceCounter:', obj.hitDebounceCounter);
         }
     }
 
 
     /**
      * Check if hurt
+     * @param {number} animDuration - duration (ms) of the hurt animation
      * @returns {boolean}
      */
-    isHurt() {
-        return debounceLeading(this.lastHit, 500);
+    isHurt(animDuration = 500) {
+        return debounceLeading(this.lastHit, animDuration);
     }
 
 
@@ -306,7 +308,8 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Handling if dead
+     * Check if dead
+     * @returns {boolean}
      */
     isDead() {
         return this.energy <= 0;
@@ -315,15 +318,18 @@ class MovableObject extends DrawableObject {
 
     /**
      * Handling death
+     * @param {number} clearTimeout - timeout in ms after intervals should be cleared
      */
     handlingDeath(clearTimeout = 3000) {
-        if(this.isEnemy && !(this instanceof Endboss)) {
-            livingEnemies--;
+        if(this.deathDebounceCounter === 0) {
+            this.deathDebounceCounter++;
+            if(this.isEnemy && !(this instanceof Endboss)) {
+                livingEnemies--;
+            }
+            this.deathAnimation();
+            this.clearIntervals(clearTimeout);
+            this.destroyed = true;
         }
-        this.deathDebouncer++;
-        this.deathAnimation();
-        this.clearIntervals(clearTimeout);
-        this.destroyed = true;
     }
 
 

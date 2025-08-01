@@ -94,39 +94,39 @@ class Keystrokes {
      */
     bindBtnTouchEventsToKeyPress() {
         document.getElementById('btnMoveLeft').addEventListener('touchstart', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_LEFT = true;
             lastKeystroke = new Date().getTime();
         });
         document.getElementById('btnMoveLeft').addEventListener('touchend', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_LEFT = false;
         });
         document.getElementById('btnMoveRight').addEventListener('touchstart', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_RIGHT = true;
             lastKeystroke = new Date().getTime();
         });
         document.getElementById('btnMoveRight').addEventListener('touchend', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_RIGHT = false;
         });
         document.getElementById('btnJump').addEventListener('touchstart', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_SPACE = true;
             lastKeystroke = new Date().getTime();
         });
         document.getElementById('btnJump').addEventListener('touchend', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_SPACE = false;
         });
         document.getElementById('btnThrowBottle').addEventListener('touchstart', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_B = true;
             lastKeystroke = new Date().getTime();
         });
         document.getElementById('btnThrowBottle').addEventListener('touchend', (event) => {
-            event.preventDefault();
+            event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_B = false;
         });
     }

@@ -14,8 +14,9 @@ class Character extends MovableObject {
     bottles = [];
     isIdle = false;
     isIdleLong = false;
-    throwing = false;
-    throwDebouncer = 0;
+    throwDebounceCounter = 0;
+    lastThrow = 0;
+    thrownBottle = {};
 
     IMAGES_IDLE = [
         imgPathBase + '2_character_pepe/1_idle/idle/I-1.png',
@@ -320,40 +321,22 @@ class Character extends MovableObject {
     
     
     /**
-     * Throw bottle
+     * Throw bottle 
      */
     throwBottle() {
         if(this.bottles.length <= 0) return;
-        // if(debounceLeading(lastKeystroke_THROW, 100)) {
-        if(debounceDelayed(lastKeystroke_THROW, 100)) {
-            console.log('#bottles before throw', this.bottles.length)
-            let bottle = this.bottles[0];
-            bottle.x = Math.round(this.borderX);
-            bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
-            bottle.handleThrow(this);
-            console.log('Thrown bottle', bottle.objectName);
-            this.bottles.shift();
-            this.bottleStatus -= bottle.value;
-            console.log('#bottles after throw', this.bottles.length)
-        }
-    }
-
-
-    /**
-     * Throw bottle old
-     */
-    xthrowBottle() {
+        this.throwDebounceCounter++;
         console.log('#bottles before throw', this.bottles.length)
-        if(this.bottles.length <= 0) return;
-        if(this.throwDebouncer === 0) {
-            this.throwDebouncer++;
+        if(this.throwDebounceCounter === 1) {
+            this.lastThrow = new Date().getTime();
             let bottle = this.bottles[0];
+            this.thrownBottle = bottle;
             bottle.x = Math.round(this.borderX);
             bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
             bottle.handleThrow(this);
             console.log('Thrown bottle', bottle.objectName);
-            this.bottles.shift();
             this.bottleStatus -= bottle.value;
+            this.bottles.shift();
             console.log('#bottles after throw', this.bottles.length)
             // setTimeout(() => {
             //     this.bottles.shift();
@@ -361,9 +344,8 @@ class Character extends MovableObject {
             //     this.throwing = false;
             //     console.log('#bottles after throw', this.bottles.length)
             // }, 50);
-        } else {
-            this.throwDebouncer = 0;
         }
+        debounceDelayed(this.lastThrow, 1000) ? this.throwDebounceCounter = 0 : null;
     }
 
 
