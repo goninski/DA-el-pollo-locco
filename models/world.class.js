@@ -262,7 +262,8 @@ class World {
      * @returns {boolean}
      */
     isGameOver(){
-        return this.character.dead === true;
+        // console.log('character.dead:', this.character.dead);
+        return this.character.dead;
         if(this.character.dead) {
             return debounceDelayed(this.character.lastHit, 2000);
         }

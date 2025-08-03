@@ -4,7 +4,7 @@ let audioMuted = false;
 let currentAudio;
 let loopedAudios = [];
 let audioCache = {
-    start : new Audio(audioPathBase + 'start.mp3'),
+    gameStart : new Audio(audioPathBase + 'game-start.mp3'),
     gameOver : new Audio(audioPathBase + 'game-over.mp3'),
     gameWin : new Audio(audioPathBase + 'game-win.wav'),
 };
@@ -42,6 +42,7 @@ function setLoopedAudioArray(audioObj) {
             loopedAudios.push(audioObj);        
         };
     }
+    // console.log('loopedAudios:', loopedAudios);
 }
 
 
@@ -78,7 +79,7 @@ function startAudioDebouncedLeading(audioObj, startTime, duration = 150, volume 
 
 
 /**
- * Start audio resumed (from beginning) - still in use ??
+ * Start audio resumed (restart from beginning)
  * @param {object} audioObj - audio object
  * @param {number} volume - 0 to 1
  */
@@ -89,26 +90,41 @@ function startAudioResumed(audioObj, volume = 1) {
 
 
 /**
- * Stop audios
- */
-function stopAudios() {
-    currentAudio.pause();
-    // loopedAudios.forEach(item => item.pause());
-    loopedAudios.forEach(item => {
-        item.pause();
-        // console.log(item.paused);
-    });
-}
-
-
-/**
- * Stop single audio (iteration of the loop above)
+ * Stop audio object and remove it from loopedAudios if containing
  * @param {object} audioObj - audio object
  */
 function stopAudio(audioObj) {
     audioObj.pause();
+    currentAudio ? currentAudio.pause() : null;
+    removeAudioFromLoopedAudios(audioObj);
+}
+
+
+/**
+ * Stop all audios
+ */
+function stopAllAudios() {
+    currentAudio ? currentAudio.pause() : null;
+    loopedAudios.forEach(item => item.pause());
+    cleanLoopedAudiosArray();
+}
+
+
+/**
+ * Remove audio from loopedAudios Array if containing
+ * @param {object} audioObj - audio object
+ */
+function removeAudioFromLoopedAudios(audioObj) {
     let index = loopedAudios.findIndex(item => item === audioObj);
     index >= 0 ? loopedAudios.splice(index, 1) : null;
+}
+
+
+/**
+ * Clean loopedAudios Array (remove stopped objects)
+ */
+function cleanLoopedAudiosArray() {
+    loopedAudios = loopedAudios.filter(audio => !audio.paused);
 }
 
 
@@ -161,4 +177,3 @@ function unmuteAudio(event = null) {
     audioMuted = false;
     body.classList.remove('audio-muted', 'audio-auto-muted');
 }
-

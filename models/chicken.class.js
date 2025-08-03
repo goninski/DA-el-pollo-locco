@@ -19,7 +19,7 @@ class Chicken extends MovableObject {
 
     audioFiles = {
         walk : audioPathBase + 'chicken-walk.mp3',
-        dead : audioPathBase + 'chicken-death.mp3',
+        death : audioPathBase + 'chicken-death.mp3',
     }
 
 
@@ -62,7 +62,7 @@ class Chicken extends MovableObject {
 
 
     /**
-     * AnimateDeath
+     * Animate Death
      */
     animateDeath() {
         intervalId = setInterval(() => {
@@ -76,26 +76,24 @@ class Chicken extends MovableObject {
 
 
     /**
-     * AnimateWalking
+     * Animate Walking
      */
     animateWalking() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead) return;
-            if(this.isDying()) return;
+            if(gameIsPaused || this.dead || this.isDying()) return;
             this.walkingAnimation();
-            startAudio(this.audioCache.walk, 0.25, true);
+            this.startAudio(this.audioCache.walk, 0.20, true);
         }, 200);  
         this.intervals.push(intervalId);
     }
 
 
     /**
-     * AnimateMoving
+     * Animate Moving
      */
     animateMoving() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead) return;
-            if(this.isDying()) return;
+            if(gameIsPaused || this.dead || this.isDying()) return;
             this.moveLeft(0.15, 0.45, false);
         }, 1000 / 60); 
         this.intervals.push(intervalId);
@@ -105,13 +103,15 @@ class Chicken extends MovableObject {
     /**
      * Handling death
      */
-    handlingDeath() {
-        if(this.deathDebounceCounter === 0) {
-            stopAudio(this.audioCache.walk);
-            startAudio(this.audioCache.dead, 0.7);
-            super.handlingDeath();
+    handlingDeath(animDuration = 50) {
+        // this.deathDebounceCounter++;
+        super.handlingDeath(animDuration);
+        if(this.deathDebounceCounter === 1) {
+            this.startAudio(this.audioCache.death, 0.7);
+            this.stopOtherAudios();
         }
     }
+
 
 }
 

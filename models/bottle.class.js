@@ -9,7 +9,6 @@ class Bottle extends CollectableObject {
     value = 20;
     strength = 10;
     throwableObj = true;
-    // flyingBottles = [];
     flying = false;
     throwX = 0;
     otherDirection = false;
@@ -112,7 +111,6 @@ class Bottle extends CollectableObject {
             this.splashingAnimation();
             setTimeout(() => {
                 this.splashed = true;
-                // flyingBottles.shift();
                 this.flying = false;
             }, 750);
         } else if(this.splashed) {
@@ -127,7 +125,7 @@ class Bottle extends CollectableObject {
      * Flying animation
      */
     flyingAnimation() {
-        startAudioResumed(this.audioCache.flying);
+        this.startAudioResumed(this.audioCache.flying);
         let imagePaths = 'IMAGES_THROW';
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);
@@ -149,7 +147,8 @@ class Bottle extends CollectableObject {
      * Splashing animation
      */
     splashingAnimation() {
-        startAudio(this.audioCache.splash);
+        this.startAudio(this.audioCache.splash);
+        // this.stopOtherAudios();
         let imagePaths = 'IMAGES_SPLASH';
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);
@@ -160,10 +159,10 @@ class Bottle extends CollectableObject {
      * Handle splashed bottle
      */
     handleSplashed() {
-        // this.flyingBottles.shift();
         this.flying = false;
         this.destroyed = true;
         this.clearIntervals(0);
+        // this.stopAllAudios();
         this.loadImage(this.IMAGES_SPLASH[5]);
     }
 

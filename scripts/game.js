@@ -19,8 +19,6 @@ let secondsPlay = 0;
 let intervalId = 0;
 let stoppableIntervals = [];
 let livingEnemies;
-// let flyingBottle = {};
-let flyingBottles = [];
 let gameIsPaused = false;
 
 
@@ -47,7 +45,7 @@ function showStartScreen() {
     body.classList.add('start-screen');
     loadLevel1();
     pauseGame();
-    startAudio(audioCache.start, 0.2, true);
+    startAudio(audioCache.gameStart, 0.2, true);
     unmuteAudio();
 }
 
@@ -68,9 +66,8 @@ function loadLevel1() {
  */
 function startGame(event = null) {
     event ? event.stopPropagation() : null;
-    stopAudio(audioCache.start);
-    loopedAudios = [];
-    resumeGame()
+    stopAudio(audioCache.gameStart);
+    resumeGame();
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();
     hideAllScreens();
@@ -86,8 +83,9 @@ function startGame(event = null) {
  */
 function restartGame(event = null) {
     event ? event.stopPropagation() : null;
-    stopAudios();
     stoppableIntervals.forEach(clearInterval);
+    stopAllAudios();
+    cleanLoopedAudiosArray();
     gameIsPaused = false;
     // window.location.reload();
     initGame();
@@ -134,7 +132,7 @@ function setBodyClassIfTouchDevice() {
 function handlingGameWin(event = null) {
     event ? event.stopPropagation() : null;
     console.log('handlingGameWin');
-    stopAudios();
+    stopAllAudios();
     hideAllScreens();
     body.classList.add('win-screen');
     startAudio(audioCache.gameWin);
@@ -152,7 +150,7 @@ function handlingGameOver(event = null) {
     event ? event.stopPropagation() : null;
     console.log('handlingGameOver');
     resumeGame();
-    stopAudios();
+    stopAllAudios();
     stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
     body.classList.add('game-over-screen');
@@ -264,7 +262,6 @@ function pauseGame() {
     gameIsPaused = true;
     muteAudio();
 }   
-
 
 /**
  * Resume game

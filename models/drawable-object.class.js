@@ -46,8 +46,90 @@ class DrawableObject {
             this.imageCache[path] = this.img
         });
     }
-    
-    
+        
+
+    /**
+     * Set audio cache
+     * @param {object} audioFiles - object with audiofile names
+     */
+    setAudioCache(audioFiles) {
+        for (let [type, path] of Object.entries(audioFiles)) {
+            this.audioCache[type] = new Audio(path);
+        }
+        // console.log(this.audioCache);
+    }
+
+
+    /**
+     * Start audio
+     * @param {object} audioObj - audio object
+     * @param {number} volume - 0 to 1
+     */
+    startAudio(audioObj, volume = 1, loop = false) {
+        this.currentAudio = audioObj;
+        startAudio(this.currentAudio, volume, loop);
+    }
+
+
+    /**
+     * Start audio resumed (restart from beginning)
+     * @param {object} audioObj - audio object
+     * @param {number} volume - 0 to 1
+     */
+    startAudioResumed(audioObj, volume = 1, loop = false) {
+        this.currentAudio = audioObj;
+        this.currentAudio.currentTime = 0;
+        startAudio(this.currentAudio, volume, loop);
+    }
+
+
+    /**
+     * Start audio debounced leading
+     * @param {object} audioObj - audio object
+     * @param {date} startTime - start time for compare to now
+     * @param {number} duration - valid leading signal duration
+     * @param {number} volume - 0 to 1
+     */
+    startAudioDebouncedLeading(audioObj, startTime, duration = 150, volume = 1) {
+        this.currentAudio = audioObj;
+        startAudioDebouncedLeading(this.currentAudio, startTime, duration, volume, false);
+    }
+
+
+    /**
+     * Stop current audio
+     */
+    stopCurrentAudio() {
+        this.currentAudio ? this.currentAudio.pause() : null;
+        removeAudioFromLoopedAudios(this.currentAudio);
+    }
+
+
+    /**
+     * Stop other audios
+     */
+    stopOtherAudios() {
+        Object.values(this.audioCache).forEach(audio => {
+            if(audio != this.currentAudio) {
+                audio.pause();
+                removeAudioFromLoopedAudios(this.currentAudio);
+            }
+        });
+    }
+
+
+    /**
+     * Stop All audios
+     */
+    stopAllAudios() {
+        this.currentAudio = null;
+        Object.values(this.audioCache).forEach(audio => {
+            audio.pause();
+            removeAudioFromLoopedAudios(this.currentAudio);
+        });
+    }
+
+
     /**
      * Set x position with screen slide no
      * @param {number} screenSlide - currently -1 to 3, default 0

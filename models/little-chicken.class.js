@@ -80,10 +80,9 @@ class LittleChicken extends Chicken {
      */
     animateWalking() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead) return;
-            if(this.isDying()) return;
+            if(gameIsPaused || this.dead || this.isDying()) return;
             this.walkingAnimation();
-            startAudio(this.audioCache.walk, 0.25, true);
+            this.startAudio(this.audioCache.walk, 0.25, true);
         }, 200);  
         this.intervals.push(intervalId);
     }
@@ -94,8 +93,7 @@ class LittleChicken extends Chicken {
      */
     animateMoving() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead) return;
-            if(this.isDying()) return;
+            if(gameIsPaused || this.dead || this.isDying()) return;
             this.moveLeft(0.075, 0.2, false);
         }, 1000 / 60); 
         this.intervals.push(intervalId);

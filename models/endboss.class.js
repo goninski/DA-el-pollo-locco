@@ -52,11 +52,11 @@ class Endboss extends MovableObject {
 
     audioFiles = {
         walk : audioPathBase + 'endboss-walk.mp3',
-        walkSteps : audioPathBase + 'walk.mp3',
+        walkSteps : audioPathBase + 'walk-step.mp3',
         alert : audioPathBase + 'endboss-alert.mp3',
         attack : audioPathBase + 'endboss-attack.mp3',
         hurt : audioPathBase + 'endboss-hurt.mp3',
-        dead : audioPathBase + 'endboss-dead.mp3',
+        death : audioPathBase + 'endboss-death.mp3',
     }
 
 
@@ -141,9 +141,13 @@ class Endboss extends MovableObject {
         intervalId = setInterval(() => {
             if(gameIsPaused || this.dead || !this.active) return;
             if(this.isDying()) {
-                this.handlingDeath();
+                this.handlingDeath(1500);
+                this.startAudio(this.audioCache.death);
+                this.stopOtherAudios;
             } else if(this.isHurt()) {
                 this.handlingHurt();
+                this.startAudio(this.audioCache.hurt, 0.6);
+                this.stopOtherAudios;
             }
         }, 100);  
         this.intervals.push(intervalId);
@@ -157,30 +161,21 @@ class Endboss extends MovableObject {
         intervalId = setInterval(() => {
             if(gameIsPaused || this.dead || !this.active) return;
             if(this.isDying() || this.isHurt()) return;
-            startAudio(this.audioCache.walkSteps, 1);
-            this.stopWalkAudios();
+            this.stopOtherAudios();
             if(this.isAttacking()) {
-                startAudio(this.audioCache.attack, 1);
+                this.startAudio(this.audioCache.attack, 1);
+                this.startAudio(this.audioCache.walkSteps, 1);
             } else if(this.isAlert()) {
-                startAudio(this.audioCache.alert, 1);
-            } else {
+                this.startAudio(this.audioCache.alert, 1);
+        } else {
                 this.walkingAnimation();
-                startAudio(this.audioCache.walk, 0.33, true);
+                this.startAudio(this.audioCache.walkSteps, 1);
+                this.startAudio(this.audioCache.walk, 0.33, true);
             }
         }, 150);  
         this.intervals.push(intervalId);
     }
     
-
-    /**
-     * Stop the walking audios
-     */
-    stopWalkAudios() {
-        stopAudio(this.audioCache.walk);
-        stopAudio(this.audioCache.alert);
-        stopAudio(this.audioCache.attack);
-    }
-
 
     /**
      * Check if close to character
@@ -191,7 +186,6 @@ class Endboss extends MovableObject {
         let characterPos = this.world.character.borderX + this.world.character.borderWidth;
         return (this.borderX - characterPos < (widthCanvas * distance / 100));
     }
-
 
 
     /**
@@ -224,14 +218,6 @@ class Endboss extends MovableObject {
 
 
     /**
-     * check if dying
-     */
-    isDying() {
-        return super.isDying(1500);
-    }
-
-
-    /**
      * Handling if on alert
      */
     handlingAlert() {
@@ -248,27 +234,6 @@ class Endboss extends MovableObject {
         let imagePaths = 'IMAGES_ATTACK';
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    
-    }
-
-
-    /**
-     * Handling if hurt
-     */
-    handlingHurt() {
-        this.stopWalkAudios()
-        startAudio(this.audioCache.hurt, 0.6);
-        super.handlingHurt();
-    }
-
-
-    /**
-     * Handling death
-     */
-    handlingDeath() {
-        if(this.deathDebounceCounter === 0) {
-            startAudio(this.audioCache.dead);
-            super.handlingDeath();
-        }
     }
 
 

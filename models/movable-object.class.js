@@ -8,13 +8,14 @@ class MovableObject extends DrawableObject {
     energy = 100;
     strength = 0;
     intervals = [];
-    audio;
-    audioFiles = {};
-    audioCache = {};
-    lastHit = 0;
+    lastHitTime = 0;
+    deadlyHitTime = 0;
     hitDebounceCounter = 0;
     deathDebounceCounter = 0;
     dead = false;
+    audioFiles = {};
+    audioCache = {};
+    currentAudio;
 
 
     /**
@@ -22,17 +23,6 @@ class MovableObject extends DrawableObject {
      */
     constructor() {
         super();
-    }
-
-
-    /**
-     * Set audio cache
-     * @param {object} audioFiles - object with audiofile names
-     */
-    setAudioCache(audioFiles) {
-        for (let [type, path] of Object.entries(audioFiles)) {
-            this.audioCache[type] = new Audio(path);
-        }
     }
 
 
@@ -264,13 +254,17 @@ class MovableObject extends DrawableObject {
      * @param {object} fromObj - counter object
      */
     handlingHit(obj) {
+        if(this.dead || this.isDying()) return;
         this.hitDebounceCounter++;
         if(this.hitDebounceCounter === 1) {
-            this.lastHit = new Date().getTime();
+            this.lastHitTime = new Date().getTime();
             this.energy -= obj.strength;
-            this.energy <= 0 ? this.energy = 0 : null;
+            if(this.energy <= 0) {
+                this.energy = 0;
+                this.deadlyHitTime = new Date().getTime();
+            }
         }
-        debounceDelayed(this.lastHit, 1000) ? this.hitDebounceCounter = 0 : null;
+        debounceDelayed(this.lastHitTime, 1000) ? this.hitDebounceCounter = 0 : null;
         this.ConsoleLogHitDetails(obj, true);
     }
 
@@ -295,7 +289,7 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHurt(animDuration = 500) {
-        return debounceLeading(this.lastHit, animDuration);
+        return debounceLeading(this.lastHitTime, animDuration);
     }
 
 
@@ -312,10 +306,19 @@ class MovableObject extends DrawableObject {
      * @param {number} animDuration - duration (ms) of the death animation
      * @returns {boolean}
      */
-    isDying(animDuration = 2000) {
-        if(this.energy <= 0) {
-            return debounceLeading(this.lastHit, animDuration);
-        }
+    isDying() {
+        return (this.energy <= 0 && !this.dead);
+        return (this.energy <= 0 && debounceLeading(this.deadlyHit, animDuration));
+        if(this.energy > 0) return;
+        let currentTime = new Date().getTime();
+        // if(this instanceof Character) {
+        //     console.log(this.objectName, 'deadlyHit:', this.deadlyHit);
+        //     console.log(this.objectName, 'timePassed:', currentTime - this.deadlyHit);
+        // }
+        if(currentTime - this.deadlyHit <= animDuration) {
+            console.log(this.objectName, 'isDying');
+            return true;
+        };
     }
 
 
@@ -323,16 +326,19 @@ class MovableObject extends DrawableObject {
      * Handling death
      * @param {number} clearTimeout - timeout in ms after intervals should be cleared
      */
-    handlingDeath(clearTimeout = 3000) {
-        if(this.deathDebounceCounter === 0) {
-            this.deathDebounceCounter++;
+    handlingDeath(animDuration = 2000, clearTimeout = 10000) {
+        this.deathDebounceCounter++;
+        if(debounceLeading(this.deadlyHitTime, animDuration)) {
+            this.deathAnimation();
+        }
+        if(debounceDelayed(this.deadlyHitTime, animDuration)) {
             this.dead = true;
+            // this.deathDebounceCounter = 1;
             if(this.isEnemy && !(this instanceof Endboss)) {
                 livingEnemies--;
             }
-            this.deathAnimation();
             this.clearIntervals(clearTimeout);
-            this.destroyed = true;
+            this.stopAllAudios();
         }
     }
 
@@ -364,6 +370,7 @@ class MovableObject extends DrawableObject {
         this.x = widthCanvas + 1;
         this.roundCoordinates()
         this.clearIntervals(intervalTimeout);
+        this.stopAllAudios();
     }
 
 

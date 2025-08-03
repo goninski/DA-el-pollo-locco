@@ -82,11 +82,11 @@ class Character extends MovableObject {
     ];
 
     audioFiles = {
-        idle : audioPathBase + 'idle.mp3',
-        walk : audioPathBase + 'walk.mp3',
-        jump : audioPathBase + 'jump.mp3',
-        hurt : audioPathBase + 'hurt.mp3',
-        dead : audioPathBase + 'dead.mp3',
+        idle : audioPathBase + 'character-idle.mp3',
+        walk : audioPathBase + 'character-walk.mp3',
+        jump : audioPathBase + 'character-jump.mp3',
+        hurt : audioPathBase + 'character-hurt.mp3',
+        death : audioPathBase + 'character-death.mp3',
     }
 
 
@@ -125,7 +125,6 @@ class Character extends MovableObject {
      */
     animate() {
         this.keystrokesHandler(); //60x
-        // this.throwBottleKeystrokeHandler(); //70ms
         this.animateWalkingHurtDeath(); //50ms
         this.animateJumping(); //100ms
         this.animateIdle(); //300ms
@@ -160,29 +159,13 @@ class Character extends MovableObject {
     }
 
 
-    // /**
-    //  * Throw bottle keystroke handler (slower interval)
-    //  */
-    // throwBottleKeystrokeHandler() {
-    //     intervalId = setInterval(() => {
-    //         if(gameIsPaused) return;
-    //         if(this.world.keystrokes.KEY_B) {
-    //             // this.throwBottle();
-    //             debounceLeading(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
-    //             // debounceDelayed(lastKeystroke_THROW, 100) ? this.throwBottle() : null;
-    //         } 
-    //     }, 150);
-    //     this.intervals.push(intervalId);
-    // }
-
-
     /**
      * Handle keystroke SPACE (jump)
      */
     handleKeystrokeSpace() {
         if(this.isAboveGround()) return;
         this.jump(30);
-        startAudioDebouncedLeading(this.audioCache.jump, lastKeystroke_JUMP, 125);
+        this.startAudioDebouncedLeading(this.audioCache.jump, lastKeystroke_JUMP, 100);
     }
 
 
@@ -208,12 +191,14 @@ class Character extends MovableObject {
             if(!this.isAboveGround()) {
                 if(this.isDying()) {
                     this.handlingDeath();
-                    stopAudio(this.audioCache.idle);
-                    startAudioDebouncedLeading(this.audioCache.dead, this.lastHit, 125, 0.7);
+                    this.startAudio(this.audioCache.death,0.7);
+                    // this.startAudioDebouncedLeading(this.audioCache.dead, this.lastHitTime, 125, 0.7);
+                    this.stopOtherAudios();
                 } else if(this.isHurt()) {
                     this.handlingHurt();
-                    stopAudio(this.audioCache.idle);
-                    startAudioDebouncedLeading(this.audioCache.hurt, this.lastHit, 125);
+                    this.startAudio(this.audioCache.hurt);
+                    // this.startAudioDebouncedLeading(this.audioCache.hurt, this.lastHitTime, 125);
+                    this.stopOtherAudios();
                 } else if(!this.isIdle && !this.isIdleLong) {
                     this.walkingAnimation();
                 }
@@ -256,10 +241,8 @@ class Character extends MovableObject {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
             super.walkingAnimation();
-            stopAudio(this.audioCache.idle);
-            startAudio(this.audioCache.walk);
-        } else {
-            stopAudio(this.audioCache.walk);
+            this.startAudio(this.audioCache.walk);
+            this.stopOtherAudios();
         }
     }
 
@@ -273,7 +256,8 @@ class Character extends MovableObject {
             imagePaths = 'IMAGES_IDLE'
         } else if(this.isIdleLong) {
             imagePaths = 'IMAGES_IDLE_LONG'
-            startAudio(this.audioCache.idle);
+            this.startAudio(this.audioCache.idle);
+            this.stopOtherAudios();
         } else {
             return;
         }
@@ -315,7 +299,7 @@ class Character extends MovableObject {
         this[objName + 'Status'] += obj.value;
         obj.collected = true;
         obj.hideObject();
-        startAudioResumed(obj.audioCache.collect);
+        this.startAudioResumed(obj.audioCache.collect);
         console.log('collected', obj.objectName, '#' + this[objName + 's'].length, 'Status', this[objName + 'Status']);
     }
     
@@ -347,6 +331,7 @@ class Character extends MovableObject {
 
     /**
      * check if dying
+     * @returns {boolean}
      */
     isDying() {
         return super.isDying(2500);
