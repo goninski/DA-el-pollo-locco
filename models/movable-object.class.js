@@ -303,42 +303,30 @@ class MovableObject extends DrawableObject {
 
     /**
      * Check if dying
-     * @param {number} animDuration - duration (ms) of the death animation
      * @returns {boolean}
      */
     isDying() {
         return (this.energy <= 0 && !this.dead);
-        return (this.energy <= 0 && debounceLeading(this.deadlyHit, animDuration));
-        if(this.energy > 0) return;
-        let currentTime = new Date().getTime();
-        // if(this instanceof Character) {
-        //     console.log(this.objectName, 'deadlyHit:', this.deadlyHit);
-        //     console.log(this.objectName, 'timePassed:', currentTime - this.deadlyHit);
-        // }
-        if(currentTime - this.deadlyHit <= animDuration) {
-            console.log(this.objectName, 'isDying');
-            return true;
-        };
     }
 
 
     /**
      * Handling death
+     * @param {number} animDuration - duration ms for death animation
      * @param {number} clearTimeout - timeout in ms after intervals should be cleared
      */
-    handlingDeath(animDuration = 2000, clearTimeout = 10000) {
+    handlingDeath(animDuration = 2000, clearTimeout = 5000) {
         this.deathDebounceCounter++;
         if(debounceLeading(this.deadlyHitTime, animDuration)) {
             this.deathAnimation();
         }
         if(debounceDelayed(this.deadlyHitTime, animDuration)) {
             this.dead = true;
-            // this.deathDebounceCounter = 1;
             if(this.isEnemy && !(this instanceof Endboss)) {
                 livingEnemies--;
             }
             this.clearIntervals(clearTimeout);
-            this.stopAllAudios();
+            this.stopAllAudios(clearTimeout);
         }
     }
 
@@ -348,14 +336,13 @@ class MovableObject extends DrawableObject {
      */
     saveIntervalsGlobally() {
        stoppableIntervals.push(...this.intervals);
-    //    console.log(stoppableIntervals);
     }
 
 
     /**
      * Clear intervals
      */
-    clearIntervals(timeout = 10000) {
+    clearIntervals(timeout = 5000) {
        setTimeout(() => this.intervals.forEach(clearInterval), timeout);
     }
 

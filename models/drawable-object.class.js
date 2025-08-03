@@ -97,22 +97,13 @@ class DrawableObject {
 
 
     /**
-     * Stop current audio
-     */
-    stopCurrentAudio() {
-        this.currentAudio ? this.currentAudio.pause() : null;
-        removeAudioFromLoopedAudios(this.currentAudio);
-    }
-
-
-    /**
      * Stop other audios
      */
     stopOtherAudios() {
         Object.values(this.audioCache).forEach(audio => {
             if(audio != this.currentAudio) {
                 audio.pause();
-                removeAudioFromLoopedAudios(this.currentAudio);
+                removeAudioFromLoopedAudios(audio);
             }
         });
     }
@@ -121,12 +112,14 @@ class DrawableObject {
     /**
      * Stop All audios
      */
-    stopAllAudios() {
-        this.currentAudio = null;
-        Object.values(this.audioCache).forEach(audio => {
-            audio.pause();
-            removeAudioFromLoopedAudios(this.currentAudio);
-        });
+    stopAllAudios(timeout = 0) {
+        setTimeout(() => {
+            this.currentAudio = null;
+            Object.values(this.audioCache).forEach(audio => {
+                audio.pause();
+                removeAudioFromLoopedAudios(audio);
+            });
+        }, timeout);
     }
 
 

@@ -71,6 +71,13 @@ class Character extends MovableObject {
         imgPathBase + '2_character_pepe/4_hurt/H-43.png',
     ];
 
+    IMAGES_WIN = [
+        imgPathBase + '2_character_pepe/3_jump/J-31.png',
+        imgPathBase + '2_character_pepe/3_jump/J-32.png',
+        imgPathBase + '2_character_pepe/3_jump/J-33.png',
+        imgPathBase + '2_character_pepe/3_jump/J-34.png',
+    ];
+
     IMAGES_DEATH = [
         imgPathBase + '2_character_pepe/5_dead/D-51.png',
         imgPathBase + '2_character_pepe/5_dead/D-52.png',
@@ -87,6 +94,7 @@ class Character extends MovableObject {
         jump : audioPathBase + 'character-jump.mp3',
         hurt : audioPathBase + 'character-hurt.mp3',
         death : audioPathBase + 'character-death.mp3',
+        win : audioPathBase + 'character-win.wav',
     }
 
 
@@ -115,6 +123,7 @@ class Character extends MovableObject {
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_JUMPING);
         this.setImageCache(this.IMAGES_HURT);
+        this.setImageCache(this.IMAGES_WIN);
         this.setImageCache(this.IMAGES_DEATH);
         this.setAudioCache(this.audioFiles);
     }
@@ -140,7 +149,9 @@ class Character extends MovableObject {
             if(gameIsPaused || this.dead || this.isDying()) return;
             this.isIdle = false;
             this.isIdleLong = false;
-            if(this.world.keystrokes.KEY_LEFT) {
+            if(this.world.isGameWon()) {
+                this.winJump();
+            } else if(this.world.keystrokes.KEY_LEFT) {
                 this.otherDirection = true;
                 this.moveLeft(this.speed);
             } else if(this.world.keystrokes.KEY_RIGHT) {
@@ -165,7 +176,7 @@ class Character extends MovableObject {
     handleKeystrokeSpace() {
         if(this.isAboveGround()) return;
         this.jump(30);
-        this.startAudioDebouncedLeading(this.audioCache.jump, lastKeystroke_JUMP, 100);
+        this.startAudio(this.audioCache.jump);
     }
 
 
@@ -192,12 +203,10 @@ class Character extends MovableObject {
                 if(this.isDying()) {
                     this.handlingDeath();
                     this.startAudio(this.audioCache.death,0.7);
-                    // this.startAudioDebouncedLeading(this.audioCache.dead, this.lastHitTime, 125, 0.7);
                     this.stopOtherAudios();
                 } else if(this.isHurt()) {
                     this.handlingHurt();
                     this.startAudio(this.audioCache.hurt);
-                    // this.startAudioDebouncedLeading(this.audioCache.hurt, this.lastHitTime, 125);
                     this.stopOtherAudios();
                 } else if(!this.isIdle && !this.isIdleLong) {
                     this.walkingAnimation();
@@ -214,7 +223,9 @@ class Character extends MovableObject {
     animateJumping() {
         intervalId = setInterval(() => {
             if(gameIsPaused || this.dead || this.isDying()) return;
-            if(this.isAboveGround()) {
+            if(this.world.isGameWon()) {
+                this.winJumpAnimation();
+            } else if(this.isAboveGround()) {
                 this.jumpingAnimation();
              }
         }, 100); 
@@ -330,11 +341,12 @@ class Character extends MovableObject {
 
 
     /**
-     * check if dying
-     * @returns {boolean}
+     * Win jump animation
+     * @param {string} imagePaths - variable name for the win jump images array
      */
-    isDying() {
-        return super.isDying(2500);
+    winJumpAnimation(imagePaths = 'IMAGES_WIN') {
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);    
     }
 
 
@@ -342,12 +354,22 @@ class Character extends MovableObject {
      * Jump animation on game win
      */
     winJump() {
-        this.otherDirection ? this.otherDirection = false : null;
+        // this.otherDirection ? this.otherDirection = false : null;
         this.x = 0;
         this.setWalkGroundY();
-        this.jump(80);
-        this.loadImage(this.IMAGES_JUMPING[3]);
+        this.jump(30);
+        this.startAudio(this.audioCache.win);
+        this.clearIntervals(1000);
+        this.loadImage(this.IMAGES_WIN[3]);
     }
 
+
+    /**
+     * check if dying
+     * @returns {boolean}
+     */
+    isDying() {
+        return super.isDying(2500);
+    }
 
 }

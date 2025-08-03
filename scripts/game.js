@@ -68,6 +68,7 @@ function startGame(event = null) {
     event ? event.stopPropagation() : null;
     stopAudio(audioCache.gameStart);
     resumeGame();
+    logPlayingAudios();
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();
     hideAllScreens();
@@ -132,12 +133,16 @@ function setBodyClassIfTouchDevice() {
 function handlingGameWin(event = null) {
     event ? event.stopPropagation() : null;
     console.log('handlingGameWin');
-    stopAllAudios();
     hideAllScreens();
     body.classList.add('win-screen');
-    startAudio(audioCache.gameWin);
-    world.character.winJump();
-    stoppableIntervals.forEach(clearInterval);
+    // stopAllAudios();
+    // startAudio(audioCache.gameWin);
+    // world.character.winJump();
+    // stoppableIntervals.forEach(clearInterval);
+    // setTimeout(() => {
+    //     stoppableIntervals.forEach(clearInterval);
+    //     stopAllAudios();
+    // }, 1000);
     // setTimeout(() => restartGame(null), 12000);
 }    
 

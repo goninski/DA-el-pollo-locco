@@ -27,7 +27,7 @@ function initLevel1() {
             new Clouds(imgPathBase + '5_background/layers/4_clouds/1.png', 1),    
         ],
         [
-            // new LittleChicken(),    
+            new LittleChicken(),    
             // new LittleChicken(),    
             // new LittleChicken(),    
             // new LittleChicken(),    

@@ -154,7 +154,7 @@ class World {
             if(this.isGameOver()) {
                 return handlingGameOver();
             } else if(this.isGameWon()) {
-                return handlingGameWin();
+                handlingGameWin();
             } else if(livingEnemies <= 0 && !this.endboss.active) {
                 this.endboss.active = true;
                 this.endboss.setWalkGroundY();
@@ -239,7 +239,7 @@ class World {
         if(this.isGameOver() || this.isGameWon()) {
             return false;
         } else {
-            return gameIsPaused === true;
+            return gameIsPaused;
         }
     }
 
@@ -249,11 +249,7 @@ class World {
      * @returns {boolean}
      */
     isGameWon() {
-        return this.endboss.dead === true;
-        // return livingEnemies <= 0;
-        if(this.endboss.dead) {
-            return debounceDelayed(this.endboss.lastHit, 1500);
-        }
+        return this.endboss.dead;
     }
     
     
@@ -262,11 +258,7 @@ class World {
      * @returns {boolean}
      */
     isGameOver(){
-        // console.log('character.dead:', this.character.dead);
         return this.character.dead;
-        if(this.character.dead) {
-            return debounceDelayed(this.character.lastHit, 2000);
-        }
     }
   
     

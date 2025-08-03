@@ -103,8 +103,7 @@ class Chicken extends MovableObject {
     /**
      * Handling death
      */
-    handlingDeath(animDuration = 50) {
-        // this.deathDebounceCounter++;
+    handlingDeath(animDuration = 75) {
         super.handlingDeath(animDuration);
         if(this.deathDebounceCounter === 1) {
             this.startAudio(this.audioCache.death, 0.7);

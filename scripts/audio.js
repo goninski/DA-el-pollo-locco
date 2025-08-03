@@ -6,7 +6,7 @@ let loopedAudios = [];
 let audioCache = {
     gameStart : new Audio(audioPathBase + 'game-start.mp3'),
     gameOver : new Audio(audioPathBase + 'game-over.mp3'),
-    gameWin : new Audio(audioPathBase + 'game-win.wav'),
+    // gameWin : new Audio(audioPathBase + 'game-win.wav'),
 };
 
 
@@ -20,8 +20,8 @@ function startAudio(audioObj, volume = 1, loop = false) {
     currentAudio = audioObj;
     audioObj.volume = volume;
     audioObj.loop = loop;
-    setLoopedAudioArray(audioObj);
-    setAudioMuting(audioObj);
+    addAudioToLoopedAudios(audioObj);
+    setAudioMuteStates(audioObj);
     audioObj.play().catch(error => {
         audioObj.muted = true;
         audioMuted = true;
@@ -36,7 +36,7 @@ function startAudio(audioObj, volume = 1, loop = false) {
  * Set array for looped audio
  * @param {object} audioObj - audio object
  */
-function setLoopedAudioArray(audioObj) {
+function addAudioToLoopedAudios(audioObj) {
     if(audioObj.loop) {
         if(!(loopedAudios.includes(audioObj))) {
             loopedAudios.push(audioObj);        
@@ -46,11 +46,12 @@ function setLoopedAudioArray(audioObj) {
 }
 
 
+
 /**
  * Set audio muting depending on state
  * @param {object} audioObj - audio object
  */
-function setAudioMuting(audioObj) {
+function setAudioMuteStates(audioObj) {
     // console.log('audioMuted ?', audioMuted);
     if(audioMuted) {
         audioObj.muted = true;
@@ -125,6 +126,24 @@ function removeAudioFromLoopedAudios(audioObj) {
  */
 function cleanLoopedAudiosArray() {
     loopedAudios = loopedAudios.filter(audio => !audio.paused);
+}
+
+
+/**
+ * Log playing Audios (temporary for debug)
+ */
+function logPlayingAudios(showLog = false) {
+    if(!showLog) return;
+    let playingAudios;
+    console.log('Playing Audios Global:');
+        playingAudios = loopedAudios.filter(audio => !audio.paused);
+        playingAudios.forEach(audio => console.log(audio.src));
+    console.log('Playing Audios Enemies:');
+    world.enemies.forEach(enemy => {
+        Object.values(enemy.audioCache).forEach(audio => {
+            console.log(audio.src);
+        });
+    });
 }
 
 
