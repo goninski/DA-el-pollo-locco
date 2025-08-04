@@ -40,7 +40,7 @@
                     <div id="gameOverScreen" class="canvas-cover"></div>
                     <div id="winScreen" class="canvas-cover"></div>
                     <div id="startScreen" class="canvas-cover"></div>
-                    <div id="legalNoticeScreen" class="canvas-cover"></div>
+                    <!-- <div id="legalNoticeScreen" class="canvas-cover"></div> -->
                     <div id="screenOverlay" class=""></div>
                 </div>
 
@@ -55,6 +55,9 @@
                     </button>
                     <button id="btnSurrender" onclick="handlingGameOver(event)" title="Surrender (Game Over)">
                         <img src="assets/icons/flag.svg" alt="white-flag-icon">
+                    </button>
+                    <button id="btnToggleLegalNotice" onclick="toggleLegalNotice(event)" title="Legal Notice on/off">
+                        <img class="" src="assets/icons/legal-notice.svg" alt="legal-notice-icon">
                     </button>
                     <!-- <button id="btnWin" onclick="handlingGameWin(event)" title="win game">
                         <img src="assets/icons/trophy.svg" alt="trophy-icon">
@@ -72,9 +75,9 @@
                     </button>
                 </div>
 
-                <div class="nav-panel" data-before="Instructions | Level 1">
+                <div class="nav-panel info-panel" data-before="Instructions | Level 1">
                     <button class="close" onclick="toggleHelp(event)"><img src="assets/icons/close-fill.svg" alt="close-icon"></button>
-                    <div class="play-info help">
+                    <div class="info-text help">
                         Pepe has been hit by a plague of chickens. <br>                         
                         You are Pepe and you need to eliminate all chickens. <br>
                         Use jumps and throw collected bottles. Collect coins to<br> 
@@ -102,6 +105,13 @@
                             <div class="key-info help">[ B ]</div>
                             <button id="btnThrowBottle"><img src="assets/icons/spacebar-orange.png"><img class="label-img" src="assets/icons/broken-bottle.svg" alt="broken-bottle-icon"></button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="legal-notice-panel info-panel" data-before="Legal Notice">
+                    <button class="close" onclick="toggleLegalNotice(event)"><img src="assets/icons/close-fill.svg" alt="close-icon"></button>
+                    <div class="info-text help">
+                        Legal Notice.....
                     </div>
                 </div>
 

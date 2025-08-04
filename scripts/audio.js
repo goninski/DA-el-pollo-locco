@@ -1,7 +1,5 @@
 let audioPathBase = '/assets/audio/';
 let audioMuted = false;
-// let audioMutedByUser = false;
-let currentAudio;
 let loopedAudios = [];
 let audioCache = {
     gameStart : new Audio(audioPathBase + 'game-start.mp3'),
@@ -17,7 +15,6 @@ let audioCache = {
  * @param {boolean} loop 
  */
 function startAudio(audioObj, volume = 1, loop = false) {
-    currentAudio = audioObj;
     audioObj.volume = volume;
     audioObj.loop = loop;
     addAudioToLoopedAudios(audioObj);
@@ -96,7 +93,6 @@ function startAudioResumed(audioObj, volume = 1) {
  */
 function stopAudio(audioObj) {
     audioObj.pause();
-    currentAudio ? currentAudio.pause() : null;
     removeAudioFromLoopedAudios(audioObj);
 }
 
@@ -105,7 +101,6 @@ function stopAudio(audioObj) {
  * Stop all audios
  */
 function stopAllAudios() {
-    currentAudio ? currentAudio.pause() : null;
     loopedAudios.forEach(item => item.pause());
     cleanLoopedAudiosArray();
 }
@@ -170,7 +165,6 @@ function toggleAudioMute(event = null) {
  */
 function muteAudio() {
     loopedAudios.forEach(item => item.muted = true);
-    currentAudio? currentAudio.muted = true : null;
     audioMuted = true;
     body.classList.add('audio-muted');
 }
@@ -188,10 +182,8 @@ function unmuteAudio(event = null) {
             body.classList.contains('audio-auto-muted') ? item.play() : null;
         });
     } else {
-        // if(audioMutedByUser) return;
         if(localStorage.getItem("audioMutedByUser") === 'true') return;
         loopedAudios.forEach(item => item.muted = false);
-        currentAudio? currentAudio.muted = false : null;
     }
     audioMuted = false;
     body.classList.remove('audio-muted', 'audio-auto-muted');

@@ -31,7 +31,7 @@ class Coin extends CollectableObject {
         this.roundDimensions();
         this.setRandomPosX();
         this.setWalkGroundY();
-        this.y = this.groundY - (Math.floor(Math.random() * (heightCanvas * 0.66)));
+        this.y = this.groundY - (Math.floor(Math.random() * (heightCanvas * 0.6)));
         this.roundCoordinates();
         this.setBorderCoordinates();
         let index = Math.floor(Math.random() * 2);

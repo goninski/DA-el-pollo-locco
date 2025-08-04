@@ -91,6 +91,7 @@ class Character extends MovableObject {
     audioFiles = {
         idle : audioPathBase + 'character-idle.mp3',
         walk : audioPathBase + 'character-walk.mp3',
+        walkSteps : audioPathBase + 'walk-step.mp3',
         jump : audioPathBase + 'character-jump.mp3',
         hurt : audioPathBase + 'character-hurt.mp3',
         death : audioPathBase + 'character-death.mp3',
@@ -130,11 +131,12 @@ class Character extends MovableObject {
 
 
     /**
-     * Animate calls
+     * Animate interval calls
      */
     animate() {
         this.keystrokesHandler(); //60x
         this.animateWalkingHurtDeath(); //50ms
+        this.animateWalkingAudio(); //50ms
         this.animateJumping(); //100ms
         this.animateIdle(); //300ms
         this.saveIntervalsGlobally();
@@ -142,27 +144,25 @@ class Character extends MovableObject {
 
 
     /**
-     * Keystrokes handler 
+     * Interval for: keystrokes handler 
      */
     keystrokesHandler() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead || this.isDying()) return;
-            this.isIdle = false;
-            this.isIdleLong = false;
+            if(gamePaused || this.dead || this.isDying()) return;
             if(this.world.isGameWon()) {
                 this.winJump();
             } else if(this.world.keystrokes.KEY_LEFT) {
                 this.otherDirection = true;
                 this.moveLeft(this.speed);
+                this.startAudio(this.audioCache.walkSteps);
             } else if(this.world.keystrokes.KEY_RIGHT) {
                 this.otherDirection = false;
                 this.moveRight(this.speed);
+                this.startAudio(this.audioCache.walkSteps);
             } else if(this.world.keystrokes.KEY_SPACE) {
-                this.handleKeystrokeSpace();
+                this.handleJumpKeystroke();
             } else if(this.world.keystrokes.KEY_B) {
                 this.throwBottle();
-            } else {
-                this.checkAndSetIdle();
             }
             this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
         }, 1000 / 60);
@@ -171,45 +171,25 @@ class Character extends MovableObject {
 
 
     /**
-     * Handle keystroke SPACE (jump)
-     */
-    handleKeystrokeSpace() {
-        if(this.isAboveGround()) return;
-        this.jump(30);
-        this.startAudio(this.audioCache.jump);
-    }
-
-
-    /**
-     * Check and handle idle
-     */
-    checkAndSetIdle() {
-        let timePassed = new Date().getTime() - lastKeystroke;
-        if(timePassed >= 3000 && timePassed < 6000) {
-            this.isIdle = true;
-        } else if(timePassed >= 6000) {
-            this.isIdleLong = true;
-        }
-    }
-
-
-    /**
-     * Interval to animate walking, hurt, death
+     * Interval for: Animation of walking/hurt/death, set idleState
      */
     animateWalkingHurtDeath() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead) return;
+            if(gamePaused || this.dead) return;
             if(!this.isAboveGround()) {
                 if(this.isDying()) {
+                    this.disableIdle();
                     this.handlingDeath();
                     this.startAudio(this.audioCache.death,0.7);
-                    this.stopOtherAudios();
                 } else if(this.isHurt()) {
+                    this.disableIdle();
                     this.handlingHurt();
                     this.startAudio(this.audioCache.hurt);
-                    this.stopOtherAudios();
-                } else if(!this.isIdle && !this.isIdleLong) {
-                    this.walkingAnimation();
+                } else {
+                    this.setIdleState();
+                    if(!this.isIdle && !this.isIdleLong) {
+                        this.walkingAnimation();
+                    }
                 }
             }
         }, 50); 
@@ -218,11 +198,25 @@ class Character extends MovableObject {
 
 
     /**
-     * Interval to animate jumping
+     * Interval for: walking audio
+     */
+    animateWalkingAudio() {
+        // intervalId = setInterval(() => {
+        //     if(gamePaused || this.dead || this.isDying()) return;
+        //     if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
+        //         this.startAudio(this.audioCache.walkSteps);
+        //     }
+        // }, 1000/60); 
+        // this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * Interval for: jumping animation
      */
     animateJumping() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead || this.isDying()) return;
+            if(gamePaused || this.dead || this.isDying()) return;
             if(this.world.isGameWon()) {
                 this.winJumpAnimation();
             } else if(this.isAboveGround()) {
@@ -234,14 +228,67 @@ class Character extends MovableObject {
 
 
     /**
-     * Interval to animate idle
+     * Interval for: idle animation
      */
     animateIdle() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead || this.isDying()) return;
-            this.idleAnimation();
+            if(gamePaused || this.dead || this.isHurt() || this.isDying()) return;
+            // console.log('\nanimateIdle Interval');
+            // console.log('isIdle', this.isIdle);
+            // console.log('isIdleLong', this.isIdleLong);
+            if(this.isIdle) {
+                console.log('animateIdle.isIdle');
+                this.img = this.imageCache[this['IMAGES_IDLE'][0]];
+                this.movementAnimation(this['IMAGES_IDLE']);
+            } else if(this.isIdleLong) {
+                console.log('animateIdle.isIdleLong');
+                this.img = this.imageCache[this['IMAGES_IDLE_LONG'][0]];
+                this.movementAnimation(this['IMAGES_IDLE_LONG']);
+                this.startAudio(this.audioCache.idle);
+            }
         }, 300); 
         this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * Handle jump keystroke
+     */
+    handleJumpKeystroke() {
+        this.disableIdle();
+        if(this.isAboveGround()) return;
+        this.jump(30);
+        this.startAudio(this.audioCache.jump);
+    }
+
+
+    /**
+     * Check and set idle states
+     */
+    setIdleState() {
+        if(gamePaused || this.dead || this.isDying()) return;
+        let timePassed = new Date().getTime() - lastKeystroke;
+        if(timePassed >= 3000 && timePassed < 6000) {
+            this.isIdle = true;
+            this.isIdleLong = false;
+        } else if(timePassed >= 6000) {
+            this.isIdle = false;
+            this.isIdleLong = true;
+        } else {
+            this.idle = false;
+            this.idleLong = false;
+        }
+        // console.log('\nisIdle', this.isIdle);
+        // console.log('isIdleLong', this.isIdleLong);
+    }
+
+
+    /**
+     * disable idle
+     */
+    disableIdle() {
+        this.idle = false;
+        this.isIdleLong = false;
     }
 
 
@@ -251,37 +298,18 @@ class Character extends MovableObject {
     walkingAnimation() {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
+            this.disableIdle();
             super.walkingAnimation();
-            this.startAudio(this.audioCache.walk);
-            this.stopOtherAudios();
         }
     }
 
-
-    /**
-     * Idle and long idle animation
-     */
-    idleAnimation() {
-        let imagePaths;
-        if(this.isIdle) {
-            imagePaths = 'IMAGES_IDLE'
-        } else if(this.isIdleLong) {
-            imagePaths = 'IMAGES_IDLE_LONG'
-            this.startAudio(this.audioCache.idle);
-            this.stopOtherAudios();
-        } else {
-            return;
-        }
-        this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);
-    }
-
-
+    
     /**
      * Move left
      * @param {number} speed 
      */
     moveLeft(speed) {
+        this.disableIdle();
         if(this.x > (widthCanvas * -1) + 8) {
             this.x -= speed;
         }
@@ -293,6 +321,7 @@ class Character extends MovableObject {
      * @param {number} speed 
      */
     moveRight(speed) {
+        this.disableIdle();
         if(this.x < (widthCanvas * 2) - this.width) {
             this.x += speed;
         }
@@ -305,13 +334,14 @@ class Character extends MovableObject {
      */
     collectObject(obj) {
         if(!obj.collectableObj || obj.collected) return;
+        if(this.x === 0) return;
         let objName = obj.constructor.name.toLowerCase();
         this[objName + 's'].push(obj);
         this[objName + 'Status'] += obj.value;
         obj.collected = true;
         obj.hideObject();
         this.startAudioResumed(obj.audioCache.collect);
-        console.log('collected', obj.objectName, '#' + this[objName + 's'].length, 'Status', this[objName + 'Status']);
+        // console.log('collected', obj.objectName, '#' + this[objName + 's'].length, 'Status', this[objName + 'Status']);
     }
     
     
@@ -319,6 +349,7 @@ class Character extends MovableObject {
      * Throw bottle 
      */
     throwBottle() {
+        this.disableIdle();
         if(this.bottles.length <= 0) return;
         this.throwDebounceCounter++;
         console.log('#bottles before throw', this.bottles.length)
@@ -326,9 +357,9 @@ class Character extends MovableObject {
             this.lastThrow = new Date().getTime();
             let bottle = this.bottles[0];
             this.thrownBottle = bottle;
-            let charClone = {...this};
-            let posX = Math.round(charClone.borderX); 
-            bottle.x = posX;
+            // let charClone = {...this};
+            // let posX = Math.round(charClone.borderX); 
+            bottle.x = Math.round(this.borderX);
             bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
             bottle.handleThrow(this);
             console.log('Thrown bottle', bottle.objectName);
@@ -355,11 +386,12 @@ class Character extends MovableObject {
      */
     winJump() {
         // this.otherDirection ? this.otherDirection = false : null;
+        this.disableIdle();
         this.x = 0;
         this.setWalkGroundY();
         this.jump(30);
         this.startAudio(this.audioCache.win);
-        this.clearIntervals(1000);
+        this.clearIntervals(1500);
         this.loadImage(this.IMAGES_WIN[3]);
     }
 

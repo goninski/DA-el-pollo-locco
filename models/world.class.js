@@ -60,7 +60,7 @@ class World {
         this.ctx.translate(-this.screenTranslateX, 0);
         this.drawObjects(this.statusBars);
 
-        if(!this.isGameOver() && !this.isGameWon() && !gameIsPaused) {
+        if(!this.isGameOver() && !this.isGameWon() && !gamePaused) {
             let self = this;
             requestAnimationFrame(() => self.draw());
         }
@@ -119,15 +119,8 @@ class World {
      */
     globalIntervals() {
         this.playTimeInterval(); //1s
-        this.updateGameStatus(); //300ms
-
-        intervalId = setInterval(() => {
-            if(gameIsPaused) return;
-            this.checkEnemyHits();
-            this.checkObjectCollection('bottle');
-            this.checkObjectCollection('coin');
-        }, 100);
-        this.intervals.push(intervalId);
+        this.updateGameStatus(); //100ms
+        this.StatusbarInterval(); //300ms
     }
 
 
@@ -136,7 +129,7 @@ class World {
      */
     playTimeInterval() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gamePaused) return;
             timer = runPlayTimeCounter();
             document.getElementById('playTimer').innerHTML =  timer;
         }, 1000);
@@ -149,18 +142,17 @@ class World {
      */
     updateGameStatus() {
         intervalId = setInterval(() => {
-            this.debugLogs(false);
-            this.updateStatusBars();
+            if(gamePaused) return;
             if(this.isGameOver()) {
-                return handlingGameOver();
+                handlingGameOver();
             } else if(this.isGameWon()) {
                 handlingGameWin();
-            } else if(livingEnemies <= 0 && !this.endboss.active) {
-                this.endboss.active = true;
-                this.endboss.setWalkGroundY();
-                this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
+            } else {
+                this.checkEnemyHits();
+                this.checkObjectCollection('bottle');
+                this.checkObjectCollection('coin');
             }
-        }, 300);
+        }, 50);
         this.intervals.push(intervalId);
     }
 
@@ -168,11 +160,21 @@ class World {
     /**
      * Update the status bars
      */
-    updateStatusBars() {
-        this.statusBars[0].updateStatusBar(this.character.energy);
-        this.statusBars[1].updateStatusBar(this.character.coinStatus);
-        this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-        this.statusBars[3].updateStatusBar(this.endboss.energy);
+    StatusbarInterval() {
+        intervalId = setInterval(() => {
+            if(gamePaused) return;
+            this.debugLogs(false);
+            this.statusBars[0].updateStatusBar(this.character.energy);
+            this.statusBars[1].updateStatusBar(this.character.coinStatus);
+            this.statusBars[2].updateStatusBar(this.character.bottleStatus);
+            this.statusBars[3].updateStatusBar(this.endboss.energy);
+            if(livingEnemies <= 0 && !this.endboss.active) {
+                this.endboss.active = true;
+                this.endboss.setWalkGroundY();
+                this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
+            }
+        }, 300);
+        this.intervals.push(intervalId);
     }
 
 
@@ -239,7 +241,7 @@ class World {
         if(this.isGameOver() || this.isGameWon()) {
             return false;
         } else {
-            return gameIsPaused;
+            return gamePaused;
         }
     }
 
@@ -258,7 +260,7 @@ class World {
      * @returns {boolean}
      */
     isGameOver(){
-        return this.character.dead;
+        return (this.character.dead || this.endboss.borderX + this.endboss.borderWidth < widthCanvas * -1);
     }
   
     

@@ -19,7 +19,7 @@ let secondsPlay = 0;
 let intervalId = 0;
 let stoppableIntervals = [];
 let livingEnemies;
-let gameIsPaused = false;
+let gamePaused = false;
 
 
 /**
@@ -86,8 +86,7 @@ function restartGame(event = null) {
     event ? event.stopPropagation() : null;
     stoppableIntervals.forEach(clearInterval);
     stopAllAudios();
-    cleanLoopedAudiosArray();
-    gameIsPaused = false;
+    gamePaused = false;
     // window.location.reload();
     initGame();
 }    
@@ -135,14 +134,10 @@ function handlingGameWin(event = null) {
     console.log('handlingGameWin');
     hideAllScreens();
     body.classList.add('win-screen');
-    // stopAllAudios();
-    // startAudio(audioCache.gameWin);
-    // world.character.winJump();
-    // stoppableIntervals.forEach(clearInterval);
-    // setTimeout(() => {
-    //     stoppableIntervals.forEach(clearInterval);
-    //     stopAllAudios();
-    // }, 1000);
+    setTimeout(() => {
+        stoppableIntervals.forEach(clearInterval);
+        stopAllAudios();
+    }, 1000);
     // setTimeout(() => restartGame(null), 12000);
 }    
 
@@ -155,6 +150,7 @@ function handlingGameOver(event = null) {
     event ? event.stopPropagation() : null;
     console.log('handlingGameOver');
     resumeGame();
+    gamePaused = true;
     stopAllAudios();
     stoppableIntervals.forEach(clearInterval);
     hideAllScreens();
@@ -178,6 +174,9 @@ function toggleHelp(event) {
             resumeGame();
         }
     } else {
+        if(body.classList.contains('legal-notice-screen')) {
+            body.classList.remove('legal-notice-screen');
+        }
         body.classList.add('help-screen');
         if(body.classList.contains('play-screen')) {
             pauseGame();
@@ -194,7 +193,13 @@ function toggleLegalNotice(event) {
     event.stopPropagation();
     if(body.classList.contains('legal-notice-screen')) {
         body.classList.remove('legal-notice-screen');
+        if(body.classList.contains('play-screen')) {
+            body.classList.add('help-screen');
+        }
     } else {
+        if(body.classList.contains('help-screen')) {
+            body.classList.remove('help-screen');
+        }
         body.classList.add('legal-notice-screen');
     }
 }   
@@ -264,7 +269,7 @@ function closeFullscreen() {
  */
 function pauseGame() {
     body.classList.add('game-paused');
-    gameIsPaused = true;
+    gamePaused = true;
     muteAudio();
 }   
 
@@ -272,7 +277,7 @@ function pauseGame() {
  * Resume game
  */
 function resumeGame() {
-    gameIsPaused = false;
+    gamePaused = false;
     unmuteAudio();
     world.draw();
 }   

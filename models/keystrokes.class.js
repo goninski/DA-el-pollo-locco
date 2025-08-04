@@ -97,6 +97,7 @@ class Keystrokes {
             event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_LEFT = true;
             lastKeystroke = new Date().getTime();
+            lastKeystroke_LEFT = lastKeystroke;
         });
         document.getElementById('btnMoveLeft').addEventListener('touchend', (event) => {
             event.cancelable ? event.preventDefault() : null;
@@ -106,6 +107,7 @@ class Keystrokes {
             event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_RIGHT = true;
             lastKeystroke = new Date().getTime();
+            lastKeystroke_RIGHT = lastKeystroke;
         });
         document.getElementById('btnMoveRight').addEventListener('touchend', (event) => {
             event.cancelable ? event.preventDefault() : null;
@@ -115,6 +117,7 @@ class Keystrokes {
             event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_SPACE = true;
             lastKeystroke = new Date().getTime();
+            lastKeystroke_SPACE = lastKeystroke;
         });
         document.getElementById('btnJump').addEventListener('touchend', (event) => {
             event.cancelable ? event.preventDefault() : null;
@@ -124,6 +127,7 @@ class Keystrokes {
             event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_B = true;
             lastKeystroke = new Date().getTime();
+            lastKeystroke_THROW = lastKeystroke;
         });
         document.getElementById('btnThrowBottle').addEventListener('touchend', (event) => {
             event.cancelable ? event.preventDefault() : null;

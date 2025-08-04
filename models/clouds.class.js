@@ -1,8 +1,6 @@
 /** Class representing clouds for the canvas */
 class Clouds extends MovableObject {
 
-    static instanceId = 0;
-
     width = widthCanvas;
     height = heightCanvas;
 
@@ -14,8 +12,7 @@ class Clouds extends MovableObject {
      */
     constructor(imgPath, screenSlide = 0) {
         super();
-        this.instanceId++;
-        this.objectName += this.instanceId;
+        this.objectName;
         this.setScreenSlidePos(screenSlide);
         this.loadImage(imgPath);
         this.animate();

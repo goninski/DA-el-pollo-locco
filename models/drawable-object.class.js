@@ -15,6 +15,8 @@ class DrawableObject {
     img;
     imageCache = {};
     currentImage = 0;
+    audioFiles = {};
+    audioCache = {};
     destroyed = false;
 
     
@@ -66,8 +68,8 @@ class DrawableObject {
      * @param {number} volume - 0 to 1
      */
     startAudio(audioObj, volume = 1, loop = false) {
-        this.currentAudio = audioObj;
-        startAudio(this.currentAudio, volume, loop);
+        // this.currentAudio = audioObj;
+        startAudio(audioObj, volume, loop);
     }
 
 
@@ -77,9 +79,9 @@ class DrawableObject {
      * @param {number} volume - 0 to 1
      */
     startAudioResumed(audioObj, volume = 1, loop = false) {
-        this.currentAudio = audioObj;
-        this.currentAudio.currentTime = 0;
-        startAudio(this.currentAudio, volume, loop);
+        // this.currentAudio = audioObj;
+        audioObj.currentTime = 0;
+        startAudio(audioObj, volume, loop);
     }
 
 
@@ -91,21 +93,16 @@ class DrawableObject {
      * @param {number} volume - 0 to 1
      */
     startAudioDebouncedLeading(audioObj, startTime, duration = 150, volume = 1) {
-        this.currentAudio = audioObj;
-        startAudioDebouncedLeading(this.currentAudio, startTime, duration, volume, false);
+        // this.currentAudio = audioObj;
+        startAudioDebouncedLeading(audioObj, startTime, duration, volume, false);
     }
 
 
     /**
-     * Stop other audios
+     * Stop audio
      */
-    stopOtherAudios() {
-        Object.values(this.audioCache).forEach(audio => {
-            if(audio != this.currentAudio) {
-                audio.pause();
-                removeAudioFromLoopedAudios(audio);
-            }
-        });
+    stopAudio(audioObj) {
+        stopAudio(audioObj);
     }
 
 
@@ -114,7 +111,6 @@ class DrawableObject {
      */
     stopAllAudios(timeout = 0) {
         setTimeout(() => {
-            this.currentAudio = null;
             Object.values(this.audioCache).forEach(audio => {
                 audio.pause();
                 removeAudioFromLoopedAudios(audio);

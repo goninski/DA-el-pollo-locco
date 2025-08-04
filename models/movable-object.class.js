@@ -13,9 +13,6 @@ class MovableObject extends DrawableObject {
     hitDebounceCounter = 0;
     deathDebounceCounter = 0;
     dead = false;
-    audioFiles = {};
-    audioCache = {};
-    currentAudio;
 
 
     /**
@@ -31,7 +28,7 @@ class MovableObject extends DrawableObject {
      * @param {array} imagePaths - image paths
      */
     movementAnimation(imagePaths) {
-        if(gameIsPaused === true) return;
+        if(gamePaused === true) return;
         let index = this.currentImage % imagePaths.length;
         let path = imagePaths[index];
         this.img = this.imageCache[path];
@@ -85,7 +82,7 @@ class MovableObject extends DrawableObject {
      * @param {number} speedMax - maximal speed
      */
     moveLeft(speedMin = 0.15, speedMax = null) {
-        if(gameIsPaused === true) return;
+        if(gamePaused === true) return;
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         this.x -= speed;
     }
@@ -201,7 +198,7 @@ class MovableObject extends DrawableObject {
     handlingHitFromBottle(obj) {
         obj.strength = 100;
         if(this instanceof Endboss) {
-            obj.strength = 10;
+            obj.strength = 33;
         }
         // console.log(this.objectName, '(handlingHitFromBottle)');
         this.handlingHit(obj);
@@ -265,7 +262,7 @@ class MovableObject extends DrawableObject {
             }
         }
         debounceDelayed(this.lastHitTime, 1000) ? this.hitDebounceCounter = 0 : null;
-        this.ConsoleLogHitDetails(obj, true);
+        this.ConsoleLogHitDetails(obj, false);
     }
 
 

@@ -96,6 +96,7 @@ class Endboss extends MovableObject {
         this.animateAlertAttack();
         this.animateHurtDeath();
         this.animateAudios();
+        this.animateWalkingAudios();
         this.saveIntervalsGlobally();
     }
 
@@ -105,7 +106,7 @@ class Endboss extends MovableObject {
      */
     animateMoving() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead || !this.active) return;
+            if(gamePaused || this.dead || !this.active) return;
             if(this.isDying() || this.isHurt() || this.isAlert()) return;
             if(this.isAttacking()) {
                 this.moveLeft(1, 2, false);
@@ -122,7 +123,7 @@ class Endboss extends MovableObject {
      */
     animateAlertAttack() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead || !this.active) return;
+            if(gamePaused || this.dead || !this.active) return;
             if(this.isDying() || this.isHurt()) return;
             if(this.isAttacking()) {
                 this.handlingAttack();
@@ -139,15 +140,15 @@ class Endboss extends MovableObject {
      */
     animateHurtDeath() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead || !this.active) return;
+            if(gamePaused || this.dead || !this.active) return;
             if(this.isDying()) {
                 this.handlingDeath(1500);
+                this.stopAudio(this.audioCache.walk);
                 this.startAudio(this.audioCache.death);
-                this.stopOtherAudios;
             } else if(this.isHurt()) {
                 this.handlingHurt();
+                this.stopAudio(this.audioCache.walk);
                 this.startAudio(this.audioCache.hurt, 0.6);
-                this.stopOtherAudios;
             }
         }, 100);  
         this.intervals.push(intervalId);
@@ -159,22 +160,39 @@ class Endboss extends MovableObject {
      */
     animateAudios() {
         intervalId = setInterval(() => {
-            if(gameIsPaused || this.dead || !this.active) return;
+            if(gamePaused || this.dead || !this.active) return;
             if(this.isDying() || this.isHurt()) return;
-            this.stopOtherAudios();
             if(this.isAttacking()) {
+                this.stopAudio(this.audioCache.walk);
+                this.startAudio(this.audioCache.walkSteps, 0.5);
                 this.startAudio(this.audioCache.attack, 1);
-                this.startAudio(this.audioCache.walkSteps, 1);
             } else if(this.isAlert()) {
+                this.stopAudio(this.audioCache.walk);
                 this.startAudio(this.audioCache.alert, 1);
-        } else {
+            } else {
                 this.walkingAnimation();
-                this.startAudio(this.audioCache.walkSteps, 1);
                 this.startAudio(this.audioCache.walk, 0.33, true);
+                // this.startAudio(this.audioCache.walk, 0.33, true);
+                // this.startAudio(this.audioCache.walkSteps, 0.5);
             }
         }, 150);  
         this.intervals.push(intervalId);
     }
+
+
+    /**
+     * Animate audios for walking
+     */
+    animateWalkingAudios() {
+        intervalId = setInterval(() => {
+            if(gamePaused || this.dead || !this.active) return;
+            if(this.isDying() || this.isHurt()) return;
+            if(this.isAttacking() || this.isAlert()) return;
+            this.startAudio(this.audioCache.walkSteps, 0.5);
+        }, 175);  
+        this.intervals.push(intervalId);
+    }
+
     
 
     /**
@@ -201,7 +219,6 @@ class Endboss extends MovableObject {
      * Return true if alert is needed
      */
     isAlert() {
-        // console.log(this.isCharacterActing());
         if(this.isAttacking()) return;
         if(this.world.character.isIdle || this.world.character.isIdleLong) return;
         return (this.isCloseToCharacter(45) || this.isCharacterActing());

@@ -73,7 +73,7 @@ class Bottle extends CollectableObject {
      */
     animate() {
         intervalId = setInterval(() => {
-            if(gameIsPaused) return;
+            if(gamePaused) return;
             if(this.flying) {
                 this.handleFlying();
             }

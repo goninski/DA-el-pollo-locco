@@ -157,10 +157,12 @@ body:is(.help-screen, .legal-notice-screen) #screenOverlay {
     content: attr(data-after);
     display: block;
 }
-:is(#btnStartGame, #btnRestartGame, #btnSurrender, .game-is-paused-msg),
-body:is(.game-over-screen, .win-screen) #btnToggleHelp,
+
+body:is(.game-over-screen, .win-screen) :is(#btnToggleHelp, #btnToggleLegalNotice),
+body.play-screen:not(.help-screen) #btnToggleLegalNotice,
 body.audio-muted #btnToggleAudioMute .enabled,
-body:not(.audio-muted) #btnToggleAudioMute .disabled {
+body:not(.audio-muted) #btnToggleAudioMute .disabled,
+:is(#btnStartGame, #btnRestartGame, #btnSurrender, .game-is-paused-msg) {
     display: none;
 }
 
@@ -272,7 +274,7 @@ body.win-screen .option-panel {
     }
 }
 
-body.help-screen .nav-panel button.close,
+body:is(.help-screen, .legal-notice-screen) .info-panel button.close,
 body.start-screen:not(.help-screen) #btnToggleHelp img {
     --pulse-scale: 1.3;
     animation: pulse 1.5s infinite ease-in-out;
@@ -292,18 +294,23 @@ body.play-screen.game-paused :is(.game-is-paused-msg),
 body.play-screen.help-screen :is(#btnRestartGame, #btnSurrender) {
     display: unset;
 }
+body.start-screen :is(#btnStartGame, #btnToggleHelp) {
+    order: -1;
+}
 
 
 /* NAV PANEL */
-.nav-panel, .nav-panel button.close {
+.info-panel, .info-panel button.close {
     display: none;
 }
 body.help-screen .nav-panel,
 body.help-screen .nav-panel button.close,
+body.legal-notice-screen .legal-notice-panel,
+body.legal-notice-screen .legal-notice-panel button.close,
 body.is-touch-device.play-screen .nav-panel {
     display: flex;
 }
-.nav-panel {
+.info-panel {
     position: absolute;
     bottom: 10%;
     right: 10%; 
@@ -311,6 +318,8 @@ body.is-touch-device.play-screen .nav-panel {
     align-items: center;
     align-self: center;
     gap: 1rem;
+    min-width: 480px;
+    min-height: 200px;
     background: linear-gradient(to top right, hsla(194, 69%, 47%, 0.975), hsla(195, 28%, 89%, 0.975));
     border: solid 2px var(--clr-accent);
     border-radius: 36px;
@@ -318,18 +327,6 @@ body.is-touch-device.play-screen .nav-panel {
     padding-block: 2rem 1rem;
     padding-inline: 2.25rem;
     opacity: 0.925;
-    .buttons-wrapper {
-        display: flex;
-        gap: 0.75rem
-    }
-    .button-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        .action-info, .key-info {
-            font-size: 0.75rem;
-        }
-    }
     button {
         position: relative;
         background-color: transparent;
@@ -374,7 +371,7 @@ body.is-touch-device.play-screen .nav-panel {
     button.close:hover {
         scale: 1.15;
     }
-    .play-info {
+    .info-text {
         font-size: 0.7rem;
         line-height: 1.8;
         width: 100%;
@@ -383,7 +380,7 @@ body.is-touch-device.play-screen .nav-panel {
         };
     }
 }
-.nav-panel::before {
+.info-panel::before {
     position: absolute;
     translate: 30% -145%;
     background-color: var(--clr-accent-dark);
@@ -391,6 +388,20 @@ body.is-touch-device.play-screen .nav-panel {
     padding-block: 0.5rem 0.66rem;
     padding-inline: 1.5rem;
     border-radius: 999rem;
+}
+.nav-panel {
+    .buttons-wrapper {
+        display: flex;
+        gap: 0.75rem
+    }
+    .button-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .action-info, .key-info {
+            font-size: 0.75rem;
+        }
+    }
 }
 body.is-touch-device .nav-panel .key-info {
     display: none;
@@ -416,10 +427,12 @@ body.is-touch-device:not(.help-screen) {
         display: none;
     }
 }
-body.help-screen .nav-panel button.close img {
-
+.legal-notice-panel {
+    align-items: start;
+    .info-text {
+        text-align: start;
+    }
 }
-
 
 #orientationOverlay {
     display: none;
@@ -449,7 +462,7 @@ body.help-screen .nav-panel button.close img {
     canvas {
         width: calc(100% - 12px - 12px);
     }
-    .nav-panel {
+    .info-panel {
         right: unset;
     }
 }
@@ -459,7 +472,7 @@ body.help-screen .nav-panel button.close img {
         font-size: 1.75rem;
         white-space: nowrap;
     }
-    .nav-panel {
+    .info-panel {
         padding-inline: 1.5rem;
         button img {
             height: 32px;
@@ -471,7 +484,7 @@ body.help-screen .nav-panel button.close img {
         .canvas-main-wrapper {
             translateY: -4vh;
         }
-        .nav-panel {
+        .info-panel {
             /* translate: -10% 55%; */
         }
     }
@@ -496,7 +509,7 @@ body.help-screen .nav-panel button.close img {
     body:is(.win-screen, .game-over-screen) #btnRestartGame {
         translate: -110% 27vh !important;
     }
-    body:is(.help-screen) .nav-panel {
+    body:is(.help-screen) .info-panel {
         bottom: 4%;
     }
 }
