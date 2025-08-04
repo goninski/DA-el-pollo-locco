@@ -196,6 +196,10 @@ class World {
     checkEnemyHits() {
         this.level.enemies.forEach((enemy) => {
             if(enemy.dead || this.character.dead) return;  
+            if(enemy.hasLeftWorld()) {
+                leftWorldCounter++;
+                return;
+            }
             this.checkAndHandleEnemyHitFromBottle(enemy);
             if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
                 enemy.handlingHitFromAbove(this.character);
@@ -260,7 +264,7 @@ class World {
      * @returns {boolean}
      */
     isGameOver(){
-        return (this.character.dead || this.endboss.borderX + this.endboss.borderWidth < widthCanvas * -1);
+        return (this.character.dead || leftWorldCounter > 0);
     }
   
     

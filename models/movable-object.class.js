@@ -192,13 +192,21 @@ class MovableObject extends DrawableObject {
 
 
     /**
+     * Check if has left the world (canvas on left side)
+     */
+    hasLeftWorld() {
+        return (this.borderX + this.borderWidth < widthCanvas * -1);
+    }
+
+
+    /**
      * Handling if hit from bottle
      * @param {object} fromObj - bottle object
      */
     handlingHitFromBottle(obj) {
         obj.strength = 100;
         if(this instanceof Endboss) {
-            obj.strength = 33;
+            obj.strength = 10;
         }
         // console.log(this.objectName, '(handlingHitFromBottle)');
         this.handlingHit(obj);

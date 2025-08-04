@@ -289,6 +289,7 @@ class Character extends MovableObject {
     disableIdle() {
         this.idle = false;
         this.isIdleLong = false;
+        this.stopAudio(this.audioCache.idle);
     }
 
 

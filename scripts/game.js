@@ -20,6 +20,7 @@ let intervalId = 0;
 let stoppableIntervals = [];
 let livingEnemies;
 let gamePaused = false;
+let leftWorldCounter = 0;
 
 
 /**
@@ -87,6 +88,7 @@ function restartGame(event = null) {
     stoppableIntervals.forEach(clearInterval);
     stopAllAudios();
     gamePaused = false;
+    leftWorldCounter = 0;
     // window.location.reload();
     initGame();
 }    

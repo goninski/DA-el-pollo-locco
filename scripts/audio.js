@@ -101,8 +101,10 @@ function stopAudio(audioObj) {
  * Stop all audios
  */
 function stopAllAudios() {
+    world.enemies.forEach(enemy => enemy.stopAllAudios());
     loopedAudios.forEach(item => item.pause());
     cleanLoopedAudiosArray();
+
 }
 
 
