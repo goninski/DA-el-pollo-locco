@@ -214,16 +214,10 @@ class Character extends MovableObject {
     animateIdle() {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead || this.isHurt() || this.isDying()) return;
-            // console.log('\nanimateIdle Interval');
-            // console.log('idle', this.idle);
-            // console.log('idleLong', this.idleLong);
             if(this.idle) {
-                console.log('animateIdle.idle');
                 this.img = this.imageCache[this['IMAGES_IDLE'][0]];
                 this.movementAnimation(this['IMAGES_IDLE']);
             } else if(this.idleLong) {
-                console.log('animateIdle.idleLong');
-                // this.img = this.imageCache[this['IMAGES_IDLE_LONG'][0]];
                 this.movementAnimation(this['IMAGES_IDLE_LONG']);
                 this.startAudio(this.audioCache.idle);
             } 

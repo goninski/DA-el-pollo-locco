@@ -90,7 +90,6 @@ function restartGame(event = null) {
     stopAllAudios();
     gamePaused = false;
     leftWorldCounter = 0;
-    // window.location.reload();
     initGame();
 }    
 
@@ -134,14 +133,13 @@ function setBodyClassIfTouchDevice() {
  */
 function handlingGameWin(event = null) {
     event ? event.stopPropagation() : null;
-    console.log('handlingGameWin');
     hideAllScreens();
     body.classList.add('win-screen');
     setTimeout(() => {
         stoppableIntervals.forEach(clearInterval);
         stopAllAudios();
     }, 1000);
-    // setTimeout(() => restartGame(null), 12000);
+    setTimeout(() => restartGame(null), 12000);
 }    
 
 
@@ -151,7 +149,6 @@ function handlingGameWin(event = null) {
  */
 function handlingGameOver(event = null) {
     event ? event.stopPropagation() : null;
-    console.log('handlingGameOver');
     resumeGame();
     gamePaused = true;
     stopAllAudios();
@@ -160,7 +157,7 @@ function handlingGameOver(event = null) {
     body.classList.add('game-over-screen');
     document.getElementById('playTimer').innerHTML = timer;
     startAudio(audioCache.gameOver);
-    // setTimeout(() => restartGame(null), 12000);
+    setTimeout(() => restartGame(null), 12000);
 }    
 
 
