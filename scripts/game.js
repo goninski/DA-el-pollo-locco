@@ -18,6 +18,8 @@ let timer;
 let secondsPlay = 0;
 let intervalId = 0;
 let stoppableIntervals = [];
+let timeoutId = 0;
+let stoppableTimeouts = [];
 let livingEnemies;
 let leftWorldCounter = 0;
 let gamePaused = false;
@@ -87,6 +89,7 @@ function startGame(event = null) {
 function restartGame(event = null) {
     event ? event.stopPropagation() : null;
     stoppableIntervals.forEach(clearInterval);
+    stoppableTimeouts.forEach(clearTimeout);
     stopAllAudios();
     gamePaused = false;
     leftWorldCounter = 0;
@@ -135,11 +138,13 @@ function handlingGameWin(event = null) {
     event ? event.stopPropagation() : null;
     hideAllScreens();
     body.classList.add('win-screen');
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
         stoppableIntervals.forEach(clearInterval);
         stopAllAudios();
     }, 1000);
-    setTimeout(() => restartGame(null), 12000);
+    stoppableTimeouts.push(timeoutId);
+    timeoutId = setTimeout(() => restartGame(null), 12000);
+    stoppableTimeouts.push(timeoutId);
 }    
 
 
@@ -157,7 +162,8 @@ function handlingGameOver(event = null) {
     body.classList.add('game-over-screen');
     document.getElementById('playTimer').innerHTML = timer;
     startAudio(audioCache.gameOver);
-    setTimeout(() => restartGame(null), 12000);
+    timeoutId = setTimeout(() => restartGame(null), 12000);
+    stoppableTimeouts.push(timeoutId);
 }    
 
 
@@ -319,7 +325,7 @@ function setTimeObject(dateObj) {
 
 /**
  * Save intervals globally
- * @param {array} intervals - array of intervals
+ * @param {array} intervals - array of interval id's
  */
 function saveIntervalsGlobally(intervals) {
     stoppableIntervals.push(...intervals);

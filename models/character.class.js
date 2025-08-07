@@ -52,6 +52,14 @@ class Character extends MovableObject {
         imgPathBase + '2_character_pepe/2_walk/W-26.png',
     ];
 
+    IMAGES_THROW = [
+        imgPathBase + '2_character_pepe/2_walk/W-21.png',
+        imgPathBase + '2_character_pepe/2_walk/W-22.png',
+        imgPathBase + '2_character_pepe/2_walk/W-23.png',
+        imgPathBase + '2_character_pepe/2_walk/W-24.png',
+        imgPathBase + '2_character_pepe/2_walk/W-25.png',
+    ];
+
     IMAGES_JUMPING = [
         imgPathBase + '2_character_pepe/3_jump/J-31.png',
         imgPathBase + '2_character_pepe/3_jump/J-32.png',
@@ -122,6 +130,7 @@ class Character extends MovableObject {
         this.setImageCache(this.IMAGES_IDLE_LONG);
         this.setImageCache(this.IMAGES_WALKING);
         this.setImageCache(this.IMAGES_JUMPING);
+        this.setImageCache(this.IMAGES_THROW);
         this.setImageCache(this.IMAGES_HURT);
         this.setImageCache(this.IMAGES_WIN);
         this.setImageCache(this.IMAGES_DEATH);
@@ -202,7 +211,7 @@ class Character extends MovableObject {
                 this.winJumpAnimation();
             } else if(this.isAboveGround()) {
                 this.jumpingAnimation();
-             }
+            }
         }, 100); 
         this.intervals.push(intervalId);
     }
@@ -337,12 +346,22 @@ class Character extends MovableObject {
             let bottle = this.bottles[0];
             this.thrownBottle = bottle;
             bottle.x = Math.round(this.borderX);
-            bottle.y = Math.round(this.borderY - (bottle.height * 0.5));
-            bottle.handleThrow(this);
+            bottle.y = Math.round(this.borderY + (this.borderHeight * 0.5) - (bottle.height * 0.5));
+            bottle.handleThrow(this, 25, 12.5);
             this.bottleStatus -= bottle.value;
             this.bottles.shift();
         }
         debounceDelayed(this.lastThrow, 1000) ? this.throwDebounceCounter = 0 : null;
+    }
+
+
+    /**
+     * Throw animation
+     * @param {string} imagePaths - variable name for the throw images array
+     */
+    throwAnimation(imagePaths = 'IMAGES_THROW') {
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);    
     }
 
 

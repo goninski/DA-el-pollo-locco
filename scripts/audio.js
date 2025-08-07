@@ -22,9 +22,9 @@ function startAudio(audioObj, volume = 1, loop = false) {
     audioObj.play().catch(error => {
         audioObj.muted = true;
         audioMuted = true;
+        if(localStorage.getItem("audioMutedByUser") === "true") return;
         localStorage.setItem("audioMutedByUser", "auto");
         body.classList.add('audio-muted', 'audio-auto-muted');
-        // console.log('Audio auto muted ! >>', error);
     });
 }
 
@@ -39,7 +39,6 @@ function addAudioToLoopedAudios(audioObj) {
             loopedAudios.push(audioObj);        
         };
     }
-    // console.log('loopedAudios:', loopedAudios);
 }
 
 
@@ -49,7 +48,6 @@ function addAudioToLoopedAudios(audioObj) {
  * @param {object} audioObj - audio object
  */
 function setAudioMuteStates(audioObj) {
-    // console.log('audioMuted ?', audioMuted);
     if(audioMuted) {
         audioObj.muted = true;
         body.classList.add('audio-muted');

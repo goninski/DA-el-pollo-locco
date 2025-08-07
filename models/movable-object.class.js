@@ -182,6 +182,7 @@ class MovableObject extends DrawableObject {
      */
     isHitFromSideJump(fromObj, xBuffer = 0) {
         if(!fromObj.isAboveGround()) return;
+        if(!(this instanceof Endboss)) return;
         if(!this.isHitFromSide(fromObj, xBuffer)) return;
         return true;
     }
@@ -229,7 +230,7 @@ class MovableObject extends DrawableObject {
      */
     handlingHitFromSideJump(obj) {
         if(!(this instanceof Endboss)) return;
-        this.strength = 7.5;
+        this.strength = 15;
         consoleHits ? console.log(this.objectName, '(handlingHitSideJump)') : null;
         this.handlingHit(obj);
     }
@@ -240,6 +241,7 @@ class MovableObject extends DrawableObject {
      * @param {object} fromObj - counter object
      */
     handlingHitOnGround(obj) {
+        if(this.isAboveGround()) return;
         consoleHits ? console.log(this.objectName, '(handlingHitFromGround)') : null;
         this.handlingHit(obj);
     }

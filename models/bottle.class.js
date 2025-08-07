@@ -90,7 +90,7 @@ class Bottle extends CollectableObject {
      * @param {number} speed - throw y-speed (i.g. coming from thrower)
      * @param {number} moveX - x-position move per interval
      */
-    handleThrow(fromObj, speed = 10, moveX = 15) {
+    handleThrow(fromObj, speed = 15, moveX = 15) {
         this.flying = true;
         this.speedY = speed;
         this.applyGravity();

@@ -152,6 +152,7 @@ class World {
                 this.checkObjectCollection('bottle');
                 this.checkObjectCollection('coin');
             }
+            this.debugLogs(false);
         }, 100);
         this.intervals.push(intervalId);
     }
@@ -163,7 +164,6 @@ class World {
     StatusbarInterval() {
         intervalId = setInterval(() => {
             if(gamePaused) return;
-            this.debugLogs(false);
             this.statusBars[0].updateStatusBar(this.character.energy);
             this.statusBars[1].updateStatusBar(this.character.coinStatus);
             this.statusBars[2].updateStatusBar(this.character.bottleStatus);
@@ -178,7 +178,7 @@ class World {
      * Show endboss status bar
      */
     showEndbossStatusbar() {
-        if(livingEnemies <= 0 && !this.endboss.active) {
+        if(livingEnemies <= 5 && !this.endboss.active) {
             this.endboss.active = true;
             this.endboss.setWalkGroundY();
             this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
