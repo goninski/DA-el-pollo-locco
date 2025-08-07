@@ -40,7 +40,6 @@
                     <div id="gameOverScreen" class="canvas-cover"></div>
                     <div id="winScreen" class="canvas-cover"></div>
                     <div id="startScreen" class="canvas-cover"></div>
-                    <!-- <div id="legalNoticeScreen" class="canvas-cover"></div> -->
                     <div id="screenOverlay" class=""></div>
                 </div>
 
@@ -56,13 +55,10 @@
                     <button id="btnSurrender" onclick="handlingGameOver(event)" title="Surrender (Game Over)">
                         <img src="assets/icons/flag.svg" alt="white-flag-icon">
                     </button>
-                    <button id="btnToggleLegalNotice" onclick="toggleLegalNotice(event)" title="Legal Notice on/off">
+                    <button id="btnToggleLegalNotice" onclick="toggleLegalNotice(event)" title="Legal Notice">
                         <img class="" src="assets/icons/legal-notice.svg" alt="legal-notice-icon">
                     </button>
-                    <!-- <button id="btnWin" onclick="handlingGameWin(event)" title="win game">
-                        <img src="assets/icons/trophy.svg" alt="trophy-icon">
-                    </button> -->
-                    <button id="btnToggleHelp" onclick="toggleHelp(event)" title="Help/Pause on/off">
+                    <button id="btnToggleHelp" onclick="toggleHelp(event)" title="Help / Pause">
                         <img class="" src="assets/icons/help-fill.svg" alt="question-mark-icon">
                     </button>
                     <button id="btnToggleAudioMute" onclick="toggleAudioMute(event)" title="Audio on/off">
@@ -111,7 +107,9 @@
                 <div class="legal-notice-panel info-panel" data-before="Legal Notice">
                     <button class="close" onclick="toggleLegalNotice(event)"><img src="assets/icons/close-fill.svg" alt="close-icon"></button>
                     <div class="info-text help">
-                        Legal Notice.....
+                        Copyright © 2025 François Gonin [email address]</br>
+                        This student project was created by François Gonin as part of the curriculum at Developer Akademie GmbH. While the code and design are owned by François Gonin, the game's concept and all visual assets are the proprietary property of Developer Akademie GmbH.<br>
+                        The game is provided "as is" for non-commercial, educational use. There are no warranties, and the developer is not liable for any issues that may arise from its use.
                     </div>
                 </div>
 

@@ -24,7 +24,7 @@ class Clouds extends MovableObject {
      */
     animate() {
         intervalId = setInterval(() => {
-             this.moveLeft(0.15, null, false);
+            this.moveLeft(0.33);
         }, 1000 / 60); 
         this.intervals.push(intervalId);
         this.saveIntervalsGlobally();

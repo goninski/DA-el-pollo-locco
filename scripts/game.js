@@ -19,8 +19,9 @@ let secondsPlay = 0;
 let intervalId = 0;
 let stoppableIntervals = [];
 let livingEnemies;
-let gamePaused = false;
 let leftWorldCounter = 0;
+let gamePaused = false;
+let consoleHits = false;
 
 
 /**

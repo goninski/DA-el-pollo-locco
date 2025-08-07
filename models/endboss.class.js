@@ -5,7 +5,7 @@ class Endboss extends MovableObject {
     isEnemy = true;
     width = this.width * 2;
     height = this.width / 0.86;
-    strength = 25;
+    strength = 20;
     active = false;
     lastApproach = null;
 
@@ -126,9 +126,9 @@ class Endboss extends MovableObject {
             if(gamePaused || this.dead || !this.active) return;
             if(this.isDying() || this.isHurt()) return;
             if(this.isAttacking()) {
-                this.handlingAttack();
+                this.attackAnimation();
             } else if(this.isAlert()) {
-                this.handlingAlert();
+                this.alertAnimation();
             }
         }, 50);  
         this.intervals.push(intervalId);
@@ -163,17 +163,13 @@ class Endboss extends MovableObject {
             if(gamePaused || this.dead || !this.active) return;
             if(this.isDying() || this.isHurt()) return;
             if(this.isAttacking()) {
-                this.stopAudio(this.audioCache.walk);
-                this.startAudio(this.audioCache.walkSteps, 0.5);
-                this.startAudio(this.audioCache.attack, 1);
+                this.handlingAttack();
             } else if(this.isAlert()) {
-                this.stopAudio(this.audioCache.walk);
-                this.startAudio(this.audioCache.alert, 1);
+                this.handlingAlert();
             } else {
                 this.walkingAnimation();
+                this.stopAudio(this.audioCache.alert);
                 this.startAudio(this.audioCache.walk, 0.33, true);
-                // this.startAudio(this.audioCache.walk, 0.33, true);
-                // this.startAudio(this.audioCache.walkSteps, 0.5);
             }
         }, 150);  
         this.intervals.push(intervalId);
@@ -194,7 +190,6 @@ class Endboss extends MovableObject {
     }
 
     
-
     /**
      * Check if close to character
      * @param {number} distance - distance in % of the canvas width
@@ -220,7 +215,7 @@ class Endboss extends MovableObject {
      */
     isAlert() {
         if(this.isAttacking()) return;
-        if(this.world.character.isIdle || this.world.character.isIdleLong) return;
+        if(this.world.character.idle || this.world.character.idleLong) return;
         return (this.isCloseToCharacter(45) || this.isCharacterActing());
     }
 
@@ -229,7 +224,8 @@ class Endboss extends MovableObject {
      * Return true if attack is needed
      */
     isAttacking() {
-        if(this.world.character.isIdle || this.world.character.isIdleLong) return;
+        if(this.world.character.dead || this.world.character.isDying()) return;
+        if(this.world.character.idle || this.world.character.idleLong) return;
         return (this.isCloseToCharacter(33) || this.isCharacterActing());
     }
 
@@ -238,9 +234,10 @@ class Endboss extends MovableObject {
      * Handling if on alert
      */
     handlingAlert() {
-        let imagePaths = 'IMAGES_ALERT';
-        this.img = this.imageCache[this[imagePaths][0]];
-        this.movementAnimation(this[imagePaths]);    
+        this.stopAudio(this.audioCache.hurt);
+        this.stopAudio(this.audioCache.attack);
+        this.stopAudio(this.audioCache.walk);
+        this.startAudio(this.audioCache.alert, 1);
     }
 
 
@@ -248,6 +245,28 @@ class Endboss extends MovableObject {
      * Handling if on attack
      */
     handlingAttack() {
+        this.stopAudio(this.audioCache.hurt);
+        this.stopAudio(this.audioCache.alert);
+        this.stopAudio(this.audioCache.walk);
+        this.startAudio(this.audioCache.walkSteps, 0.5);
+        this.startAudio(this.audioCache.attack, 1);
+    }
+    
+    
+    /**
+     * Alert animation
+     */
+    alertAnimation() {
+        let imagePaths = 'IMAGES_ALERT';
+        this.img = this.imageCache[this[imagePaths][0]];
+        this.movementAnimation(this[imagePaths]);    
+    }
+
+
+    /**
+     * Attack Animation
+     */
+    attackAnimation() {
         let imagePaths = 'IMAGES_ATTACK';
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);    

@@ -319,7 +319,6 @@ body.is-touch-device.play-screen .nav-panel {
     align-self: center;
     gap: 1rem;
     min-width: 480px;
-    min-height: 200px;
     background: linear-gradient(to top right, hsla(194, 69%, 47%, 0.975), hsla(195, 28%, 89%, 0.975));
     border: solid 2px var(--clr-accent);
     border-radius: 36px;
@@ -414,6 +413,7 @@ body.is-touch-device:not(.help-screen) {
         background: transparent;
         border: none;
         width: 80%;
+        /* min-height: unset; */
         .buttons-wrapper {
             width: 100%;
             justify-content: space-between;
@@ -428,6 +428,8 @@ body.is-touch-device:not(.help-screen) {
     }
 }
 .legal-notice-panel {
+    max-width: 536px;
+    /* min-height: 200px; */
     align-items: start;
     .info-text {
         text-align: start;
@@ -483,9 +485,6 @@ body.is-touch-device:not(.help-screen) {
     body:not(.is-touch-device) {
         .canvas-main-wrapper {
             translateY: -4vh;
-        }
-        .info-panel {
-            /* translate: -10% 55%; */
         }
     }
 }

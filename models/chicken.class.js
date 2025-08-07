@@ -5,7 +5,7 @@ class Chicken extends MovableObject {
 
     isEnemy = true;
     height = this.width / 1.02;
-    strength = 15;
+    strength = 30;
 
     IMAGES_WALKING = [
         imgPathBase + '3_enemies_chicken/chicken_normal/1_walk/1_w.png',
@@ -32,8 +32,7 @@ class Chicken extends MovableObject {
         chickenId++;
         this.objectName += chickenId;
         this.roundDimensions();
-        this.setRandomPosX(0.5, 3);
-        // this.setRandomPosX(0.5, 1.2);
+        this.setRandomPosX(0.6, 3.5);
         this.setWalkGroundY();
         this.setMediaCache();
         this.loadImage(this.IMAGES_WALKING[0]);
@@ -96,7 +95,7 @@ class Chicken extends MovableObject {
     animateWalkingAudios() {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead || this.isDying()) return;
-            this.startAudio(this.audioCache.walk, 0.25, true);
+            this.startAudio(this.audioCache.walk, 0.33, true);
             this.startAudio(this.audioCache.walkSteps, 0.15);
         }, 375);  
         this.intervals.push(intervalId);

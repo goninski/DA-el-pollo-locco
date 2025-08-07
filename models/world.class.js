@@ -119,8 +119,8 @@ class World {
      */
     globalIntervals() {
         this.playTimeInterval(); //1s
-        this.updateGameStatus(); //100ms
-        this.StatusbarInterval(); //300ms
+        this.updateGameStatus(); 
+        this.StatusbarInterval();
     }
 
 
@@ -138,7 +138,7 @@ class World {
 
 
     /**
-     * Update game status
+     * Interval for: main game checks
      */
     updateGameStatus() {
         intervalId = setInterval(() => {
@@ -152,13 +152,13 @@ class World {
                 this.checkObjectCollection('bottle');
                 this.checkObjectCollection('coin');
             }
-        }, 50);
+        }, 100);
         this.intervals.push(intervalId);
     }
 
 
     /**
-     * Update the status bars
+     * Interval for: status bars updates
      */
     StatusbarInterval() {
         intervalId = setInterval(() => {
@@ -168,13 +168,21 @@ class World {
             this.statusBars[1].updateStatusBar(this.character.coinStatus);
             this.statusBars[2].updateStatusBar(this.character.bottleStatus);
             this.statusBars[3].updateStatusBar(this.endboss.energy);
-            if(livingEnemies <= 0 && !this.endboss.active) {
-                this.endboss.active = true;
-                this.endboss.setWalkGroundY();
-                this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
-            }
+            this.showEndbossStatusbar();
         }, 300);
         this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * Show endboss status bar
+     */
+    showEndbossStatusbar() {
+        if(livingEnemies <= 0 && !this.endboss.active) {
+            this.endboss.active = true;
+            this.endboss.setWalkGroundY();
+            this.statusBars[3].positionObject((widthCanvas * 0.985) - 158, (heightCanvas * 0.03) + 72);
+        }
     }
 
 
@@ -211,17 +219,6 @@ class World {
         });
     }
     
-
-    // /**
-    //  * Check if character is hit on the ground
-    //  * @param {object} enemy - enemy object
-    //  */
-    // checkAndHandleCharacterHitOnGround(enemy) {
-    //     if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.125)) {
-    //         this.character.handlingHitOnGround(enemy);
-    //     }
-    // }
-
 
     /**
      * Check if ememy is hit from bottle (part of enemies loop)

@@ -58,7 +58,6 @@ class DrawableObject {
         for (let [type, path] of Object.entries(audioFiles)) {
             this.audioCache[type] = new Audio(path);
         }
-        // console.log(this.audioCache);
     }
 
 
@@ -68,7 +67,6 @@ class DrawableObject {
      * @param {number} volume - 0 to 1
      */
     startAudio(audioObj, volume = 1, loop = false) {
-        // this.currentAudio = audioObj;
         startAudio(audioObj, volume, loop);
     }
 
@@ -79,7 +77,6 @@ class DrawableObject {
      * @param {number} volume - 0 to 1
      */
     startAudioResumed(audioObj, volume = 1, loop = false) {
-        // this.currentAudio = audioObj;
         audioObj.currentTime = 0;
         startAudio(audioObj, volume, loop);
     }
@@ -93,7 +90,6 @@ class DrawableObject {
      * @param {number} volume - 0 to 1
      */
     startAudioDebouncedLeading(audioObj, startTime, duration = 150, volume = 1) {
-        // this.currentAudio = audioObj;
         startAudioDebouncedLeading(audioObj, startTime, duration, volume, false);
     }
 
@@ -121,7 +117,7 @@ class DrawableObject {
 
     /**
      * Set x position with screen slide no
-     * @param {number} screenSlide - currently -1 to 3, default 0
+     * @param {number} screenSlide - -1 to 3, default 0
      */
     setScreenSlidePos(screenSlide) {
         this.x = screenSlide * (widthCanvas - 0);

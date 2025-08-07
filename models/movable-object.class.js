@@ -28,7 +28,7 @@ class MovableObject extends DrawableObject {
      * @param {array} imagePaths - image paths
      */
     movementAnimation(imagePaths) {
-        if(gamePaused === true) return;
+        if(gamePaused) return;
         let index = this.currentImage % imagePaths.length;
         let path = imagePaths[index];
         this.img = this.imageCache[path];
@@ -82,7 +82,7 @@ class MovableObject extends DrawableObject {
      * @param {number} speedMax - maximal speed
      */
     moveLeft(speedMin = 0.15, speedMax = null) {
-        if(gamePaused === true) return;
+        if(gamePaused) return;
         let speed = speedMax ? 0.15 + (Math.random() * speedMax) : speedMin;
         this.x -= speed;
     }
@@ -141,12 +141,8 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHitOnGround(fromObj, xBuffer = 0) {
-        // if(this.isAboveGround()) return;
         return this.touchesObject(fromObj, xBuffer);
     }
-    // isHitOnGround(fromObj, xBuffer = 0) {
-    //     return this.isHitFromSide(fromObj, xBuffer);
-    // }
 
 
     /**
@@ -208,7 +204,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 10;
         }
-        // console.log(this.objectName, '(handlingHitFromBottle)');
+        consoleHits ? console.log(this.objectName, '(handlingHitFromBottle)') : null;
         this.handlingHit(obj);
     }
 
@@ -222,7 +218,7 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 15;
         }
-        // console.log(this.objectName, '(handlingHitFromAbove)');
+        consoleHits ? console.log(this.objectName, '(handlingHitFromAbove)') : null;
         this.handlingHit(obj);
     }
 
@@ -233,9 +229,8 @@ class MovableObject extends DrawableObject {
      */
     handlingHitFromSideJump(obj) {
         if(!(this instanceof Endboss)) return;
-        this.strength = 10;
-        obj.strength = 10;
-        // console.log(this.objectName, '(handlingHitSideJump)');
+        this.strength = 7.5;
+        consoleHits ? console.log(this.objectName, '(handlingHitSideJump)') : null;
         this.handlingHit(obj);
     }
 
@@ -245,11 +240,7 @@ class MovableObject extends DrawableObject {
      * @param {object} fromObj - counter object
      */
     handlingHitOnGround(obj) {
-        obj.strength = 15;
-        if(obj instanceof Endboss) {
-            obj.strength = 5;
-        }
-        // console.log(this.objectName, '(handlingHitFromGround)');
+        consoleHits ? console.log(this.objectName, '(handlingHitFromGround)') : null;
         this.handlingHit(obj);
     }
 
@@ -270,7 +261,7 @@ class MovableObject extends DrawableObject {
             }
         }
         debounceDelayed(this.lastHitTime, 1000) ? this.hitDebounceCounter = 0 : null;
-        this.ConsoleLogHitDetails(obj, false);
+        this.ConsoleLogHitDetails(obj, consoleHits);
     }
 
 
@@ -364,6 +355,5 @@ class MovableObject extends DrawableObject {
         this.clearIntervals(intervalTimeout);
         this.stopAllAudios();
     }
-
 
 }

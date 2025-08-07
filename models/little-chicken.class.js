@@ -6,7 +6,7 @@ class LittleChicken extends Chicken {
     isEnemy = true;
     width = this.width * 0.66;
     height = this.width / 1.12;
-    strength = 8;
+    strength = 20;
 
     IMAGES_WALKING = [
         imgPathBase + '3_enemies_chicken/chicken_small/1_walk/1_w.png',
@@ -33,7 +33,7 @@ class LittleChicken extends Chicken {
         littleChickenId++;
         this.objectName += littleChickenId;
         this.roundDimensions();
-        this.setRandomPosX(0.5, 3);
+        this.setRandomPosX(0.4, 3.5);
         this.setWalkGroundY();
         this.setMediaCache();
         this.loadImage(this.IMAGES_WALKING[0]);

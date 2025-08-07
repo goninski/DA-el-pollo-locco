@@ -25,6 +25,8 @@ function initLevel1() {
             new Clouds(imgPathBase + '5_background/layers/4_clouds/1.png', -1),    
             new Clouds(imgPathBase + '5_background/layers/4_clouds/2.png', 0),    
             new Clouds(imgPathBase + '5_background/layers/4_clouds/1.png', 1),    
+            new Clouds(imgPathBase + '5_background/layers/4_clouds/2.png', 2),    
+            new Clouds(imgPathBase + '5_background/layers/4_clouds/1.png', 3),    
         ],
         [
             new LittleChicken(),    
@@ -50,17 +52,6 @@ function initLevel1() {
             new Endboss(),
         ],
         [
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-            new Bottle(),    
-
             new Bottle(),    
             new Bottle(),    
             new Bottle(),    
