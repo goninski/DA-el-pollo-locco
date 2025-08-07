@@ -169,7 +169,7 @@ class World {
             this.statusBars[2].updateStatusBar(this.character.bottleStatus);
             this.statusBars[3].updateStatusBar(this.endboss.energy);
             this.showEndbossStatusbar();
-        }, 300);
+        }, 333);
         this.intervals.push(intervalId);
     }
 
