@@ -117,7 +117,7 @@ class Keystrokes {
             event.cancelable ? event.preventDefault() : null;
             keystrokes.KEY_SPACE = true;
             lastKeystroke = new Date().getTime();
-            lastKeystroke_SPACE = lastKeystroke;
+            lastKeystroke_JUMP = lastKeystroke;
         });
         document.getElementById('btnJump').addEventListener('touchend', (event) => {
             event.cancelable ? event.preventDefault() : null;

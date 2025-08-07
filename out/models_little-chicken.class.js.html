@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/little-chicken.class.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/little-chicken.class.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let littleChickenId = 0;
+
+/**Class representing a little chicken  */
+class LittleChicken extends Chicken {
+
+    isEnemy = true;
+    width = this.width * 0.66;
+    height = this.width / 1.12;
+    strength = 20;
+
+    IMAGES_WALKING = [
+        imgPathBase + '3_enemies_chicken/chicken_small/1_walk/1_w.png',
+        imgPathBase + '3_enemies_chicken/chicken_small/1_walk/2_w.png',
+        imgPathBase + '3_enemies_chicken/chicken_small/1_walk/3_w.png',
+    ];
+
+    IMAGES_DEATH = [
+        imgPathBase + '3_enemies_chicken/chicken_small/2_dead/dead.png',
+    ];
+
+    audioFiles = {
+        walk : audioPathBase + 'chicken-little-noise.mp3',
+        walkSteps : audioPathBase + 'walk-step.mp3',
+        dead : audioPathBase + 'chicken-death.mp3',
+    }
+
+
+    /**
+     * Create a chicken - and place it randomly on ground level
+     */
+    constructor() {
+        super();
+        littleChickenId++;
+        this.objectName += littleChickenId;
+        this.roundDimensions();
+        this.setRandomPosX(0.4, 3.5);
+        this.setWalkGroundY();
+        this.setMediaCache();
+        this.loadImage(this.IMAGES_WALKING[0]);
+        this.animate();
+    }
+
+
+    /**
+     * set media cache
+     */
+    setMediaCache() {
+        this.setImageCache(this.IMAGES_WALKING);
+        this.setImageCache(this.IMAGES_DEATH);
+        this.setAudioCache(this.audioFiles);
+    }
+
+
+    /**
+     * Animate calls
+     */
+    animate() {
+        this.animateDeath();
+        this.animateWalking();
+        this.animateMoving();
+        this.animateWalkingAudios();
+        this.saveIntervalsGlobally();
+    }
+
+
+    /**
+     * AnimateDeath
+     */
+    animateDeath() {
+        intervalId = setInterval(() => {
+            if(gamePaused || this.dead) return;
+            if(this.isDying()) {
+                this.handlingDeath();
+            }
+        }, 50);  
+        this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * AnimateWalking
+     */
+    animateWalking() {
+        intervalId = setInterval(() => {
+            if(gamePaused || this.dead || this.isDying()) return;
+            this.walkingAnimation();
+        }, 200);  
+        this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * AnimateMoving
+     */
+    animateMoving() {
+        intervalId = setInterval(() => {
+            if(gamePaused || this.dead || this.isDying()) return;
+            this.moveLeft(0.075, 0.2, false);
+        }, 1000 / 60); 
+        this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * Animate audios for walking
+     */
+    animateWalkingAudios() {
+        intervalId = setInterval(() => {
+            if(gamePaused || this.dead || this.isDying()) return;
+            this.startAudio(this.audioCache.walk, 0.35, true);
+            this.startAudio(this.audioCache.walkSteps, 0.1);
+        }, 250);  
+        this.intervals.push(intervalId);
+    }
+
+
+    /**
+     * Handling death
+     */
+    handlingDeath(animDuration = 75) {
+        super.handlingDeath(animDuration);
+        if(this.deathDebounceCounter === 1) {
+            this.stopAudio(this.audioCache.walk);
+            this.startAudio(this.audioCache.death, 0.4);
+        }
+    }
+
+
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Background.html">Background</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="Keystrokes.html">Keystrokes</a></li><li><a href="Level.html">Level</a></li><li><a href="LittleChicken.html">LittleChicken</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAudioToLoopedAudios">addAudioToLoopedAudios</a></li><li><a href="global.html#cleanLoopedAudiosArray">cleanLoopedAudiosArray</a></li><li><a href="global.html#clearIntervalAfterTimeout">clearIntervalAfterTimeout</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#debounceDelayed">debounceDelayed</a></li><li><a href="global.html#debounceLeading">debounceLeading</a></li><li><a href="global.html#getPassedTime">getPassedTime</a></li><li><a href="global.html#handlingGameOver">handlingGameOver</a></li><li><a href="global.html#handlingGameWin">handlingGameWin</a></li><li><a href="global.html#hideAllScreens">hideAllScreens</a></li><li><a href="global.html#initGame">initGame</a></li><li><a href="global.html#initLevel1">initLevel1</a></li><li><a href="global.html#isTouchEnabled">isTouchEnabled</a></li><li><a href="global.html#loadLevel1">loadLevel1</a></li><li><a href="global.html#logPlayingAudios">logPlayingAudios</a></li><li><a href="global.html#muteAudio">muteAudio</a></li><li><a href="global.html#openFullscreen">openFullscreen</a></li><li><a href="global.html#pauseGame">pauseGame</a></li><li><a href="global.html#removeAudioFromLoopedAudios">removeAudioFromLoopedAudios</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#resumeGame">resumeGame</a></li><li><a href="global.html#runPlayTimeCounter">runPlayTimeCounter</a></li><li><a href="global.html#saveIntervalsGlobally">saveIntervalsGlobally</a></li><li><a href="global.html#setAudioMuteStates">setAudioMuteStates</a></li><li><a href="global.html#setBodyClassIfTouchDevice">setBodyClassIfTouchDevice</a></li><li><a href="global.html#setFullscreenToggle">setFullscreenToggle</a></li><li><a href="global.html#setTimeObject">setTimeObject</a></li><li><a href="global.html#showStartScreen">showStartScreen</a></li><li><a href="global.html#startAudio">startAudio</a></li><li><a href="global.html#startAudioDebouncedLeading">startAudioDebouncedLeading</a></li><li><a href="global.html#startAudioResumed">startAudioResumed</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#stopAllAudios">stopAllAudios</a></li><li><a href="global.html#stopAudio">stopAudio</a></li><li><a href="global.html#toggleAudioMute">toggleAudioMute</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleHelp">toggleHelp</a></li><li><a href="global.html#toggleLegalNotice">toggleLegalNotice</a></li><li><a href="global.html#unmuteAudio">unmuteAudio</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Aug 07 2025 14:22:39 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
