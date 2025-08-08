@@ -32,7 +32,6 @@ let loopedAudios = [];
 let audioCache = {
     gameStart : new Audio(audioPathBase + 'game-start.mp3'),
     gameOver : new Audio(audioPathBase + 'game-over.mp3'),
-    // gameWin : new Audio(audioPathBase + 'game-win.wav'),
 };
 
 
@@ -50,9 +49,13 @@ function startAudio(audioObj, volume = 1, loop = false) {
     audioObj.play().catch(error => {
         audioObj.muted = true;
         audioMuted = true;
-        localStorage.setItem("audioMutedByUser", "auto");
-        body.classList.add('audio-muted', 'audio-auto-muted');
-        // console.log('Audio auto muted ! >>', error);
+        if(localStorage.getItem("audioMutedByUser") === "true") {
+            body.classList.add('audio-muted');
+            return;
+        } else {
+            localStorage.setItem("audioMutedByUser", "auto");
+            body.classList.add('audio-muted', 'audio-auto-muted');
+        }
     });
 }
 
@@ -67,7 +70,6 @@ function addAudioToLoopedAudios(audioObj) {
             loopedAudios.push(audioObj);        
         };
     }
-    // console.log('loopedAudios:', loopedAudios);
 }
 
 
@@ -76,13 +78,12 @@ function addAudioToLoopedAudios(audioObj) {
  * Set audio muting depending on state
  * @param {object} audioObj - audio object
  */
-function setAudioMuteStates(audioObj) {
-    // console.log('audioMuted ?', audioMuted);
+function setAudioMuteStates(audioObj = null) {
     if(audioMuted) {
-        audioObj.muted = true;
+        audioObj ? audioObj.muted = true : null;
         body.classList.add('audio-muted');
     } else {
-        audioObj.muted = false;
+        audioObj ? audioObj.muted = false : null;
         localStorage.setItem("audioMutedByUser", "false");
         body.classList.remove('audio-muted', 'audio-auto-muted');
     }
@@ -160,13 +161,14 @@ function cleanLoopedAudiosArray() {
 function logPlayingAudios(showLog = false) {
     if(!showLog) return;
     let playingAudios;
-    console.log('Playing Audios Global:');
+    console.log('\nPlaying looped Audios:');
         playingAudios = loopedAudios.filter(audio => !audio.paused);
         playingAudios.forEach(audio => console.log(audio.src));
-    console.log('Playing Audios Enemies:');
+    console.log('\nPlaying Enemy Audios:');
     world.enemies.forEach(enemy => {
         Object.values(enemy.audioCache).forEach(audio => {
-            console.log(audio.src);
+            console.log(audio);
+            // console.log(audio.src);
         });
     });
 }
@@ -179,11 +181,9 @@ function logPlayingAudios(showLog = false) {
 function toggleAudioMute(event = null) {
     event ? event.stopPropagation() : null;
     if(audioMuted) {
-        // audioMutedByUser = false;
         localStorage.setItem("audioMutedByUser", "false");
         unmuteAudio(event);
     } else {
-        // audioMutedByUser = true;
         localStorage.setItem("audioMutedByUser", "true");
         muteAudio();
     }
@@ -209,7 +209,7 @@ function unmuteAudio(event = null) {
         event.stopPropagation();
         loopedAudios.forEach(item => {
             item.muted = false;
-            body.classList.contains('audio-auto-muted') ? item.play() : null;
+            body.classList.contains('audio-muted') ? item.play() : null;
         });
     } else {
         if(localStorage.getItem("audioMutedByUser") === 'true') return;
@@ -227,13 +227,13 @@ function unmuteAudio(event = null) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Background.html">Background</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="Keystrokes.html">Keystrokes</a></li><li><a href="Level.html">Level</a></li><li><a href="LittleChicken.html">LittleChicken</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAudioToLoopedAudios">addAudioToLoopedAudios</a></li><li><a href="global.html#cleanLoopedAudiosArray">cleanLoopedAudiosArray</a></li><li><a href="global.html#clearIntervalAfterTimeout">clearIntervalAfterTimeout</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#debounceDelayed">debounceDelayed</a></li><li><a href="global.html#debounceLeading">debounceLeading</a></li><li><a href="global.html#getPassedTime">getPassedTime</a></li><li><a href="global.html#handlingGameOver">handlingGameOver</a></li><li><a href="global.html#handlingGameWin">handlingGameWin</a></li><li><a href="global.html#hideAllScreens">hideAllScreens</a></li><li><a href="global.html#initGame">initGame</a></li><li><a href="global.html#initLevel1">initLevel1</a></li><li><a href="global.html#isTouchEnabled">isTouchEnabled</a></li><li><a href="global.html#loadLevel1">loadLevel1</a></li><li><a href="global.html#logPlayingAudios">logPlayingAudios</a></li><li><a href="global.html#muteAudio">muteAudio</a></li><li><a href="global.html#openFullscreen">openFullscreen</a></li><li><a href="global.html#pauseGame">pauseGame</a></li><li><a href="global.html#removeAudioFromLoopedAudios">removeAudioFromLoopedAudios</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#resumeGame">resumeGame</a></li><li><a href="global.html#runPlayTimeCounter">runPlayTimeCounter</a></li><li><a href="global.html#saveIntervalsGlobally">saveIntervalsGlobally</a></li><li><a href="global.html#setAudioMuteStates">setAudioMuteStates</a></li><li><a href="global.html#setBodyClassIfTouchDevice">setBodyClassIfTouchDevice</a></li><li><a href="global.html#setFullscreenToggle">setFullscreenToggle</a></li><li><a href="global.html#setTimeObject">setTimeObject</a></li><li><a href="global.html#showStartScreen">showStartScreen</a></li><li><a href="global.html#startAudio">startAudio</a></li><li><a href="global.html#startAudioDebouncedLeading">startAudioDebouncedLeading</a></li><li><a href="global.html#startAudioResumed">startAudioResumed</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#stopAllAudios">stopAllAudios</a></li><li><a href="global.html#stopAudio">stopAudio</a></li><li><a href="global.html#toggleAudioMute">toggleAudioMute</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleHelp">toggleHelp</a></li><li><a href="global.html#toggleLegalNotice">toggleLegalNotice</a></li><li><a href="global.html#unmuteAudio">unmuteAudio</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Background.html">Background</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="Keystrokes.html">Keystrokes</a></li><li><a href="Level.html">Level</a></li><li><a href="LittleChicken.html">LittleChicken</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAudioToLoopedAudios">addAudioToLoopedAudios</a></li><li><a href="global.html#cleanLoopedAudiosArray">cleanLoopedAudiosArray</a></li><li><a href="global.html#clearIntervalAfterTimeout">clearIntervalAfterTimeout</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#debounceDelayed">debounceDelayed</a></li><li><a href="global.html#debounceLeading">debounceLeading</a></li><li><a href="global.html#getPassedTime">getPassedTime</a></li><li><a href="global.html#handlingGameOver">handlingGameOver</a></li><li><a href="global.html#handlingGameWin">handlingGameWin</a></li><li><a href="global.html#hideAllScreens">hideAllScreens</a></li><li><a href="global.html#initGame">initGame</a></li><li><a href="global.html#initLevel1">initLevel1</a></li><li><a href="global.html#isTouchEnabled">isTouchEnabled</a></li><li><a href="global.html#loadLevel1">loadLevel1</a></li><li><a href="global.html#logPlayingAudios">logPlayingAudios</a></li><li><a href="global.html#muteAudio">muteAudio</a></li><li><a href="global.html#openFullscreen">openFullscreen</a></li><li><a href="global.html#pauseGame">pauseGame</a></li><li><a href="global.html#removeAudioFromLoopedAudios">removeAudioFromLoopedAudios</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#resumeGame">resumeGame</a></li><li><a href="global.html#runPlayTimeCounter">runPlayTimeCounter</a></li><li><a href="global.html#saveIntervalsGlobally">saveIntervalsGlobally</a></li><li><a href="global.html#setAudioMuteStates">setAudioMuteStates</a></li><li><a href="global.html#setBodyClassIfTouchDevice">setBodyClassIfTouchDevice</a></li><li><a href="global.html#setFullscreenToggle">setFullscreenToggle</a></li><li><a href="global.html#setTimeObject">setTimeObject</a></li><li><a href="global.html#showStartScreen">showStartScreen</a></li><li><a href="global.html#startAudio">startAudio</a></li><li><a href="global.html#startAudioDebouncedLeading">startAudioDebouncedLeading</a></li><li><a href="global.html#startAudioResumed">startAudioResumed</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#stopAllAudios">stopAllAudios</a></li><li><a href="global.html#stopAudio">stopAudio</a></li><li><a href="global.html#toggleAudioMute">toggleAudioMute</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleHelp">toggleHelp</a></li><li><a href="global.html#toggleLegalNotice">toggleLegalNotice</a></li><li><a href="global.html#unmuteAudio">unmuteAudio</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Aug 07 2025 14:38:05 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Aug 08 2025 20:37:47 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

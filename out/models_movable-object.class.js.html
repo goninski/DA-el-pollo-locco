@@ -149,15 +149,44 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Check if touches a counter object
+     * Check if crosses a counter object from x axis
      * @param {object} fromObj - counter object to check
-     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @param {number} offsetX - x offset (for more precision)
      * @returns {boolean}
      */
-    touchesObject(fromObj, xBuffer = 0) {
-        if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
+    crossesObjectFromX(fromObj, offsetX = 0) {
+        let thisX = this.borderX;
+        let fromX = fromObj.borderX;
+        if((thisX + offsetX > fromX + fromObj.borderWidth)) return;
+        if((thisX + this.borderWidth &lt; fromX + offsetX)) return;
+        return true;
+    }
+
+
+    /**
+     * Check if crosses a counter object from y axis
+     * @param {object} fromObj - counter object to check
+     * @param {number} offsetY - y offset (for more precision)
+     * @returns {boolean}
+     */
+    crossesObjectFromY(fromObj, offsetY = 0) {
+        if((this.borderY + offsetY > fromObj.borderY + fromObj.borderHeight)) return;
         if((this.borderY + this.borderHeight &lt; fromObj.borderY)) return;
-        if(!this.isHitFromSide(fromObj, xBuffer)) return;
+        return true;
+    }
+
+
+    /**
+     * Check if crosses a counter object
+     * @param {object} fromObj - counter object to check
+     * @param {number} offsetX - x offset (for more precision)
+     * @param {number} offsetY - y offset (for more precision)
+     * @returns {boolean}
+     */
+    crossesObject(fromObj, offsetX = 0, offsetY = 0) {
+        if(!this.crossesObjectFromX(fromObj, offsetX)) return;
+        if(!this.crossesObjectFromY(fromObj, offsetY)) return;
+        consoleHits ? console.log(this.objectName, '(crossesObject)', 'from', fromObj.objectName) : null;
         return true;
     }
 
@@ -165,52 +194,29 @@ class MovableObject extends DrawableObject {
     /**
      * Check if is hit from a counter object
      * @param {object} fromObj - counter object to check
-     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @param {number} offsetX - x offset (for more precision)
      * @returns {boolean}
      */
-    isHitOnGround(fromObj, xBuffer = 0) {
-        return this.touchesObject(fromObj, xBuffer);
-    }
-
-
-    /**
-     * Check if is hit from the sides
-     * @param {object} fromObj - counter object to check
-     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
-     * @returns {boolean}
-     */
-    isHitFromSide(fromObj, xBuffer = 0) {
-        let thisX = this.borderX;
-        let fromX = fromObj.borderX;
-        if((thisX + xBuffer > fromX + fromObj.borderWidth)) return;
-        if((thisX + this.borderWidth &lt; fromX + xBuffer)) return;
+    isHitOnGround(fromObj, offsetX = 0) {
+        if(this.isAboveGround()) return;
+        if(!this.crossesObject(fromObj, offsetX)) return;
+        consoleHits ? console.log(this.objectName, '(isHitOnGround)', 'from', fromObj.objectName) : null;
         return true;
     }
-
-
+    
+    
     /**
      * Check if is hit from a above from a counter object
      * @param {object} fromObj - counter object to check
-     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+     * @param {number} offsetX - x offset (for more precision)
      * @returns {boolean}
      */
-    isHitFromAbove(fromObj, xBuffer = 0) {
+    isHitFromAbove(fromObj, offsetX = 0) {
+        if(fromObj.speedY > 0) return;
         if(!fromObj.isAboveGround()) return;
         if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
-        if(!this.isHitFromSide(fromObj, xBuffer)) return;
-        return true;
-    }
-
-
-    /**
-     * Check if is hit from side jump
-     * @param {object} fromObj - counter object to check
-     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
-     * @returns {boolean}
-     */
-    isHitFromSideJump(fromObj, xBuffer = 0) {
-        if(!fromObj.isAboveGround()) return;
-        if(!this.isHitFromSide(fromObj, xBuffer)) return;
+        if(!this.crossesObjectFromX(fromObj, offsetX)) return;
+        consoleHits ? console.log(this.objectName, '(isHitFromAbove)', 'from', fromObj.objectName) : null;
         return true;
     }
 
@@ -246,7 +252,6 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 15;
         }
-        consoleHits ? console.log(this.objectName, '(handlingHitFromAbove)') : null;
         this.handlingHit(obj);
     }
 
@@ -255,10 +260,10 @@ class MovableObject extends DrawableObject {
      * Handling if hit from side jump
      * @param {object} fromObj - counter object
      */
-    handlingHitFromSideJump(obj) {
-        if(!(this instanceof Endboss)) return;
-        this.strength = 7.5;
-        consoleHits ? console.log(this.objectName, '(handlingHitSideJump)') : null;
+    handlingHitFromSide(obj) {
+        if(!(obj instanceof Endboss)) return;
+        obj.strength = 10;
+        consoleHits ? console.log(this.objectName, '(handlingHitFromSide)') : null;
         this.handlingHit(obj);
     }
 
@@ -268,6 +273,7 @@ class MovableObject extends DrawableObject {
      * @param {object} fromObj - counter object
      */
     handlingHitOnGround(obj) {
+        if(this.isAboveGround()) return;
         consoleHits ? console.log(this.objectName, '(handlingHitFromGround)') : null;
         this.handlingHit(obj);
     }
@@ -394,13 +400,13 @@ class MovableObject extends DrawableObject {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Background.html">Background</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="Keystrokes.html">Keystrokes</a></li><li><a href="Level.html">Level</a></li><li><a href="LittleChicken.html">LittleChicken</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAudioToLoopedAudios">addAudioToLoopedAudios</a></li><li><a href="global.html#cleanLoopedAudiosArray">cleanLoopedAudiosArray</a></li><li><a href="global.html#clearIntervalAfterTimeout">clearIntervalAfterTimeout</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#debounceDelayed">debounceDelayed</a></li><li><a href="global.html#debounceLeading">debounceLeading</a></li><li><a href="global.html#getPassedTime">getPassedTime</a></li><li><a href="global.html#handlingGameOver">handlingGameOver</a></li><li><a href="global.html#handlingGameWin">handlingGameWin</a></li><li><a href="global.html#hideAllScreens">hideAllScreens</a></li><li><a href="global.html#initGame">initGame</a></li><li><a href="global.html#initLevel1">initLevel1</a></li><li><a href="global.html#isTouchEnabled">isTouchEnabled</a></li><li><a href="global.html#loadLevel1">loadLevel1</a></li><li><a href="global.html#logPlayingAudios">logPlayingAudios</a></li><li><a href="global.html#muteAudio">muteAudio</a></li><li><a href="global.html#openFullscreen">openFullscreen</a></li><li><a href="global.html#pauseGame">pauseGame</a></li><li><a href="global.html#removeAudioFromLoopedAudios">removeAudioFromLoopedAudios</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#resumeGame">resumeGame</a></li><li><a href="global.html#runPlayTimeCounter">runPlayTimeCounter</a></li><li><a href="global.html#saveIntervalsGlobally">saveIntervalsGlobally</a></li><li><a href="global.html#setAudioMuteStates">setAudioMuteStates</a></li><li><a href="global.html#setBodyClassIfTouchDevice">setBodyClassIfTouchDevice</a></li><li><a href="global.html#setFullscreenToggle">setFullscreenToggle</a></li><li><a href="global.html#setTimeObject">setTimeObject</a></li><li><a href="global.html#showStartScreen">showStartScreen</a></li><li><a href="global.html#startAudio">startAudio</a></li><li><a href="global.html#startAudioDebouncedLeading">startAudioDebouncedLeading</a></li><li><a href="global.html#startAudioResumed">startAudioResumed</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#stopAllAudios">stopAllAudios</a></li><li><a href="global.html#stopAudio">stopAudio</a></li><li><a href="global.html#toggleAudioMute">toggleAudioMute</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleHelp">toggleHelp</a></li><li><a href="global.html#toggleLegalNotice">toggleLegalNotice</a></li><li><a href="global.html#unmuteAudio">unmuteAudio</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Background.html">Background</a></li><li><a href="Bottle.html">Bottle</a></li><li><a href="Character.html">Character</a></li><li><a href="Chicken.html">Chicken</a></li><li><a href="Clouds.html">Clouds</a></li><li><a href="Coin.html">Coin</a></li><li><a href="CollectableObject.html">CollectableObject</a></li><li><a href="DrawableObject.html">DrawableObject</a></li><li><a href="Endboss.html">Endboss</a></li><li><a href="Keystrokes.html">Keystrokes</a></li><li><a href="Level.html">Level</a></li><li><a href="LittleChicken.html">LittleChicken</a></li><li><a href="MovableObject.html">MovableObject</a></li><li><a href="StatusBar.html">StatusBar</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAudioToLoopedAudios">addAudioToLoopedAudios</a></li><li><a href="global.html#cleanLoopedAudiosArray">cleanLoopedAudiosArray</a></li><li><a href="global.html#clearIntervalAfterTimeout">clearIntervalAfterTimeout</a></li><li><a href="global.html#closeFullscreen">closeFullscreen</a></li><li><a href="global.html#debounceDelayed">debounceDelayed</a></li><li><a href="global.html#debounceLeading">debounceLeading</a></li><li><a href="global.html#getPassedTime">getPassedTime</a></li><li><a href="global.html#handlingGameOver">handlingGameOver</a></li><li><a href="global.html#handlingGameWin">handlingGameWin</a></li><li><a href="global.html#hideAllScreens">hideAllScreens</a></li><li><a href="global.html#initGame">initGame</a></li><li><a href="global.html#initLevel1">initLevel1</a></li><li><a href="global.html#isTouchEnabled">isTouchEnabled</a></li><li><a href="global.html#loadLevel1">loadLevel1</a></li><li><a href="global.html#logPlayingAudios">logPlayingAudios</a></li><li><a href="global.html#muteAudio">muteAudio</a></li><li><a href="global.html#openFullscreen">openFullscreen</a></li><li><a href="global.html#pauseGame">pauseGame</a></li><li><a href="global.html#removeAudioFromLoopedAudios">removeAudioFromLoopedAudios</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html#restartGame">restartGame</a></li><li><a href="global.html#resumeGame">resumeGame</a></li><li><a href="global.html#runPlayTimeCounter">runPlayTimeCounter</a></li><li><a href="global.html#saveIntervalsGlobally">saveIntervalsGlobally</a></li><li><a href="global.html#setAudioMuteStates">setAudioMuteStates</a></li><li><a href="global.html#setBodyClassIfTouchDevice">setBodyClassIfTouchDevice</a></li><li><a href="global.html#setFullscreenToggle">setFullscreenToggle</a></li><li><a href="global.html#setTimeObject">setTimeObject</a></li><li><a href="global.html#showStartScreen">showStartScreen</a></li><li><a href="global.html#startAudio">startAudio</a></li><li><a href="global.html#startAudioDebouncedLeading">startAudioDebouncedLeading</a></li><li><a href="global.html#startAudioResumed">startAudioResumed</a></li><li><a href="global.html#startGame">startGame</a></li><li><a href="global.html#stopAllAudios">stopAllAudios</a></li><li><a href="global.html#stopAudio">stopAudio</a></li><li><a href="global.html#toggleAudioMute">toggleAudioMute</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleHelp">toggleHelp</a></li><li><a href="global.html#toggleLegalNotice">toggleLegalNotice</a></li><li><a href="global.html#unmuteAudio">unmuteAudio</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Aug 07 2025 14:38:05 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Aug 08 2025 20:37:47 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,5 +1,6 @@
 let fullscreenAvailable = document.fullscreenEnabled;
 let showObjectBorders = false;
+let consoleHits = false;
 let imgPathBase = '/assets/img/';
 let body;
 let world;
@@ -15,15 +16,14 @@ let lastKeystroke_JUMP;
 let lastKeystroke_THROW;
 let time = {};
 let timer;
-let secondsPlay = 0;
-let intervalId = 0;
+let secondsPlay;
+let intervalId;
 let stoppableIntervals = [];
-let timeoutId = 0;
+let timeoutId;
 let stoppableTimeouts = [];
 let livingEnemies;
-let leftWorldCounter = 0;
-let gamePaused = false;
-let consoleHits = false;
+let leftWorldCounter;
+let gamePaused;
 
 
 /**
@@ -36,8 +36,26 @@ function initGame(skipStartScreen = false) {
     keystrokes = new Keystrokes();
     setFullscreenToggle();
     setBodyClassIfTouchDevice();
+    resetValues();
     audioMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
     skipStartScreen ? startGame() : showStartScreen();
+}
+
+
+/**
+ * Reset game values
+ */
+function resetValues() {
+    stoppableIntervals.forEach(clearInterval);
+    stoppableTimeouts.forEach(clearTimeout);
+    gamePaused = false;
+    leftWorldCounter = 0;
+    intervalId = 0;
+    timeoutId = 0;
+    chickenId = 0;
+    littleChickenId = 0;
+    coinId = 0;
+    bottleId = 0;
 }
 
 
@@ -72,7 +90,7 @@ function startGame(event = null) {
     event ? event.stopPropagation() : null;
     stopAudio(audioCache.gameStart);
     resumeGame();
-    logPlayingAudios(true);
+    logPlayingAudios(false);
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();
     hideAllScreens();
@@ -88,15 +106,7 @@ function startGame(event = null) {
  */
 function restartGame(event = null) {
     event ? event.stopPropagation() : null;
-    stoppableIntervals.forEach(clearInterval);
-    stoppableTimeouts.forEach(clearTimeout);
     stopAllAudios();
-    gamePaused = false;
-    leftWorldCounter = 0;
-    chickenId = 0;
-    littleChickenId = 0;
-    coinId = 0;
-    bottleId = 0;
     initGame();
 }    
 

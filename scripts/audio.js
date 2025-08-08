@@ -4,7 +4,6 @@ let loopedAudios = [];
 let audioCache = {
     gameStart : new Audio(audioPathBase + 'game-start.mp3'),
     gameOver : new Audio(audioPathBase + 'game-over.mp3'),
-    // gameWin : new Audio(audioPathBase + 'game-win.wav'),
 };
 
 
@@ -22,9 +21,13 @@ function startAudio(audioObj, volume = 1, loop = false) {
     audioObj.play().catch(error => {
         audioObj.muted = true;
         audioMuted = true;
-        if(localStorage.getItem("audioMutedByUser") === "true") return;
-        localStorage.setItem("audioMutedByUser", "auto");
-        body.classList.add('audio-muted', 'audio-auto-muted');
+        if(localStorage.getItem("audioMutedByUser") === "true") {
+            body.classList.add('audio-muted');
+            return;
+        } else {
+            localStorage.setItem("audioMutedByUser", "auto");
+            body.classList.add('audio-muted', 'audio-auto-muted');
+        }
     });
 }
 
@@ -47,12 +50,12 @@ function addAudioToLoopedAudios(audioObj) {
  * Set audio muting depending on state
  * @param {object} audioObj - audio object
  */
-function setAudioMuteStates(audioObj) {
+function setAudioMuteStates(audioObj = null) {
     if(audioMuted) {
-        audioObj.muted = true;
+        audioObj ? audioObj.muted = true : null;
         body.classList.add('audio-muted');
     } else {
-        audioObj.muted = false;
+        audioObj ? audioObj.muted = false : null;
         localStorage.setItem("audioMutedByUser", "false");
         body.classList.remove('audio-muted', 'audio-auto-muted');
     }
@@ -150,11 +153,9 @@ function logPlayingAudios(showLog = false) {
 function toggleAudioMute(event = null) {
     event ? event.stopPropagation() : null;
     if(audioMuted) {
-        // audioMutedByUser = false;
         localStorage.setItem("audioMutedByUser", "false");
         unmuteAudio(event);
     } else {
-        // audioMutedByUser = true;
         localStorage.setItem("audioMutedByUser", "true");
         muteAudio();
     }
@@ -180,7 +181,7 @@ function unmuteAudio(event = null) {
         event.stopPropagation();
         loopedAudios.forEach(item => {
             item.muted = false;
-            body.classList.contains('audio-auto-muted') ? item.play() : null;
+            body.classList.contains('audio-muted') ? item.play() : null;
         });
     } else {
         if(localStorage.getItem("audioMutedByUser") === 'true') return;

@@ -153,7 +153,7 @@ class World {
                 this.checkObjectCollection('coin');
             }
             this.debugLogs(false);
-        }, 50);
+        }, 75);
         this.intervals.push(intervalId);
     }
 
