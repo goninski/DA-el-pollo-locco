@@ -70,7 +70,7 @@ class Endboss extends MovableObject {
         this.roundCoordinates();
         this.roundDimensions();
         this.setMediaCache();
-        this.loadImage(this.IMAGES_WALKING[0]);
+        this.showImageFromCache('IMAGES_WALKING');
         this.animate();
     }
 

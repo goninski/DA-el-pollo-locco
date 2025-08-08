@@ -120,7 +120,6 @@ class World {
     globalIntervals() {
         this.playTimeInterval(); //1s
         this.updateGameStatus(); 
-        this.StatusbarInterval();
     }
 
 
@@ -143,6 +142,7 @@ class World {
     updateGameStatus() {
         intervalId = setInterval(() => {
             if(gamePaused) return;
+            this.updateStatusbars();
             if(this.isGameOver()) {
                 handlingGameOver();
             } else if(this.isGameWon()) {
@@ -159,18 +159,14 @@ class World {
 
 
     /**
-     * Interval for: status bars updates
+     * Update status bars
      */
-    StatusbarInterval() {
-        intervalId = setInterval(() => {
-            if(gamePaused) return;
-            this.statusBars[0].updateStatusBar(this.character.energy);
-            this.statusBars[1].updateStatusBar(this.character.coinStatus);
-            this.statusBars[2].updateStatusBar(this.character.bottleStatus);
-            this.statusBars[3].updateStatusBar(this.endboss.energy);
-            this.showEndbossStatusbar();
-        }, 333);
-        this.intervals.push(intervalId);
+    updateStatusbars() {
+        this.statusBars[0].updateStatusBar(this.character.energy);
+        this.statusBars[1].updateStatusBar(this.character.coinStatus);
+        this.statusBars[2].updateStatusBar(this.character.bottleStatus);
+        this.statusBars[3].updateStatusBar(this.endboss.energy);
+        this.showEndbossStatusbar();
     }
 
 
@@ -213,7 +209,7 @@ class World {
                 enemy.handlingHitFromAbove(this.character);
             // } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
             //     enemy.handlingHitFromSideJump(this.character);
-            } else if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.375)) {
+            } else if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.25)) {
                 this.character.handlingHitOnGround(enemy);
             }
         });
@@ -231,6 +227,20 @@ class World {
                 enemy.handlingHitFromBottle(bottle);                    
             }
         }
+    }
+  
+    
+    /**
+     * Check object collection (coin/bottle collection)
+     * @param {string} objectName - class name of the collectable object (lower case)
+     */
+    checkObjectCollection(objectName) {
+        if(this.character[objectName + 'Status'] >= 100) return;
+        this.level[objectName + 's'].forEach((item) => {
+            if(this.character.crossesObject(item, this.character.borderWidth * 0.25)) {
+                this.character.collectObject(item);
+            };
+        });
     }
 
     
@@ -263,20 +273,5 @@ class World {
     isGameOver(){
         return (this.character.dead || leftWorldCounter > 0);
     }
-  
-    
-    /**
-     * Check object collection (coin/bottle collection)
-     * @param {string} objectName - class name of the collectable object (lower case)
-     */
-    checkObjectCollection(objectName) {
-        if(this.character[objectName + 'Status'] >= 100) return;
-        this.level[objectName + 's'].forEach((item) => {
-            if(this.character.touchesObject(item, this.character.borderWidth * 0.25)) {
-                this.character.collectObject(item);
-            };
-        });
-    }
-
 
 }

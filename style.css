@@ -300,7 +300,8 @@ body.start-screen :is(#btnStartGame, #btnToggleHelp) {
 
 
 /* NAV PANEL */
-.info-panel, .info-panel button.close {
+.info-panel, .info-panel button.close,
+body:not(.is-touch-device) .nav-panel .touch-button {
     display: none;
 }
 body.help-screen .nav-panel,
@@ -391,14 +392,19 @@ body.is-touch-device.play-screen .nav-panel {
 .nav-panel {
     .buttons-wrapper {
         display: flex;
-        gap: 0.75rem
+        gap: 1rem
     }
     .button-wrapper {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        .action-info, .key-info {
-            font-size: 0.75rem;
+        .key-info {
+            font-size: 0.9rem;
+        }
+        .action-info {
+            font-size: 0.7rem;
+            margin-top: 0.75rem;
+            order: 99;
         }
     }
 }

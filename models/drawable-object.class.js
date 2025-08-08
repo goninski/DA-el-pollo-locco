@@ -29,16 +29,6 @@ class DrawableObject {
 
 
     /**
-     * Load single image
-     * @param {string} path - image path
-     */
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-    }
-
-
-    /**
      * Set image cache
      * @param {array} imagePaths - image paths
      */
@@ -48,7 +38,27 @@ class DrawableObject {
             this.imageCache[path] = this.img
         });
     }
+
+
+    /**
+     * Load single image
+     * @param {string} path - image path
+     */
+    loadImage(path) {
+        this.img = new Image();
+        this.img.src = path;
+    }
         
+
+    /**
+     * Show single image from Cache
+     * @param {array} imagePaths - image paths
+     * @param {number} index - index within the image path
+     */
+    showImageFromCache(imagePaths, index = 0) {
+        this.img = this.imageCache[this[imagePaths][index]];
+    }
+
 
     /**
      * Set audio cache

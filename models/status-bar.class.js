@@ -63,7 +63,9 @@ class StatusBar extends DrawableObject {
         if(this.statusType === 'ENDBOSS') {
             this.hideObject();
         }
-        this.loadImage(this['IMAGES_'+ this.statusType][0]);
+        this.setImageCache(this['IMAGES_' + statusType]);
+        this.showImageFromCache('IMAGES_'+ this.statusType);
+        // this.loadImage(this['IMAGES_'+ this.statusType][0]);
     }
 
 
@@ -74,7 +76,8 @@ class StatusBar extends DrawableObject {
     updateStatusBar(statusValue) {
         this.statusValue = statusValue;
         let index = this.resolveImgIndex(this.statusValue);
-        this.loadImage(this['IMAGES_'+ this.statusType][index]);
+        this.showImageFromCache('IMAGES_'+ this.statusType, index);
+        // this.loadImage(this['IMAGES_'+ this.statusType][index]);
     }
 
 

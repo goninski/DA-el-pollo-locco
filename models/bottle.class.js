@@ -3,7 +3,7 @@ let bottleId = 0;
 /** Class representing a bottle */
 class Bottle extends CollectableObject {
 
-    width = this.width * 0.7
+    width = this.width * 0.8
     height = this.width * 1;
     objectPadding = [0.1, 0.2, 0.1, 0.2];
     value = 20;
@@ -53,7 +53,7 @@ class Bottle extends CollectableObject {
         this.setWalkGroundY();
         this.setMediaCache();
         let index = Math.floor(Math.random() * 2);
-        this.loadImage(this.IMAGES_GROUND[index]);
+        this.showImageFromCache('IMAGES_GROUND', index);
         this.animate();
 }
 
@@ -62,6 +62,7 @@ class Bottle extends CollectableObject {
      * set media cache
      */
     setMediaCache() {
+        this.setImageCache(this.IMAGES_GROUND);
         this.setImageCache(this.IMAGES_THROW);
         this.setImageCache(this.IMAGES_SPLASH);
         this.setAudioCache(this.audioFiles);

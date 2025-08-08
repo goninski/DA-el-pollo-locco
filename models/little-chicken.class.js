@@ -36,7 +36,7 @@ class LittleChicken extends Chicken {
         this.setRandomPosX(0.4, 2.75);
         this.setWalkGroundY();
         this.setMediaCache();
-        this.loadImage(this.IMAGES_WALKING[0]);
+        this.showImageFromCache('IMAGES_WALKING');
         this.animate();
     }
 

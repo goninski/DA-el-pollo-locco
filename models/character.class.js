@@ -116,7 +116,8 @@ class Character extends MovableObject {
         this.setWalkGroundY();
         this.roundCoordinates();
         this.setMediaCache();
-        this.loadImage(this.IMAGES_WALKING[0]);
+        // this.loadImage(this.IMAGES_WALKING[0]);
+        this.showImageFromCache('IMAGES_WALKING');
         this.applyGravity();
         this.animate();
     }
@@ -264,8 +265,6 @@ class Character extends MovableObject {
             this.idle = false;
             this.idleLong = false;
         }
-        // console.log('\nidle', this.idle);
-        // console.log('idleLong', this.idleLong);
     }
 
 
@@ -387,7 +386,7 @@ class Character extends MovableObject {
         super.jump(30);
         this.startAudio(this.audioCache.win);
         this.clearIntervals(1500);
-        this.loadImage(this.IMAGES_WIN[3]);
+        this.showImageFromCache('IMAGES_WIN', 3);
     }
 
 

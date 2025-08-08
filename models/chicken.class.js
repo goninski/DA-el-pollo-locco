@@ -35,7 +35,7 @@ class Chicken extends MovableObject {
         this.setRandomPosX(0.6, 2.75);
         this.setWalkGroundY();
         this.setMediaCache();
-        this.loadImage(this.IMAGES_WALKING[0]);
+        this.showImageFromCache('IMAGES_WALKING');
         this.animate();
     }
 
@@ -83,7 +83,6 @@ class Chicken extends MovableObject {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead || this.isDying()) return;
             this.walkingAnimation();
-            // this.startAudio(this.audioCache.walk, 0.25, true);
         }, 200);  
         this.intervals.push(intervalId);
     }
@@ -108,7 +107,7 @@ class Chicken extends MovableObject {
     animateMoving() {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead || this.isDying()) return;
-            this.moveLeft(0.15, 0.45, false);
+            this.moveLeft(0.175, 0.7, false);
         }, 1000 / 60); 
         this.intervals.push(intervalId);
     }

@@ -10,7 +10,7 @@ class Coin extends CollectableObject {
     objectPadding = [0.3, 0.3, 0.3, 0.3];
     value = 5; 
 
-    IMAGES_GROUND = [
+    IMAGES_MAIN = [
         imgPathBase + '8_coin/coin_1.png',
         imgPathBase + '8_coin/coin_2.png',
 
@@ -35,9 +35,18 @@ class Coin extends CollectableObject {
         this.roundCoordinates();
         this.setBorderCoordinates();
         let index = Math.floor(Math.random() * 2);
-        this.loadImage(this.IMAGES_GROUND[index]);
+        this.setMediaCache();
+        this.showImageFromCache('IMAGES_MAIN', index);
+}
+
+    
+    /**
+     * set media cache
+     */
+    setMediaCache() {
+        this.setImageCache(this.IMAGES_MAIN);
         this.setAudioCache(this.audioFiles);
     }
-   
+
 }
 
