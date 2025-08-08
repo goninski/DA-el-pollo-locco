@@ -181,7 +181,7 @@ class Character extends MovableObject {
     animateWalkingHurtDeath() {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead) return;
-            if(!this.isAboveGround()) {
+            // if(!this.isAboveGround()) {
                 if(this.isDying()) {
                     this.disableIdle();
                     this.startAudio(this.audioCache.death,0.7);
@@ -193,9 +193,11 @@ class Character extends MovableObject {
                 } else if(this.idle || this.idleLong) {
                     return;
                 } else {
-                    this.walkingAnimation();
+                    if(!this.isAboveGround()) {
+                        this.walkingAnimation();
+                    }
                 }
-            }
+            // }
         }, 50); 
         this.intervals.push(intervalId);
     }

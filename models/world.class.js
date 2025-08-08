@@ -209,11 +209,11 @@ class World {
                 return;
             }
             this.checkAndHandleEnemyHitFromBottle(enemy);
-            if(enemy.isHitFromAbove(this.character, enemy.borderWidth * 0.25)) {
+            if(enemy.isHitFromAbove(this.character, this.character.borderWidth * 0.375)) {
                 enemy.handlingHitFromAbove(this.character);
-            } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
-                enemy.handlingHitFromSideJump(this.character);
-            } else if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.125)) {
+            // } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
+            //     enemy.handlingHitFromSideJump(this.character);
+            } else if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.375)) {
                 this.character.handlingHitOnGround(enemy);
             }
         });

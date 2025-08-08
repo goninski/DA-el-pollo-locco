@@ -141,6 +141,7 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHitOnGround(fromObj, xBuffer = 0) {
+        if(this.isAboveGround()) return;
         return this.touchesObject(fromObj, xBuffer);
     }
 
@@ -167,6 +168,7 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     isHitFromAbove(fromObj, xBuffer = 0) {
+        if(fromObj.speedY > 0) return;
         if(!fromObj.isAboveGround()) return;
         if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
         if(!this.isHitFromSide(fromObj, xBuffer)) return;
@@ -174,18 +176,18 @@ class MovableObject extends DrawableObject {
     }
 
 
-    /**
-     * Check if is hit from side jump
-     * @param {object} fromObj - counter object to check
-     * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
-     * @returns {boolean}
-     */
-    isHitFromSideJump(fromObj, xBuffer = 0) {
-        if(!fromObj.isAboveGround()) return;
-        if(!(this instanceof Endboss)) return;
-        if(!this.isHitFromSide(fromObj, xBuffer)) return;
-        return true;
-    }
+    // /**
+    //  * Check if is hit from side jump
+    //  * @param {object} fromObj - counter object to check
+    //  * @param {number} xBuffer - negativ x buffer (add value for more margin/precision)
+    //  * @returns {boolean}
+    //  */
+    // isHitFromSideJump(fromObj, xBuffer = 0) {
+    //     if(!fromObj.isAboveGround()) return;
+    //     if(!(this instanceof Endboss)) return;
+    //     if(!this.isHitFromSide(fromObj, xBuffer)) return;
+    //     return true;
+    // }
 
 
     /**

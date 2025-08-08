@@ -23,7 +23,7 @@ let stoppableTimeouts = [];
 let livingEnemies;
 let leftWorldCounter = 0;
 let gamePaused = false;
-let consoleHits = false;
+let consoleHits = true;
 
 
 /**
@@ -93,6 +93,10 @@ function restartGame(event = null) {
     stopAllAudios();
     gamePaused = false;
     leftWorldCounter = 0;
+    chickenId = 0;
+    littleChickenId = 0;
+    coinId = 0;
+    bottleId = 0;
     initGame();
 }    
 
