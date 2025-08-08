@@ -5,6 +5,7 @@ class Endboss extends MovableObject {
     isEnemy = true;
     width = this.width * 2;
     height = this.width / 0.86;
+    objectPadding = [0.15, 0, 0, 0];
     strength = 20;
     active = false;
     lastApproach = null;

@@ -121,43 +121,44 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Check if crosses from x axis
+     * Check if crosses a counter object from x axis
      * @param {object} fromObj - counter object to check
-     * @param {number} xOffset - x offset (add value for more margin/precision)
+     * @param {number} offsetX - x offset (for more precision)
      * @returns {boolean}
      */
-    crossesObjectFromX(fromObj, xOffset = 0) {
+    crossesObjectFromX(fromObj, offsetX = 0) {
         let thisX = this.borderX;
         let fromX = fromObj.borderX;
-        if((thisX + xOffset > fromX + fromObj.borderWidth)) return;
-        if((thisX + this.borderWidth < fromX + xOffset)) return;
+        if((thisX + offsetX > fromX + fromObj.borderWidth)) return;
+        if((thisX + this.borderWidth < fromX + offsetX)) return;
         return true;
     }
 
 
     /**
-     * Check if crosses from y axis
+     * Check if crosses a counter object from y axis
      * @param {object} fromObj - counter object to check
+     * @param {number} offsetY - y offset (for more precision)
      * @returns {boolean}
      */
-    crossesObjectFromY(fromObj) {
-        if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
+    crossesObjectFromY(fromObj, offsetY = 0) {
+        if((this.borderY + offsetY > fromObj.borderY + fromObj.borderHeight)) return;
         if((this.borderY + this.borderHeight < fromObj.borderY)) return;
         return true;
     }
 
 
     /**
-     * Check if touches a counter object
+     * Check if crosses a counter object
      * @param {object} fromObj - counter object to check
-     * @param {number} xOffset - x offset (add value for more margin/precision)
+     * @param {number} offsetX - x offset (for more precision)
+     * @param {number} offsetY - y offset (for more precision)
      * @returns {boolean}
      */
-    crossesObject(fromObj, xOffset = 0) {
-        if(!this.crossesObjectFromX(fromObj, xOffset)) return;
-        if(!this.crossesObjectFromY(fromObj)) return;
-        // if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
-        // if((this.borderY + this.borderHeight < fromObj.borderY)) return;
+    crossesObject(fromObj, offsetX = 0, offsetY = 0) {
+        if(!this.crossesObjectFromX(fromObj, offsetX)) return;
+        if(!this.crossesObjectFromY(fromObj, offsetY)) return;
+        consoleHits ? console.log(this.objectName, '(crossesObject)', 'from', fromObj.objectName) : null;
         return true;
     }
 
@@ -165,42 +166,31 @@ class MovableObject extends DrawableObject {
     /**
      * Check if is hit from a counter object
      * @param {object} fromObj - counter object to check
-     * @param {number} xOffset - x offset (add value for more margin/precision)
+     * @param {number} offsetX - x offset (for more precision)
      * @returns {boolean}
      */
-    isHitOnGround(fromObj, xOffset = 0) {
+    isHitOnGround(fromObj, offsetX = 0) {
         if(this.isAboveGround()) return;
-        return this.crossesObject(fromObj, xOffset);
+        if(!this.crossesObject(fromObj, offsetX)) return;
+        consoleHits ? console.log(this.objectName, '(isHitOnGround)', 'from', fromObj.objectName) : null;
+        return true;
     }
     
     
     /**
      * Check if is hit from a above from a counter object
      * @param {object} fromObj - counter object to check
-     * @param {number} xOffset - x offset (add value for more margin/precision)
+     * @param {number} offsetX - x offset (for more precision)
      * @returns {boolean}
      */
-    isHitFromAbove(fromObj, xOffset = 0) {
+    isHitFromAbove(fromObj, offsetX = 0) {
         if(fromObj.speedY > 0) return;
         if(!fromObj.isAboveGround()) return;
         if((this.borderY > fromObj.borderY + fromObj.borderHeight)) return;
-        if(!this.crossesObjectFromX(fromObj, xOffset)) return;
+        if(!this.crossesObjectFromX(fromObj, offsetX)) return;
+        consoleHits ? console.log(this.objectName, '(isHitFromAbove)', 'from', fromObj.objectName) : null;
         return true;
     }
-
-
-    // /**
-    //  * Check if is hit from side jump
-    //  * @param {object} fromObj - counter object to check
-    //  * @param {number} xOffset - negativ x offset (add value for more margin/precision)
-    //  * @returns {boolean}
-    //  */
-    // isHitFromSideJump(fromObj, xOffset = 0) {
-    //     if(!fromObj.isAboveGround()) return;
-    //     if(!(this instanceof Endboss)) return;
-    //     if(!this.crossesObjectFromX(fromObj, xOffset)) return;
-    //     return true;
-    // }
 
 
     /**
@@ -234,7 +224,6 @@ class MovableObject extends DrawableObject {
         if(this instanceof Endboss) {
             obj.strength = 15;
         }
-        consoleHits ? console.log(this.objectName, '(handlingHitFromAbove)') : null;
         this.handlingHit(obj);
     }
 
@@ -243,10 +232,10 @@ class MovableObject extends DrawableObject {
      * Handling if hit from side jump
      * @param {object} fromObj - counter object
      */
-    handlingHitFromSideJump(obj) {
-        if(!(this instanceof Endboss)) return;
-        this.strength = 15;
-        consoleHits ? console.log(this.objectName, '(handlingHitSideJump)') : null;
+    handlingHitFromSide(obj) {
+        if(!(obj instanceof Endboss)) return;
+        obj.strength = 10;
+        consoleHits ? console.log(this.objectName, '(handlingHitFromSide)') : null;
         this.handlingHit(obj);
     }
 

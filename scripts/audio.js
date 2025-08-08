@@ -130,13 +130,14 @@ function cleanLoopedAudiosArray() {
 function logPlayingAudios(showLog = false) {
     if(!showLog) return;
     let playingAudios;
-    console.log('Playing Audios Global:');
+    console.log('\nPlaying looped Audios:');
         playingAudios = loopedAudios.filter(audio => !audio.paused);
         playingAudios.forEach(audio => console.log(audio.src));
-    console.log('Playing Audios Enemies:');
+    console.log('\nPlaying Enemy Audios:');
     world.enemies.forEach(enemy => {
         Object.values(enemy.audioCache).forEach(audio => {
-            console.log(audio.src);
+            console.log(audio);
+            // console.log(audio.src);
         });
     });
 }

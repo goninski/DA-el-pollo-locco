@@ -153,7 +153,7 @@ class World {
                 this.checkObjectCollection('coin');
             }
             this.debugLogs(false);
-        }, 100);
+        }, 50);
         this.intervals.push(intervalId);
     }
 
@@ -207,10 +207,11 @@ class World {
             this.checkAndHandleEnemyHitFromBottle(enemy);
             if(enemy.isHitFromAbove(this.character, this.character.borderWidth * 0.375)) {
                 enemy.handlingHitFromAbove(this.character);
-            // } else if(enemy.isHitFromSideJump(this.character, enemy.borderWidth * 0.25)) {
-            //     enemy.handlingHitFromSideJump(this.character);
             } else if(this.character.isHitOnGround(enemy, this.character.borderWidth * 0.25)) {
                 this.character.handlingHitOnGround(enemy);
+            }
+            if(this.character.crossesObjectFromX(enemy, this.character.borderWidth * 0.25)) {
+                this.character.handlingHitFromSide(enemy);
             }
         });
     }
@@ -237,7 +238,7 @@ class World {
     checkObjectCollection(objectName) {
         if(this.character[objectName + 'Status'] >= 100) return;
         this.level[objectName + 's'].forEach((item) => {
-            if(this.character.crossesObject(item, this.character.borderWidth * 0.25)) {
+            if(this.character.crossesObject(item, this.character.borderWidth * 0.33, this.character.borderHeight * 0.33)) {
                 this.character.collectObject(item);
             };
         });

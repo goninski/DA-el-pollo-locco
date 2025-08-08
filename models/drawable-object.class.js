@@ -139,7 +139,7 @@ class DrawableObject {
      * @param {number} screenStart - starting screen slide no
      * @param {number} screenEnd - ending screen slide no
      */
-    setRandomPosX(screenStart = -1, screenEnd = 2) {
+    setRandomPosX(screenStart = -0.9, screenEnd = 2.5) {
         let min = widthCanvas * screenStart;
         let max = (widthCanvas * screenEnd) - this.width;
         this.x = Math.floor(Math.random() * (max - min)) + min;        

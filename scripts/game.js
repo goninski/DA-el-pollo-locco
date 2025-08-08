@@ -23,7 +23,7 @@ let stoppableTimeouts = [];
 let livingEnemies;
 let leftWorldCounter = 0;
 let gamePaused = false;
-let consoleHits = true;
+let consoleHits = false;
 
 
 /**
@@ -72,7 +72,7 @@ function startGame(event = null) {
     event ? event.stopPropagation() : null;
     stopAudio(audioCache.gameStart);
     resumeGame();
-    logPlayingAudios();
+    logPlayingAudios(true);
     secondsPlay = 0;
     lastKeystroke = new Date().getTime();
     hideAllScreens();

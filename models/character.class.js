@@ -383,7 +383,7 @@ class Character extends MovableObject {
         this.disableIdle();
         this.x = 0;
         this.setWalkGroundY();
-        super.jump(30);
+        super.jump(40);
         this.startAudio(this.audioCache.win);
         this.clearIntervals(1500);
         this.showImageFromCache('IMAGES_WIN', 3);
