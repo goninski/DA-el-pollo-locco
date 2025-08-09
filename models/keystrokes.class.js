@@ -13,7 +13,7 @@ class Keystrokes {
     constructor() {
         this.disableContextMenuForTouchDevice;
         this.bindKeyPressEvents();
-        this.bindBtnTouchEventsToKeyPress();
+        this.bindTouchButtonEventsToKeyPress();
     }
 
 
@@ -63,7 +63,6 @@ class Keystrokes {
                 lastKeystroke = new Date().getTime();
                 lastKeystroke_JUMP = lastKeystroke;
         }
-        // console.log(keystrokes);
     }
 
 
@@ -85,55 +84,35 @@ class Keystrokes {
             case 32:
                 keystrokes.KEY_SPACE = false;
         }
-        // console.log(keystrokes);
     }
 
 
     /**
      * Bind touch buttons to keys 
      */
-    bindBtnTouchEventsToKeyPress() {
-        document.getElementById('btnMoveLeft').addEventListener('touchstart', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_LEFT = true;
-            lastKeystroke = new Date().getTime();
-            lastKeystroke_LEFT = lastKeystroke;
-        });
-        document.getElementById('btnMoveLeft').addEventListener('touchend', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_LEFT = false;
-        });
-        document.getElementById('btnMoveRight').addEventListener('touchstart', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_RIGHT = true;
-            lastKeystroke = new Date().getTime();
-            lastKeystroke_RIGHT = lastKeystroke;
-        });
-        document.getElementById('btnMoveRight').addEventListener('touchend', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_RIGHT = false;
-        });
-        document.getElementById('btnJump').addEventListener('touchstart', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_SPACE = true;
-            lastKeystroke = new Date().getTime();
-            lastKeystroke_JUMP = lastKeystroke;
-        });
-        document.getElementById('btnJump').addEventListener('touchend', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_SPACE = false;
-        });
-        document.getElementById('btnThrowBottle').addEventListener('touchstart', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_B = true;
-            lastKeystroke = new Date().getTime();
-            lastKeystroke_THROW = lastKeystroke;
-        });
-        document.getElementById('btnThrowBottle').addEventListener('touchend', (event) => {
-            event.cancelable ? event.preventDefault() : null;
-            keystrokes.KEY_B = false;
-        });
+    bindTouchButtonEventsToKeyPress() {
+        this.bindTouchButtonEventToKeyPress('btnMoveLeft', 'KEY_LEFT');
+        this.bindTouchButtonEventToKeyPress('btnMoveRight', 'KEY_RIGHT');
+        this.bindTouchButtonEventToKeyPress('btnJump', 'KEY_SPACE');
+        this.bindTouchButtonEventToKeyPress('btnThrowBottle', 'KEY_B');
     }
 
+
+    /**
+     * Bind touch button event to key press
+     * @param {string} btnId - button id
+     * @param {string} strokeProp - property name of the keystroke
+     */
+    bindTouchButtonEventToKeyPress(btnId, strokeProp) {
+        document.getElementById(btnId).addEventListener('touchstart', (event) => {
+            event.cancelable ? event.preventDefault() : null;
+            keystrokes[strokeProp] = true;
+            lastKeystroke = new Date().getTime();
+        });
+        document.getElementById(btnId).addEventListener('touchend', (event) => {
+            event.cancelable ? event.preventDefault() : null;
+            keystrokes[strokeProp] = false;
+        });
+    }        
 
 };

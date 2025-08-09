@@ -116,7 +116,6 @@ class Character extends MovableObject {
         this.setWalkGroundY();
         this.roundCoordinates();
         this.setMediaCache();
-        // this.loadImage(this.IMAGES_WALKING[0]);
         this.showImageFromCache('IMAGES_WALKING');
         this.applyGravity();
         this.animate();
@@ -143,10 +142,10 @@ class Character extends MovableObject {
      * Animate interval calls
      */
     animate() {
-        this.keystrokesHandler(); //1000/60
-        this.animateWalkingHurtDeath(); //50ms
-        this.animateJumping(); //100ms
-        this.animateIdle(); //300ms
+        this.keystrokesHandler();
+        this.animateWalkingHurtDeath();
+        this.animateJumping(); 
+        this.animateIdle(); 
         this.saveIntervalsGlobally();
     }
 
@@ -182,23 +181,15 @@ class Character extends MovableObject {
     animateWalkingHurtDeath() {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead) return;
-            // if(!this.isAboveGround()) {
-                if(this.isDying()) {
-                    this.disableIdle();
-                    this.startAudio(this.audioCache.death,0.7);
-                    this.handlingDeath();
-                } else if(this.isHurt()) {
-                    this.disableIdle();
-                    this.startAudio(this.audioCache.hurt);
-                    this.handlingHurt();
-                } else if(this.idle || this.idleLong) {
-                    return;
-                } else {
-                    if(!this.isAboveGround()) {
-                        this.walkingAnimation();
-                    }
-                }
-            // }
+            if(this.isDying()) {
+                this.handlingDeath();
+            } else if(this.isHurt()) {
+                this.handlingHurt();
+            } else if(this.idle || this.idleLong) {
+                return;
+            } else if(!this.isAboveGround()) {
+                    this.walkingAnimation();
+            }
         }, 50); 
         this.intervals.push(intervalId);
     }
@@ -284,7 +275,6 @@ class Character extends MovableObject {
     walkingAnimation() {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
-            // this.disableIdle();
             super.walkingAnimation();
         }
     }
@@ -391,11 +381,32 @@ class Character extends MovableObject {
 
 
     /**
-     * check if dying
+     * Handling hurt
+     */
+    handlingHurt() {
+        this.disableIdle();
+        this.startAudio(this.audioCache.hurt);
+        super.handlingHurt();
+    }
+
+
+    /**
+     * Check if dying
      * @returns {boolean}
      */
     isDying() {
         return super.isDying(2500);
     }
+
+
+    /**
+     * Handling death
+     */
+    handlingDeath() {
+        this.disableIdle();
+        this.startAudio(this.audioCache.death,0.7);
+        super.handlingDeath();
+    }
+
 
 }

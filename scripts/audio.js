@@ -140,7 +140,6 @@ function logPlayingAudios(showLog = false) {
     world.enemies.forEach(enemy => {
         Object.values(enemy.audioCache).forEach(audio => {
             console.log(audio);
-            // console.log(audio.src);
         });
     });
 }

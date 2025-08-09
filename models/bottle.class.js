@@ -139,7 +139,6 @@ class Bottle extends CollectableObject {
      */
     isSplashing() {
         if(!this.collected || this.isAboveGround() || this.splashed) return;
-        // console.log(this.objectName, 'isSplashing');
         return true;
     }
 
@@ -149,7 +148,6 @@ class Bottle extends CollectableObject {
      */
     splashingAnimation() {
         this.startAudio(this.audioCache.splash);
-        // this.stopOtherAudios();
         let imagePaths = 'IMAGES_SPLASH';
         this.img = this.imageCache[this[imagePaths][0]];
         this.movementAnimation(this[imagePaths]);
@@ -163,7 +161,6 @@ class Bottle extends CollectableObject {
         this.flying = false;
         this.destroyed = true;
         this.clearIntervals(0);
-        // this.stopAllAudios();
         this.loadImage(this.IMAGES_SPLASH[5]);
     }
 

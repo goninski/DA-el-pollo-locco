@@ -65,7 +65,6 @@ class StatusBar extends DrawableObject {
         }
         this.setImageCache(this['IMAGES_' + statusType]);
         this.showImageFromCache('IMAGES_'+ this.statusType);
-        // this.loadImage(this['IMAGES_'+ this.statusType][0]);
     }
 
 
@@ -77,7 +76,6 @@ class StatusBar extends DrawableObject {
         this.statusValue = statusValue;
         let index = this.resolveImgIndex(this.statusValue);
         this.showImageFromCache('IMAGES_'+ this.statusType, index);
-        // this.loadImage(this['IMAGES_'+ this.statusType][index]);
     }
 
 

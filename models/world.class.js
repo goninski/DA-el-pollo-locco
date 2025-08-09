@@ -118,7 +118,7 @@ class World {
      * Global intervals
      */
     globalIntervals() {
-        this.playTimeInterval(); //1s
+        this.playTimeInterval();
         this.updateGameStatus(); 
     }
 
