@@ -49,7 +49,10 @@
                     </button>
                     <div class="game-is-paused-msg option-msg">Game is paused</div>
                     <div id="playTimer" class="option-msg"></div>
-                    <button id="btnRestartGame" class="button" onclick="restartGame(event)" title="New game (startscreen)">
+                    <button id="btnHome" class="button" onclick="restartGame(event)" title="Startscreen (quit game)">
+                        <img src="assets/icons/home.svg" alt="home-icon">
+                    </button>
+                    <button id="btnRestartGame" class="button" onclick="restartGame(event, true)" title="Start new game">
                         <img src="assets/icons/forward.svg" alt="replay-icon">
                     </button>
                     <button id="btnSurrender" onclick="handlingGameOver(event)" title="Surrender (Game Over)">

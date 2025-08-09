@@ -14,7 +14,7 @@ class Character extends MovableObject {
     throwDebounceCounter = 0;
     lastThrow = 0;
     thrownBottle = {};
-    idle = false;
+    idle = true;
     idleLong = false;
 
     IMAGES_IDLE = [
@@ -116,7 +116,7 @@ class Character extends MovableObject {
         this.setWalkGroundY();
         this.roundCoordinates();
         this.setMediaCache();
-        this.showImageFromCache('IMAGES_WALKING');
+        this.showImageFromCache('IMAGES_IDLE');
         this.applyGravity();
         this.animate();
     }
@@ -162,13 +162,10 @@ class Character extends MovableObject {
                 this.moveLeft(this.speed);
             } else if(this.world.keystrokes.KEY_RIGHT) {
                 this.moveRight(this.speed);
-            } else if(this.world.keystrokes.KEY_SPACE) {
-                this.jump();
-            } else if(this.world.keystrokes.KEY_B) {
-                this.throwBottle();
-            } else {
-                this.setIdleState();
-            }
+            } 
+            this.world.keystrokes.KEY_SPACE ? this.jump() : null;
+            this.world.keystrokes.KEY_B ? this.throwBottle() : null;
+            this.setIdleState();
             this.x < widthCanvas ? this.world.screenTranslateX = -this.x : null;
         }, 1000 / 60);
         this.intervals.push(intervalId);
@@ -245,15 +242,13 @@ class Character extends MovableObject {
      */
     setIdleState() {
         if(gamePaused || this.dead || this.isDying()) return;
+        if(this.world.keystrokes.KEY_LEFT || this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_B || this.world.keystrokes.KEY_SPACE ) return;
         let timePassed = new Date().getTime() - lastKeystroke;
-        if(timePassed >= 3000 && timePassed < 6000) {
-            this.idle = true;
-            this.idleLong = false;
-        } else if(timePassed >= 6000) {
+        if(timePassed >= 6000) {
             this.idle = false;
             this.idleLong = true;
         } else {
-            this.idle = false;
+            this.idle = true;
             this.idleLong = false;
         }
     }

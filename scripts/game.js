@@ -38,7 +38,12 @@ function initGame(skipStartScreen = false) {
     setBodyClassIfTouchDevice();
     resetValues();
     audioMuted ? body.classList.add('audio-muted') : body.classList.remove('audio-muted');
-    skipStartScreen ? startGame() : showStartScreen();
+    if(!skipStartScreen) {
+        showStartScreen();
+    } else {
+        loadLevel1();
+        startGame();
+    }
 }
 
 
@@ -103,11 +108,12 @@ function startGame(event = null) {
 /**
  * Restart the game
  * @param {event} event - restart button
+ * @param {boolean} skipStartScreen
  */
-function restartGame(event = null) {
+function restartGame(event = null, skipStartScreen = false) {
     event ? event.stopPropagation() : null;
     stopAllAudios();
-    initGame();
+    initGame(skipStartScreen);
 }    
 
 
