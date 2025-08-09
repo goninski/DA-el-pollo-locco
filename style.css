@@ -528,3 +528,12 @@ body.is-touch-device:not(.help-screen) {
         display: flex;
     }
 }
+@media (orientation: portrait) {
+    body.is-touch-device {
+        overflow: hidden !important;
+        #orientationOverlay {
+            display: flex;
+        }
+    }
+}
+

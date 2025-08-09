@@ -199,7 +199,7 @@ class World {
      */
     checkEnemyHits() {
         this.level.enemies.forEach((enemy) => {
-            if(enemy.dead || this.character.dead) return;  
+            if(enemy.dead || enemy.isDying() || this.character.dead || this.character.isDying()) return;  
             if(enemy.hasLeftWorld()) {
                 leftWorldCounter++;
                 return;
@@ -238,7 +238,7 @@ class World {
     checkObjectCollection(objectName) {
         if(this.character[objectName + 'Status'] >= 100) return;
         this.level[objectName + 's'].forEach((item) => {
-            if(this.character.crossesObject(item, this.character.borderWidth * 0.33, this.character.borderHeight * 0.33)) {
+            if(this.character.crossesObject(item, this.character.borderWidth * 0.15, this.character.borderHeight * 0.033)) {
                 this.character.collectObject(item);
             };
         });

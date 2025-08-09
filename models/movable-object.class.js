@@ -96,6 +96,8 @@ class MovableObject extends DrawableObject {
             if(this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
+            } else {
+                this.y = this.groundY;
             }
         }, 1000 / 25);
         this.intervals.push(intervalId);
@@ -234,7 +236,7 @@ class MovableObject extends DrawableObject {
      */
     handlingHitFromSide(obj) {
         if(!(obj instanceof Endboss)) return;
-        obj.strength = 10;
+        obj.strength = 7.5;
         consoleHits ? console.log(this.objectName, '(handlingHitFromSide)') : null;
         this.handlingHit(obj);
     }

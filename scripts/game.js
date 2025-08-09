@@ -157,7 +157,7 @@ function handlingGameWin(event = null) {
         stopAllAudios();
     }, 1000);
     stoppableTimeouts.push(timeoutId);
-    timeoutId = setTimeout(() => restartGame(null), 12000);
+    timeoutId = setTimeout(() => restartGame(null), 20000);
     stoppableTimeouts.push(timeoutId);
 }    
 
@@ -176,7 +176,7 @@ function handlingGameOver(event = null) {
     body.classList.add('game-over-screen');
     document.getElementById('playTimer').innerHTML = timer;
     startAudio(audioCache.gameOver);
-    timeoutId = setTimeout(() => restartGame(null), 12000);
+    timeoutId = setTimeout(() => restartGame(null), 20000);
     stoppableTimeouts.push(timeoutId);
 }    
 
