@@ -215,7 +215,6 @@ class Character extends MovableObject {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead || this.isHurt() || this.isDying()) return;
             if(this.idle) {
-                this.img = this.imageCache[this['IMAGES_IDLE'][0]];
                 this.movementAnimation(this['IMAGES_IDLE']);
             } else if(this.idleLong) {
                 this.movementAnimation(this['IMAGES_IDLE_LONG']);

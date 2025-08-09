@@ -42,7 +42,7 @@ class Character extends MovableObject {
     throwDebounceCounter = 0;
     lastThrow = 0;
     thrownBottle = {};
-    idle = false;
+    idle = true;
     idleLong = false;
 
     IMAGES_IDLE = [
@@ -144,8 +144,7 @@ class Character extends MovableObject {
         this.setWalkGroundY();
         this.roundCoordinates();
         this.setMediaCache();
-        // this.loadImage(this.IMAGES_WALKING[0]);
-        this.showImageFromCache('IMAGES_WALKING');
+        this.showImageFromCache('IMAGES_IDLE');
         this.applyGravity();
         this.animate();
     }
@@ -171,10 +170,10 @@ class Character extends MovableObject {
      * Animate interval calls
      */
     animate() {
-        this.keystrokesHandler(); //1000/60
-        this.animateWalkingHurtDeath(); //50ms
-        this.animateJumping(); //100ms
-        this.animateIdle(); //300ms
+        this.keystrokesHandler();
+        this.animateWalkingHurtDeath();
+        this.animateJumping(); 
+        this.animateIdle(); 
         this.saveIntervalsGlobally();
     }
 
@@ -191,13 +190,10 @@ class Character extends MovableObject {
                 this.moveLeft(this.speed);
             } else if(this.world.keystrokes.KEY_RIGHT) {
                 this.moveRight(this.speed);
-            } else if(this.world.keystrokes.KEY_SPACE) {
-                this.jump();
-            } else if(this.world.keystrokes.KEY_B) {
-                this.throwBottle();
-            } else {
-                this.setIdleState();
-            }
+            } 
+            this.world.keystrokes.KEY_SPACE ? this.jump() : null;
+            this.world.keystrokes.KEY_B ? this.throwBottle() : null;
+            this.setIdleState();
             this.x &lt; widthCanvas ? this.world.screenTranslateX = -this.x : null;
         }, 1000 / 60);
         this.intervals.push(intervalId);
@@ -210,23 +206,15 @@ class Character extends MovableObject {
     animateWalkingHurtDeath() {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead) return;
-            // if(!this.isAboveGround()) {
-                if(this.isDying()) {
-                    this.disableIdle();
-                    this.startAudio(this.audioCache.death,0.7);
-                    this.handlingDeath();
-                } else if(this.isHurt()) {
-                    this.disableIdle();
-                    this.startAudio(this.audioCache.hurt);
-                    this.handlingHurt();
-                } else if(this.idle || this.idleLong) {
-                    return;
-                } else {
-                    if(!this.isAboveGround()) {
-                        this.walkingAnimation();
-                    }
-                }
-            // }
+            if(this.isDying()) {
+                this.handlingDeath();
+            } else if(this.isHurt()) {
+                this.handlingHurt();
+            } else if(this.idle || this.idleLong) {
+                return;
+            } else if(!this.isAboveGround()) {
+                    this.walkingAnimation();
+            }
         }, 50); 
         this.intervals.push(intervalId);
     }
@@ -255,7 +243,6 @@ class Character extends MovableObject {
         intervalId = setInterval(() => {
             if(gamePaused || this.dead || this.isHurt() || this.isDying()) return;
             if(this.idle) {
-                this.img = this.imageCache[this['IMAGES_IDLE'][0]];
                 this.movementAnimation(this['IMAGES_IDLE']);
             } else if(this.idleLong) {
                 this.movementAnimation(this['IMAGES_IDLE_LONG']);
@@ -282,15 +269,13 @@ class Character extends MovableObject {
      */
     setIdleState() {
         if(gamePaused || this.dead || this.isDying()) return;
+        if(this.world.keystrokes.KEY_LEFT || this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_B || this.world.keystrokes.KEY_SPACE ) return;
         let timePassed = new Date().getTime() - lastKeystroke;
-        if(timePassed >= 3000 &amp;&amp; timePassed &lt; 6000) {
-            this.idle = true;
-            this.idleLong = false;
-        } else if(timePassed >= 6000) {
+        if(timePassed >= 6000) {
             this.idle = false;
             this.idleLong = true;
         } else {
-            this.idle = false;
+            this.idle = true;
             this.idleLong = false;
         }
     }
@@ -312,7 +297,6 @@ class Character extends MovableObject {
     walkingAnimation() {
         this.img = this.imageCache[this.IMAGES_WALKING[0]];
         if(this.world.keystrokes.KEY_RIGHT || this.world.keystrokes.KEY_LEFT) {
-            // this.disableIdle();
             super.walkingAnimation();
         }
     }
@@ -419,14 +403,36 @@ class Character extends MovableObject {
 
 
     /**
-     * check if dying
+     * Handling hurt
+     */
+    handlingHurt() {
+        this.disableIdle();
+        this.startAudio(this.audioCache.hurt);
+        super.handlingHurt();
+    }
+
+
+    /**
+     * Check if dying
      * @returns {boolean}
      */
     isDying() {
         return super.isDying(2500);
     }
 
-}</code></pre>
+
+    /**
+     * Handling death
+     */
+    handlingDeath() {
+        this.disableIdle();
+        this.startAudio(this.audioCache.death,0.7);
+        super.handlingDeath();
+    }
+
+
+}
+</code></pre>
         </article>
     </section>
 
@@ -442,7 +448,7 @@ class Character extends MovableObject {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Aug 08 2025 20:37:47 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Aug 09 2025 15:44:55 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
