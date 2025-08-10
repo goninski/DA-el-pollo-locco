@@ -162,7 +162,7 @@ body:is(.game-over-screen, .win-screen) :is(#btnToggleHelp, #btnToggleLegalNotic
 body.play-screen:not(.help-screen) #btnToggleLegalNotice,
 body.audio-muted #btnToggleAudioMute .enabled,
 body:not(.audio-muted) #btnToggleAudioMute .disabled,
-:is(#btnStartGame, #btnHome, #btnRestartGame, #btnSurrender, .game-is-paused-msg) {
+:is(#btnStartGame, #btnHome, #btnRestartGame, #btnSurrender, #warningArrow) {
     display: none;
 }
 
@@ -289,6 +289,7 @@ body.audio-auto-muted #btnToggleAudioMute img .disabled {
 body #btnToggleAudioMute img.enabled {
     --pulse-scale: 1.075;
 }
+body.play-screen.enemy-leaving-world.ch #warningArrow,
 body.start-screen #btnStartGame,
 body.play-screen.game-paused :is(.game-is-paused-msg),
 body.play-screen.help-screen :is(#btnHome, #btnSurrender),

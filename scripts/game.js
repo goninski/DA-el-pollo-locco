@@ -22,7 +22,8 @@ let stoppableIntervals = [];
 let timeoutId;
 let stoppableTimeouts = [];
 let livingEnemies;
-let leftWorldCounter;
+let enemyLeavingWorldCounter;
+let enemyHasLeftWorldCounter;
 let gamePaused;
 
 
@@ -54,7 +55,7 @@ function resetValues() {
     stoppableIntervals.forEach(clearInterval);
     stoppableTimeouts.forEach(clearTimeout);
     gamePaused = false;
-    leftWorldCounter = 0;
+    enemyHasLeftWorldCounter = 0;
     intervalId = 0;
     timeoutId = 0;
     chickenId = 0;

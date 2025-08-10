@@ -212,21 +212,25 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Return true if alert is needed
+     * Check if is alert
+     * @returns {boolean}
      */
     isAlert() {
         if(this.isAttacking()) return;
-        if(this.world.character.idle || this.world.character.idleLong) return;
+        if(this.world.character.idleLong) return;
+        // if(this.world.character.idle || this.world.character.idleLong) return;
         return (this.isCloseToCharacter(45) || this.isCharacterActing());
     }
 
 
     /**
-     * Return true if attack is needed
+     * Check if attacking
+     * @returns {boolean}
      */
     isAttacking() {
         if(this.world.character.dead || this.world.character.isDying()) return;
-        if(this.world.character.idle || this.world.character.idleLong) return;
+        if(this.world.character.idleLong) return;
+        // if(this.world.character.idle || this.world.character.idleLong) return;
         return (this.isCloseToCharacter(33) || this.isCharacterActing());
     }
 

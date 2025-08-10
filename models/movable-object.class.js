@@ -196,6 +196,15 @@ class MovableObject extends DrawableObject {
 
 
     /**
+     * Check if leaving world soon (canvas on left side)
+     */
+    isLeavingWorld() {
+        if(this.dead) return;
+        return (this.borderX < (widthCanvas * -1) + (2 * this.borderWidth));
+    }
+
+
+    /**
      * Check if has left the world (canvas on left side)
      */
     hasLeftWorld() {

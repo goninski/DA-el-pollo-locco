@@ -201,9 +201,10 @@ class World {
         this.level.enemies.forEach((enemy) => {
             if(enemy.dead || enemy.isDying() || this.character.dead || this.character.isDying()) return;  
             if(enemy.hasLeftWorld()) {
-                leftWorldCounter++;
+                enemyHasLeftWorldCounter++;
                 return;
             }
+            // this.checkIfEnemyIsLeavingWorld(enemy);
             this.checkAndHandleEnemyHitFromBottle(enemy);
             if(enemy.isHitFromAbove(this.character, this.character.borderWidth * 0.375)) {
                 enemy.handlingHitFromAbove(this.character);
@@ -216,6 +217,21 @@ class World {
         });
     }
     
+
+    /**
+     * Check if ememy is leaving the world soon
+     * @param {object} enemy - enemy object
+     */
+    checkIfEnemyIsLeavingWorld(enemy) {
+        if(enemy.isLeavingWorld()) {
+            body.classList.add('enemy-leaving-world');
+            // enemyLeavingWorld = true;
+        } else {
+            body.classList.remove('enemy-leaving-world');
+            // enemyLeavingWorld = false;
+        }
+    }
+
 
     /**
      * Check if ememy is hit from bottle (part of enemies loop)
@@ -272,7 +288,7 @@ class World {
      * @returns {boolean}
      */
     isGameOver(){
-        return (this.character.dead || leftWorldCounter > 0);
+        return (this.character.dead || enemyHasLeftWorldCounter > 0);
     }
 
 }
