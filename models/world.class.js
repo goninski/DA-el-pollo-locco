@@ -234,6 +234,7 @@ class World {
      * @param {object} enemy - enemy object
      */
     checkEnemyLeavingWorld(enemy) {
+        if(enemy.borderX >= this.character.borderX) return;
         if(enemy.hasLeftWorld()) {
             enemyHasLeftWorldCounter++;            
         } else if(enemy.isLeavingWorld()) {

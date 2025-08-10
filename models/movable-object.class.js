@@ -149,10 +149,6 @@ class MovableObject extends DrawableObject {
         let fromY = fromObj.borderX;
         let fromYE = fromY + fromObj.borderHeight;
         return (thisYE - offsetY >= fromY && thisY + offsetY <= fromYE);
-
-        // if((this.borderY + offsetY > fromObj.borderY + fromObj.borderHeight)) return;
-        // if((this.borderY + this.borderHeight < fromObj.borderY)) return;
-        // return true;
     }
 
 

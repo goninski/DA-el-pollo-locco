@@ -294,7 +294,7 @@ body #warningArrow {
     animation: pulse 1s infinite ease-in-out;
     height: 36px;
 }
-body.play-screen.enemy-leaving-world:not(.game-is-paused) #warningArrow {
+body.play-screen.enemy-leaving-world:not(.game-paused) #warningArrow {
     display: flex;
 }
 body.start-screen #btnStartGame,
