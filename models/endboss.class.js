@@ -8,7 +8,6 @@ class Endboss extends MovableObject {
     objectPadding = [0.15, 0, 0, 0];
     strength = 20;
     active = false;
-    lastApproach = null;
 
     IMAGES_WALKING = [
         imgPathBase + '4_enemie_boss_chicken/1_walk/G1.png',
@@ -218,7 +217,6 @@ class Endboss extends MovableObject {
     isAlert() {
         if(this.isAttacking()) return;
         if(this.world.character.idleLong) return;
-        // if(this.world.character.idle || this.world.character.idleLong) return;
         return (this.isCloseToCharacter(45) || this.isCharacterActing());
     }
 
@@ -230,7 +228,6 @@ class Endboss extends MovableObject {
     isAttacking() {
         if(this.world.character.dead || this.world.character.isDying()) return;
         if(this.world.character.idleLong) return;
-        // if(this.world.character.idle || this.world.character.idleLong) return;
         return (this.isCloseToCharacter(33) || this.isCharacterActing());
     }
 

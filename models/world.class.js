@@ -148,10 +148,11 @@ class World {
             } else if(this.isGameWon()) {
                 handlingGameWin();
             } else {
-                this.checkEnemyHits();
+                this.checkEnemyStuff();
                 this.checkObjectCollection('bottle');
                 this.checkObjectCollection('coin');
             }
+            this.setStateEnemyLeavingWorld();
             this.debugLogs(false);
         }, 75);
         this.intervals.push(intervalId);
@@ -171,7 +172,7 @@ class World {
 
 
     /**
-     * Show endboss status bar
+     * Show endboss after reaching certain living enemies
      */
     showEndbossStatusbar() {
         if(livingEnemies <= 5 && !this.endboss.active) {
@@ -195,16 +196,11 @@ class World {
 
 
     /**
-     * Check enemy hits (in both directions)
+     * Check enemy stuff (hits to/from, leaving world)
      */
-    checkEnemyHits() {
+    checkEnemyStuff() {
         this.level.enemies.forEach((enemy) => {
-            if(enemy.dead || enemy.isDying() || this.character.dead || this.character.isDying()) return;  
-            if(enemy.hasLeftWorld()) {
-                enemyHasLeftWorldCounter++;
-                return;
-            }
-            // this.checkIfEnemyIsLeavingWorld(enemy);
+            if(enemy.dead || enemy.isDying() || this.character.dead || this.character.isDying() || enemyHasLeftWorldCounter > 0) return;  
             this.checkAndHandleEnemyHitFromBottle(enemy);
             if(enemy.isHitFromAbove(this.character, this.character.borderWidth * 0.375)) {
                 enemy.handlingHitFromAbove(this.character);
@@ -214,24 +210,10 @@ class World {
             if(this.character.crossesObjectFromX(enemy, this.character.borderWidth * 0.25)) {
                 this.character.handlingHitFromSide(enemy);
             }
+            this.checkEnemyLeavingWorld(enemy);
         });
     }
     
-
-    /**
-     * Check if ememy is leaving the world soon
-     * @param {object} enemy - enemy object
-     */
-    checkIfEnemyIsLeavingWorld(enemy) {
-        if(enemy.isLeavingWorld()) {
-            body.classList.add('enemy-leaving-world');
-            // enemyLeavingWorld = true;
-        } else {
-            body.classList.remove('enemy-leaving-world');
-            // enemyLeavingWorld = false;
-        }
-    }
-
 
     /**
      * Check if ememy is hit from bottle (part of enemies loop)
@@ -247,6 +229,32 @@ class World {
     }
   
     
+    /**
+     * Check if ememy is leaving or has left the world
+     * @param {object} enemy - enemy object
+     */
+    checkEnemyLeavingWorld(enemy) {
+        if(enemy.hasLeftWorld()) {
+            enemyHasLeftWorldCounter++;            
+        } else if(enemy.isLeavingWorld()) {
+            enemyLeavingWorldCounter++;            
+        }
+    }
+
+
+    /**
+     * Set state ememy is leaving world
+     */
+    setStateEnemyLeavingWorld() {
+        if(enemyLeavingWorldCounter > 0) {
+            body.classList.add('enemy-leaving-world');
+            enemyLeavingWorldCounter = 0;
+        } else {
+            body.classList.remove('enemy-leaving-world');
+        }
+    }
+
+
     /**
      * Check object collection (coin/bottle collection)
      * @param {string} objectName - class name of the collectable object (lower case)

@@ -55,6 +55,7 @@ function resetValues() {
     stoppableIntervals.forEach(clearInterval);
     stoppableTimeouts.forEach(clearTimeout);
     gamePaused = false;
+    enemyLeavingWorldCounter = 0;
     enemyHasLeftWorldCounter = 0;
     intervalId = 0;
     timeoutId = 0;

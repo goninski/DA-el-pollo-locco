@@ -33,7 +33,7 @@ class LittleChicken extends Chicken {
         littleChickenId++;
         this.objectName += littleChickenId;
         this.roundDimensions();
-        this.setRandomPosX(0.4, 2.75);
+        this.setRandomPosX(0.4, 2.2);
         this.setWalkGroundY();
         this.setMediaCache();
         this.showImageFromCache('IMAGES_WALKING');

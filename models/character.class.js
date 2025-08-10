@@ -364,12 +364,10 @@ class Character extends MovableObject {
      * Jump animation on game win
      */
     winJump() {
-        this.disableIdle();
         this.x = 0;
-        this.setWalkGroundY();
         super.jump(40);
         this.startAudio(this.audioCache.win);
-        this.clearIntervals(1500);
+        this.clearIntervals(1000);
         this.showImageFromCache('IMAGES_WIN', 3);
     }
 

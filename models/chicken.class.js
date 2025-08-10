@@ -32,7 +32,7 @@ class Chicken extends MovableObject {
         chickenId++;
         this.objectName += chickenId;
         this.roundDimensions();
-        this.setRandomPosX(0.6, 2.75);
+        this.setRandomPosX(0.6, 2.2);
         this.setWalkGroundY();
         this.setMediaCache();
         this.showImageFromCache('IMAGES_WALKING');

@@ -130,10 +130,10 @@ class MovableObject extends DrawableObject {
      */
     crossesObjectFromX(fromObj, offsetX = 0) {
         let thisX = this.borderX;
+        let thisXE = thisX + this.borderWidth;
         let fromX = fromObj.borderX;
-        if((thisX + offsetX > fromX + fromObj.borderWidth)) return;
-        if((thisX + this.borderWidth < fromX + offsetX)) return;
-        return true;
+        let fromXE = fromX + fromObj.borderWidth;
+        return (thisXE - offsetX >= fromX && thisX + offsetX <= fromXE);
     }
 
 
@@ -144,9 +144,15 @@ class MovableObject extends DrawableObject {
      * @returns {boolean}
      */
     crossesObjectFromY(fromObj, offsetY = 0) {
-        if((this.borderY + offsetY > fromObj.borderY + fromObj.borderHeight)) return;
-        if((this.borderY + this.borderHeight < fromObj.borderY)) return;
-        return true;
+        let thisY = this.borderX;
+        let thisYE = thisY + this.borderHeight;
+        let fromY = fromObj.borderX;
+        let fromYE = fromY + fromObj.borderHeight;
+        return (thisYE - offsetY >= fromY && thisY + offsetY <= fromYE);
+
+        // if((this.borderY + offsetY > fromObj.borderY + fromObj.borderHeight)) return;
+        // if((this.borderY + this.borderHeight < fromObj.borderY)) return;
+        // return true;
     }
 
 
@@ -173,7 +179,7 @@ class MovableObject extends DrawableObject {
      */
     isHitOnGround(fromObj, offsetX = 0) {
         if(this.isAboveGround()) return;
-        if(!this.crossesObject(fromObj, offsetX)) return;
+        if(!this.crossesObjectFromX(fromObj, offsetX)) return;
         consoleHits ? console.log(this.objectName, '(isHitOnGround)', 'from', fromObj.objectName) : null;
         return true;
     }
@@ -200,7 +206,7 @@ class MovableObject extends DrawableObject {
      */
     isLeavingWorld() {
         if(this.dead) return;
-        return (this.borderX < (widthCanvas * -1) + (2 * this.borderWidth));
+        return (this.borderX < widthCanvas * -0.5);
     }
 
 
@@ -219,7 +225,7 @@ class MovableObject extends DrawableObject {
     handlingHitFromBottle(obj) {
         obj.strength = 100;
         if(this instanceof Endboss) {
-            obj.strength = 10;
+            obj.strength = 7;
         }
         consoleHits ? console.log(this.objectName, '(handlingHitFromBottle)') : null;
         this.handlingHit(obj);
@@ -233,20 +239,8 @@ class MovableObject extends DrawableObject {
     handlingHitFromAbove(obj) {
         obj.strength = 100;
         if(this instanceof Endboss) {
-            obj.strength = 15;
+            obj.strength = 10;
         }
-        this.handlingHit(obj);
-    }
-
-
-    /**
-     * Handling if hit from side jump
-     * @param {object} fromObj - counter object
-     */
-    handlingHitFromSide(obj) {
-        if(!(obj instanceof Endboss)) return;
-        obj.strength = 7.5;
-        consoleHits ? console.log(this.objectName, '(handlingHitFromSide)') : null;
         this.handlingHit(obj);
     }
 
@@ -258,6 +252,18 @@ class MovableObject extends DrawableObject {
     handlingHitOnGround(obj) {
         if(this.isAboveGround()) return;
         consoleHits ? console.log(this.objectName, '(handlingHitFromGround)') : null;
+        this.handlingHit(obj);
+    }
+
+
+    /**
+     * Handling if hit from side jump
+     * @param {object} fromObj - counter object
+     */
+    handlingHitFromSide(obj) {
+        if(!(obj instanceof Endboss)) return;
+        obj.strength = 10;
+        consoleHits ? console.log(this.objectName, '(handlingHitFromSide)') : null;
         this.handlingHit(obj);
     }
 

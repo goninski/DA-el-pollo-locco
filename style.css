@@ -289,7 +289,14 @@ body.audio-auto-muted #btnToggleAudioMute img .disabled {
 body #btnToggleAudioMute img.enabled {
     --pulse-scale: 1.075;
 }
-body.play-screen.enemy-leaving-world.ch #warningArrow,
+body #warningArrow {
+    --pulse-scale: 1.5;
+    animation: pulse 1s infinite ease-in-out;
+    height: 36px;
+}
+body.play-screen.enemy-leaving-world:not(.game-is-paused) #warningArrow {
+    display: flex;
+}
 body.start-screen #btnStartGame,
 body.play-screen.game-paused :is(.game-is-paused-msg),
 body.play-screen.help-screen :is(#btnHome, #btnSurrender),
