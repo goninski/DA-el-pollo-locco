@@ -65,7 +65,7 @@ class Endboss extends MovableObject {
      */
     constructor() {
         super();
-        this.setRandomPosX(2.2, 2.75);
+        this.setRandomPosX(2.5);
         this.setWalkGroundY();
         this.roundCoordinates();
         this.roundDimensions();

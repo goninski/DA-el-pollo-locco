@@ -329,6 +329,7 @@ body.is-touch-device.play-screen .nav-panel {
     align-self: center;
     gap: 1rem;
     min-width: 480px;
+    max-width: 640px;
     background: linear-gradient(to top right, hsla(194, 69%, 47%, 0.975), hsla(195, 28%, 89%, 0.975));
     border: solid 2px var(--clr-accent);
     border-radius: 36px;
@@ -336,6 +337,23 @@ body.is-touch-device.play-screen .nav-panel {
     padding-block: 2rem 1rem;
     padding-inline: 2.25rem;
     opacity: 0.925;
+    button.close {
+        position: absolute;
+        top: -6px;
+        right: -4px;
+        max-width: 26px;
+        max-height: 26px;
+        background-color: orange;
+        border-radius: 100%;
+        overflow: hidden;
+        cursor: pointer;
+        img {
+            height: 32px;
+        }
+    }
+    button.close:hover {
+        scale: 1.15;
+    }
     button {
         position: relative;
         background-color: transparent;
@@ -363,30 +381,16 @@ body.is-touch-device.play-screen .nav-panel {
             height: 24px;
         }
     }
-    button.close {
-        position: absolute;
-        top: -6px;
-        right: -4px;
-        max-width: 26px;
-        max-height: 26px;
-        background-color: orange;
-        border-radius: 100%;
-        overflow: hidden;
-        cursor: pointer;
-        img {
-            height: 32px;
-        }
-    }
-    button.close:hover {
-        scale: 1.15;
+    .key-info.help {
     }
     .info-text {
-        font-size: 0.7rem;
+        padding-top: 0.5rem;
+        font-size: 0.8rem;
         line-height: 1.8;
         width: 100%;
-        hr {
-            margin-top: 1em;
-        };
+        p {
+            margin-block: 0 0.25rem;
+        }
     }
 }
 .info-panel::before {
@@ -406,13 +410,13 @@ body.is-touch-device.play-screen .nav-panel {
     .button-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        /* gap: 10px; */
         .key-info {
             font-size: 0.9rem;
         }
         .action-info {
             font-size: 0.7rem;
-            margin-top: 0.75rem;
+            margin-top: 0.5rem;
             order: 99;
         }
     }
@@ -428,7 +432,6 @@ body.is-touch-device:not(.help-screen) {
         background: transparent;
         border: none;
         width: 80%;
-        /* min-height: unset; */
         .buttons-wrapper {
             width: 100%;
             justify-content: space-between;
@@ -443,8 +446,6 @@ body.is-touch-device:not(.help-screen) {
     }
 }
 .legal-notice-panel {
-    max-width: 536px;
-    /* min-height: 200px; */
     align-items: start;
     .info-text {
         text-align: start;
@@ -517,14 +518,17 @@ body.is-touch-device:not(.help-screen) {
         max-height: 100vh;
         max-height: calc(var(--full-height) - 12px - 3px);
         width: auto;
-        /* max-width: calc(100% - 12px); */
         max-width: 100%;
     }
     body:is(.win-screen, .game-over-screen) #btnRestartGame {
         translate: -110% 27vh !important;
     }
-    body:is(.help-screen) .info-panel {
+    body:is(.help-screen, .legal-notice-screen) .info-panel {
         bottom: 4%;
+        .info-text.help {
+            max-width: 520px;
+            font-size: 0.7rem;
+        }
     }
 }
 @media (orientation: landscape) and (min-aspect-ratio: 13/10) {
