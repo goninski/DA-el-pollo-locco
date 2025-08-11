@@ -235,7 +235,7 @@ class MovableObject extends DrawableObject {
     handlingHitFromAbove(obj) {
         obj.strength = 100;
         if(this instanceof Endboss) {
-            obj.strength = 10;
+            obj.strength = 15;
         }
         this.handlingHit(obj);
     }
