@@ -329,7 +329,7 @@ body.is-touch-device.play-screen .nav-panel {
     align-self: center;
     gap: 1rem;
     min-width: 480px;
-    max-width: 640px;
+    max-width: 567px;
     background: linear-gradient(to top right, hsla(194, 69%, 47%, 0.975), hsla(195, 28%, 89%, 0.975));
     border: solid 2px var(--clr-accent);
     border-radius: 36px;
@@ -384,7 +384,7 @@ body.is-touch-device.play-screen .nav-panel {
     .key-info.help {
     }
     .info-text {
-        padding-top: 0.5rem;
+        padding-top: 0.4rem;
         font-size: 0.8rem;
         line-height: 1.8;
         width: 100%;
@@ -525,9 +525,11 @@ body.is-touch-device:not(.help-screen) {
     }
     body:is(.help-screen, .legal-notice-screen) .info-panel {
         bottom: 4%;
+        max-width: 520px;
         .info-text.help {
-            max-width: 520px;
             font-size: 0.7rem;
+            padding-top: 0;
+            margin-bottom: -0.5rem;
         }
     }
 }
